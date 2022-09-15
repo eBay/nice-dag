@@ -5,7 +5,7 @@ import styles from './styles.module.css';
 const FeatureList = [
   {
     title: 'Easy to Use',
-    Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
+    Svg: require('@site/static/img/easy2use.svg').default,
     description: (
       <>
         Easy to create a DAG view in <a href="#">few steps</a> with this library.
@@ -14,7 +14,7 @@ const FeatureList = [
   },
   {
     title: 'Easy to customize',
-    Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
+    Svg: require('@site/static/img/easy2customize.svg').default,
     description: (
       <>
         Easy to customize your DAG render by realizing <a href="#">public interfaces</a>.
@@ -23,7 +23,7 @@ const FeatureList = [
   },
   {
     title: 'Framework Agnostic',
-    Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
+    Svg: require('@site/static/img/frameworkAgnostic.svg').default,
     description: (
       <>
         It can be used by different front-end frameworks like Angular, React, Vue.
