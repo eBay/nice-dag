@@ -16,7 +16,7 @@ Ideally, the Nice-DAG is framework agnostic. The DOM operations are covered by `
 
 Currently, Nice-DAG provides a React adaptor in the manner of a React hook.
 
-For more details information, you can visit the [Demo Portal](https://pages.github.corp.ebay.com/nice-dag/nice-dag-kernel/).
+For more details information, you can visit the [Demo Portal](https://opensource.ebay.com/nice-dag/examples/index.html).
 
 ## Installation
 
