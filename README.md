@@ -50,6 +50,7 @@ To give a visualized DAG editor can significantly make pipeline maintain much ef
 # More Documents
 
 [Tutorial](https://opensource.ebay.com/nice-dag/docs/intro)
+
 [API Reference](https://opensource.ebay.com/nice-dag/docs/api-ref/)
 
 # License
