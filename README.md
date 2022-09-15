@@ -47,10 +47,10 @@ Nowdays, there are many pipeline engines which focus on back-end pipeline orches
 
 To give a visualized DAG editor can significantly make pipeline maintain much efficient.
 
-# Documentation
+# More Documents
 
-[Tutorial](http://)
-[API Reference](http://)
+[Tutorial](https://opensource.ebay.com/nice-dag/docs/intro)
+[API Reference](https://opensource.ebay.com/nice-dag/docs/api-ref/)
 
 # License
 [MIT](LICENSE.md)
