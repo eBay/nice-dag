@@ -1,0 +1,23 @@
+{
+  "name": "nice-dag-kernel",
+  "version": "0.0.1",
+  "description": "nice-dag-kernel gives a framework which allows developers to customized a dag diagram",
+  "main": "index.js",
+  "scripts": {
+    "build": "pnpm --filter=...nice-dag-core --filter=!./example build",
+    "dev": "pnpm --filter=...nice-dag-core --parallel dev",
+    "test:e2e": "pnpm --filter=nice-dag-example start",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.corp.ebay.com:nice-dag/nice-dag-kernel.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@testing-library/react-hooks": "^7.0.2",
+    "jest": "^27.4.7"
+  }
+}

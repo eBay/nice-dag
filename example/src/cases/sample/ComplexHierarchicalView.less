@@ -1,0 +1,97 @@
+@import '../../styles/mixins';
+@conector-size: 16px;
+
+.complex-sample {
+  .ant-slider {
+    min-width: 180px;
+  }
+  &-edge-label {
+    text-align: center;
+    margin-top: -20px;
+  }
+  &-start-node,
+  &-end-node,
+  &-joint-node {
+    border: 1px solid black;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    background: white;
+  }
+
+  &-joint-node {
+    font-size: 18px;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &-end-node::before {
+    content: '';
+    position: absolute;
+    border: 1px solid black;
+    border-radius: 50%;
+    background: black;
+    top: 5px;
+    left: 5px;
+    width: 20px;
+    height: 20px;
+  }
+
+  &-connector {
+    &-in,
+    &-out {
+      width: @conector-size;
+      height: @conector-size;
+      border: 1px solid black;
+      border-radius: 50%;
+      position: absolute;
+      margin: auto;
+      top: 0;
+      bottom: 0;
+      background: white;
+    }
+
+    &-in {
+      left: @conector-size / -2;
+    }
+    &-out {
+      right: @conector-size / -2;
+    }
+  }
+
+  &-node {
+    width: 100%;
+    height: 100%;
+    &-group-content,
+    &-content {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border: 1px solid #8799c1;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+    }
+    &-group-content {
+      padding: 4px 20px;
+      > div {
+        height: 30px;
+
+        a {
+          margin-left: 6px;
+          font-size: 16px;
+        }
+      }
+    }
+    &-content {
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  &-nice-dag-wrapper {
+    height: 400px;
+  }
+}
