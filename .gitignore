@@ -109,3 +109,6 @@ lib
 
 **/packages/**/lib
 **/packages/**/lib/**
+
+.npmrc
+.DS_Store
