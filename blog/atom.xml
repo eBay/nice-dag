@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-    <id>https://github.com/nice-dag/blog</id>
+    <id>https://github.com/eBay/nice-dag/blog</id>
     <title>Nice-DAG Blog</title>
     <updated>2022-09-15T00:00:00.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
-    <link rel="alternate" href="https://github.com/nice-dag/blog"/>
+    <link rel="alternate" href="https://github.com/eBay/nice-dag/blog"/>
     <subtitle>Nice-DAG Blog</subtitle>
-    <icon>https://github.com/nice-dag/img/favicon.ico</icon>
+    <icon>https://github.com/eBay/nice-dag/img/favicon.ico</icon>
     <entry>
         <title type="html"><![CDATA[Welcome Nice-DAG]]></title>
         <id>welcome</id>
-        <link href="https://github.com/nice-dag/blog/welcome"/>
+        <link href="https://github.com/eBay/nice-dag/blog/welcome"/>
         <updated>2022-09-15T00:00:00.000Z</updated>
         <summary type="html"><![CDATA[Hey guys, here Nice-DAG want to say Hi to developers who want to realize a fancy DAG visualization. It's not a component-based library but a framework which allows developer to have powerful controls that show high-customized DAG activities, edges as well as editing operations.]]></summary>
         <content type="html"><![CDATA[<p>Hey guys, here Nice-DAG want to say <strong>Hi</strong> to developers who want to realize a fancy DAG visualization. It's not a component-based library but a framework which allows developer to have powerful controls that show high-customized DAG activities, edges as well as editing operations.</p>]]></content>
