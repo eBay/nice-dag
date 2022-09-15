@@ -9,7 +9,7 @@ const config = {
   title: "Nice-DAG",
   tagline: "A cool library to create a Nice DAG diagram",
   url: "https://github.com/",
-  baseUrl: "/eBay/nice-dag/",
+  baseUrl: "/nice-dag/",
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
   favicon: "img/favicon.ico",

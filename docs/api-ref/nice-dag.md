@@ -119,7 +119,7 @@ The api is yo stop editing.
 ```jsx
 () => void
 ```
-The api is to prettifier the diagram and get neat layout.
+The api is to prettify the diagram and get neat layout.
 ### startEdgeDragging
 ```jsx
 (node: IViewNode, e: MouseEvent) => void
