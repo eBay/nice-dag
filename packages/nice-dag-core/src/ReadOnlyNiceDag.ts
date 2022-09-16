@@ -279,10 +279,10 @@ export default class ReadOnlyNiceDag implements IReadOnlyNiceDag, ViewModelChang
         if (this.useDefaultMapEdgeToPoints) {
             this._config.mapEdgeToPoints = InitArgs.mapEdgeToPointsWithDir[this._config.graphLabel.rankdir];
         }
-        this.prettifier();
+        this.prettify();
     }
 
-    prettifier(): void {
+    prettify(): void {
         this.rootModel.doLayout(true, true);
         this.justifyCenter(this.parentSize);
         this.fireMinimapChange();

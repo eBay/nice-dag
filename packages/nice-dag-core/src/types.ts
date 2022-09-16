@@ -243,7 +243,7 @@ export type IReadOnlyNiceDag = NiceDag;
 export type IWritableNiceDag = IReadOnlyNiceDag & {
     startEditing: () => void;
     stopEditing: () => void;
-    prettifier: () => void;
+    prettify: () => void;
     editing: boolean;
     startEdgeDragging: (node: IViewNode, e: MouseEvent) => void;
     startNodeDragging: (node: IViewNode, e: MouseEvent) => void;

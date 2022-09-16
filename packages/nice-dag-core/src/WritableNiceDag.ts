@@ -350,7 +350,7 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
         }
     }
 
-    prettifier(): void {
+    prettify(): void {
         const _editing = this.editing;
         this.stopEditing();
         this.rootModel.doLayout(true, true);
