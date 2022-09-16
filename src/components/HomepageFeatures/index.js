@@ -8,7 +8,7 @@ const FeatureList = [
     Svg: require('@site/static/img/easy2use.svg').default,
     description: (
       <>
-        Easy to create a DAG view in <a href="#">few steps</a> with this library.
+        Easy to create a DAG view in <a href="./docs/tutorial-react/read-only-dag">few steps</a> with this library.
       </>
     ),
   },
@@ -17,7 +17,7 @@ const FeatureList = [
     Svg: require('@site/static/img/easy2customize.svg').default,
     description: (
       <>
-        Easy to customize your DAG render by realizing <a href="#">public interfaces</a>.
+        Easy to customize your DAG render with <a href="./docs/api-ref/useNiceDag">simple APIs</a>.
       </>
     ),
   },

@@ -4,7 +4,7 @@ sidebar_position: 8
 
 # useNiceDag
 
-It is a customized react hook given by `nice-dag-react` module, which encapsulates API of `nice-dag-core`.
+In terms of React applications, you can simply use this customized react hook which is given by `nice-dag-react` module. Essentially, it's a wrapper of the API of `nice-dag-core`.
 
 ```jsx
 useNiceDag(args: UseNiceDagArgs): UseNiceDagType

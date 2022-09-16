@@ -4,7 +4,7 @@ sidebar_position: 5
 
 # Drag And Drop (Node)
 
-To enable **dnd** support, we need to create an editable DAG view. The editable DAG example extends [Read-Only DAG](./read-only-dag).
+To enable **DnD** support, we need to create an editable DAG view. The editable DAG example extends [Read-Only DAG](./read-only-dag).
 
 ## Step 1: Add `editable` to `useNiceDag` hook
 

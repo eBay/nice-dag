@@ -8,7 +8,7 @@ sidebar_position: 1
 
 ### Create a React Component
 
-Since `nice-dag` doesn't give a react component in default, you need to create a react component which can have a container showing DAG diagram.
+Since **Nice-Dag** doesn't give a react component in default, you need to create a react component which can have a container showing DAG diagram.
 
 ```jsx
 import React from "react";
@@ -95,7 +95,7 @@ Essentically, the dom operations is handled by **nice-dag-core**, we give a DOM 
 
 ## Step 2: Render DAG node
 
-`nice-dag` doesn't give any default render for node. To create a renderer for a node, you need to pass [useNiceDag](../api-ref/useNiceDag.md) an function argument.
+**Nice-Dag** doesn't give any default render for node. To create a renderer for a node, you need to pass [useNiceDag](../api-ref/useNiceDag.md) an function argument.
 
 ```jsx
 import { useNiceDag } from "@ebay/nice-dag-react";

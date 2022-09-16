@@ -112,3 +112,12 @@ lib
 
 .npmrc
 .DS_Store
+
+**/.DS_Store
+
+build/**
+build
+
+.DS_Store
+
+**/.DS_Store
