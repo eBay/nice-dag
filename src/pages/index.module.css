@@ -21,3 +21,8 @@
   align-items: center;
   justify-content: center;
 }
+
+.link {
+  color: #ffffff !important;
+  font-size: 1.6em;
+}
