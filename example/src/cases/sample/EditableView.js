@@ -244,10 +244,10 @@ export default function EditableDagView() {
           <Button
             size="small"
             onClick={() => {
-              niceDag.prettifier();
+              niceDag.prettify();
             }}
           >
-            Prettifier
+            Prettify
           </Button>
           <Button
             size="small"

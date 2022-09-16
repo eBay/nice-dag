@@ -228,7 +228,7 @@ export default class ViewModel implements IViewModel, ViewNodeChangeListener, Vi
      */
     onModelChange(event: IViewModelChangeEvent): void {
         /**
-         * Avoid event storm when do prettifier
+         * Avoid event storm when do prettify
          */
         if ((event.source as ViewModel).id! !== this.id) {
             if (event.type === ViewModelChangeEventType.RESIZE) {
