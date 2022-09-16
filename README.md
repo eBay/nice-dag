@@ -1,3 +1,4 @@
+![nice-dag-logo](./static/img/logo.svg)
 # Nice-DAG
 
 [![Demo](https://img.shields.io/badge/demo-link-orange.svg)](https://opensource.ebay.com/nice-dag/examples/index.html)
