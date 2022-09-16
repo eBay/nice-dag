@@ -27,6 +27,7 @@ Please give the container default height or width (depends on direction of the D
 ```jsx
 .my-first-dag {
   height: 400px;
+  width: 400px;
 }
 ```
 
@@ -199,6 +200,7 @@ export function MyFirstDag() {
 If you want to make the diagram position in the center of the container, you can call [**niceDag.center**](../api-ref/nice-dag.md#center) function within a `useEffect` hook.
 
 ```jsx
+import React, { useEffect } from 'react';
 import { useNiceDag } from "@ebay/nice-dag-react";
 ...
 
