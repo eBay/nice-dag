@@ -11,9 +11,6 @@ import {
   NiceDagDirection,
 } from "./types";
 
-export function findStartNodes(nodes: Node[] = []): Node[] {
-  return nodes.filter((node) => isEmpty(node.dependencies));
-}
 
 export function findEndNodes(nodes: IViewNode[] = []): IViewNode[] {
   let dependencies: string[] = [];
