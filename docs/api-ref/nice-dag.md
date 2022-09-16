@@ -47,13 +47,13 @@ The api can make the diagram be the center position of its parent container.
 ```jsx
 (id: string) => void
 ```
-The api make the main layer scroll to target id element.
+The api make the main layer scroll to the target id element.
 
 ### setDirection
 ```jsx
 (direction: NiceDagDirection) => void
 ```
-The api can set the direction of the diagram.
+The api can set the direction of the DAG diagram.
 #### Arguments
 | Name           | Optional | Description | Type  |
 | --------------- | -------- | ----------|------------ |
@@ -63,7 +63,7 @@ The api can set the direction of the diagram.
 ```jsx
 () => Point
 ```
-The api can get the main layer scroll distance.
+The api can get the scroll distance of the main layer.
 #### Return
 | Name           | Description | Type  |
 | --------------- | -------- | ----------|
@@ -73,7 +73,7 @@ The api can get the main layer scroll distance.
 ```jsx
 () => IViewNode[]
 ```
-The api can get all nodes and return the array of IViewNode.
+The api can get all nodes and return an array of IViewNode.
 #### Return
 | Name           | Description | Type  |
 | --------------- | -------- | ----------|
@@ -83,7 +83,7 @@ The api can get all nodes and return the array of IViewNode.
 ```jsx
 () => IEdge[]
 ```
-The api can gey all edges and return the array of IEdge.
+The api can gey all edges and return an array of IEdge.
 #### Return 
 | Name            | Description | Type  |
 | --------------- | -------- | ----------|
@@ -127,7 +127,19 @@ The api can re-layout the DAG diagram according to the nodes and nodes' dependen
 ```jsx
 (node: Node, point: Point, targetNodeId?: string) => void
 ```
-The api can add a node to target position. If set targetNodeId, it will add a child node of targetNodeId.
+The api can add a node to the target position. If targetNodeId is set, it will add a child node of targetNodeId.
+#### Arguments
+| Name            | Optional | Description | Type  |
+| --------------- | -------- | ----------|------------ |
+| node           | No       | Node | [IViewNode](../dag-model/node.md#node)  |
+| point          | Yes      | Target positon | [Point](../api-ref/api-ref.md#point) |
+| targetNodeId   | Yes      | Parent node id | string
+
+### addJointNode
+```jsx
+(node: Node, point: Point, targetNodeId?: string) => void
+```
+The api can add a joint node to the target position. If targetNodeId is set, it will add a joint child node of targetNodeId.
 #### Arguments
 | Name            | Optional | Description | Type  |
 | --------------- | -------- | ----------|------------ |
