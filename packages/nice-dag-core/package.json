@@ -23,46 +23,29 @@
   "files": [
     "/lib"
   ],
-  "jest": {
-    "roots": [
-      "<rootDir>"
-    ],
-    "collectCoverage": true,
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx,ts,tsx}",
-      "!src/**/*.d.ts"
-    ],
-    "setupFilesAfterEnv": [
-      "<rootDir>/tests/setupTests.ts"
-    ],
-    "testMatch": [
-      "<rootDir>/tests/**/*.{spec,test}.{js,jsx,ts,tsx}"
-    ],
-    "testEnvironment": "jsdom",
-    "testRunner": "<rootDir>/node_modules/jest-circus/runner.js",
-    "moduleFileExtensions": [
-      "web.js",
-      "js",
-      "web.ts",
-      "ts",
-      "web.tsx",
-      "tsx",
-      "json",
-      "web.jsx",
-      "jsx",
-      "node"
-    ],
-    "resetMocks": true
-  },
   "babel": {
-    "presets": []
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "targets": {
+            "node": "current"
+          }
+        }
+      ],
+      "@babel/preset-typescript"
+    ]
   },
   "devDependencies": {
+    "@babel/core": "^7.19.1",
+    "@babel/preset-env": "^7.19.1",
+    "@babel/preset-typescript": "^7.18.6",
     "@testing-library/dom": "^8.11.2",
     "@testing-library/jest-dom": "^5.16.1",
     "@types/jest": "^26.0.24",
     "@typescript-eslint/eslint-plugin": "^4.28.2",
     "@typescript-eslint/parser": "^4.28.2",
+    "babel-jest": "^27.5.1",
     "codecov": "^3.8.3",
     "eslint": "^7.30.0",
     "eslint-plugin-jest": "^24.3.7",
