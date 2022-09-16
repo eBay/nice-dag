@@ -109,3 +109,5 @@ lib
 
 **/packages/**/lib
 **/packages/**/lib/**
+
+**/.DS_Store
