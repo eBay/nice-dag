@@ -109,56 +109,25 @@ The follow APIs are only applicable for editable DAG diagram.
 ```jsx
 () => void
 ```
-The api is to start editing.
+The api can make a DAG diagram editable. Usually, it is used to swipe editing feature (read-only vs editable).
+
 ### stopEditing
 ```jsx
 () => void
 ```
-The api is yo stop editing.
-### prettifier
+The api can disable a DAG diagram editing feature.
+
+### prettify
 ```jsx
 () => void
 ```
-The api is to prettify the diagram and get neat layout.
-### startEdgeDragging
-```jsx
-(node: IViewNode, e: MouseEvent) => void
-```
-The api allows the edge start dargging, which is used as a MouseEvent listener.
-#### Arguments
-| Name            | Optional | Description | Type  |
-| --------------- | -------- | ----------|------------ |
-| node           | No       | IViewNode | [IViewNode](../dag-model/node.md#api-iviewnode)  |
-| e           | No       | MouseEvent | MouseEvent |
-
-### startNodeDragging
-```jsx
-(node: IViewNode, e: MouseEvent) => void
-```
-The api allows the node start dargging, which is used as a MouseEvent listener.
-#### Arguments
-| Name            | Optional | Description | Type  |
-| --------------- | -------- | ----------|------------ |
-| node           | No       | IViewNode | [IViewNode](../dag-model/node.md#api-iviewnode)  |
-| e           | No       | MouseEvent | MouseEvent |
+The api can re-layout the DAG diagram according to the nodes and nodes' dependencies. If a node is editing, the node won't be impacted by the API.
 
 ### addNode
 ```jsx
 (node: Node, point: Point, targetNodeId?: string) => void
 ```
 The api can add a node to target position. If set targetNodeId, it will add a child node of targetNodeId.
-#### Arguments
-| Name            | Optional | Description | Type  |
-| --------------- | -------- | ----------|------------ |
-| node           | No       | Node | [IViewNode](../dag-model/node.md#node)  |
-| point          | Yes      | Target positon | [Point](../api-ref/api-ref.md#point) |
-| targetNodeId   | Yes      | Parent node id | string
-
-### addJointNode
-```jsx
-(node: Node, point: Point, targetNodeId?: string) => void
-```
-The api can add a joint node to target position. If set targetNodeId, it will add a child joint node of targetNodeId.
 #### Arguments
 | Name            | Optional | Description | Type  |
 | --------------- | -------- | ----------|------------ |
