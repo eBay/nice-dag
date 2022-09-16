@@ -4,8 +4,8 @@ import NiceDag from '@ebay/nice-dag-core';
 import NiceDagTypes, { IEdge, MinimapConfig } from '@ebay/nice-dag-core/lib/esm/types';
 
 export type UseNiceDagArgs = Omit<NiceDagTypes.NiceDagInitArgs, 'container'> & {
-    renderNode: (props: NiceDagNodeProps) => React.Component<any, any>;
-    renderEdge?: (props: NiceDagEdgeProps) => React.Component<any, any>;
+    renderNode: (props: NiceDagNodeProps) => React.Component<any, any, any>;
+    renderEdge?: (props: NiceDagEdgeProps) => React.Component<any, any, any>;
     scrollPosition?: NiceDagTypes.Point;
     initNodes?: NiceDagTypes.Node[];
     onMount?: () => void;
@@ -45,7 +45,7 @@ export class NiceDagNode extends React.Component<NiceDagNodeProps, any> {
             const domRef = this.props.niceDag.getElementByNodeId(this.props.node.id);
             if (domRef) {
                 return ReactDOM.createPortal(
-                    this.props.render(this.props),
+                    <>{this.props.render(this.props)}</>,
                     domRef,
                 );
             }
@@ -59,7 +59,7 @@ export class NiceDagEdge extends React.Component<NiceDagEdgeProps, any> {
     render() {
         if (this.props.niceDag && this.props.edge.ref) {
             return ReactDOM.createPortal(
-                this.props.render(this.props),
+                <>{this.props.render(this.props)}</>,
                 this.props.edge.ref,
             );
         }
@@ -172,6 +172,10 @@ export function useNiceDag(args: UseNiceDagArgs): UseNiceDagType {
      * Just clean when the component is removed
      */
     useEffect(() => {
+        if (niceDagRef.current && niceDagRef.current.isDestoried) {
+            niceDagRef.current.withNodes(initNodes).render();
+            setPatchVersion(patchVersion + 1);
+        }
         return () => {
             if (niceDagRef.current) {
                 niceDagRef.current.destory();

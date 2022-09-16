@@ -2,6 +2,8 @@
 @conector-size: 16px;
 
 .readonly-sample {
+  border: 1px solid #eaeaea;
+  padding: 4px 4px ;
   .ant-slider {
     min-width: 180px;
   }
@@ -101,10 +103,15 @@
     &-nice-dag {
       height: 100%;
     }
+    &-minimap-row {
+      height: 130px;
+      position: relative;
+    }
     &-minimap {
       position: absolute;
+      top: 0;
       right: 0;
-      width: 250px;
+      width: 300px;
       height: 120px;
       bottom: 20px; //scroll bar
       border: 1px solid gray;

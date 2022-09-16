@@ -236,6 +236,7 @@ export interface NiceDag {
     fireNiceDagChange: () => void;
     fireMinimapChange: () => void;
     config: NiceDagConfig;
+    isDestoried: boolean;
 }
 
 export type IReadOnlyNiceDag = NiceDag;

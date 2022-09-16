@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from 'react';
 import { useNiceDag } from '@ebay/nice-dag-react';
-import { HierarchicalModel, FlattenModel } from '../data/ReadOnlyViewData';
+import { HierarchicalModel } from '../data/ReadOnlyViewData';
 import { FullscreenExitOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { Button, Space, Select } from 'antd';
 import ZoomInOutSlider from './ZoomInOutSlider';
@@ -142,7 +142,6 @@ export default function ReadOnlyView() {
     <div className="readonly-sample">
       <div>
         <Space>
-          <label>Direction</label>
           <Select defaultValue="LR" style={{ width: 120 }} onChange={onDirectionChange}>
             <Option value="LR">Left to Right</Option>
             <Option value="RL">Right to Left</Option>
@@ -154,10 +153,12 @@ export default function ReadOnlyView() {
       </div>
       <div className="readonly-sample-content">
         <div className="readonly-sample-content-nice-dag" ref={niceDagEl} />
-        <div className="readonly-sample-content-minimap" >
-          <div className="readonly-sample-content-minimap-body" ref={minimapEl} />
-        </div>
         {render()}
+      </div>
+      <div className="readonly-sample-content-minimap-row">
+        <div className="readonly-sample-content-minimap" >
+            <div className="readonly-sample-content-minimap-body" ref={minimapEl} />
+        </div>
       </div>
     </div>
   );

@@ -243,6 +243,7 @@ export default class ReadOnlyNiceDag implements IReadOnlyNiceDag, ViewModelChang
     protected parentSize: Size;
     protected _scale: number;
     private useDefaultMapEdgeToPoints: boolean;
+    private destoried: boolean;
 
     constructor(args: NiceDagInitArgs) {
         this.uid = utils.uuid();
@@ -342,8 +343,12 @@ export default class ReadOnlyNiceDag implements IReadOnlyNiceDag, ViewModelChang
 
     withNodes(nodes: Node[]): NiceDag {
         this.rootModel?.destory();
-        this.rootView?.clear();
-        this.minimap?.clear();
+        if (!this.destoried) {
+            this.rootView?.clear();
+            this.minimap?.clear();
+        } else {
+            this.minimap?.addMinimapListener(this);
+        }        
         const hirerarchyNodes = this.config.modelType === NiceDagModelType.FLATTEN ? utils.flattenToHirerarchy(nodes) : nodes;
         /**
          * deep clone,due to the joint node will change dependencies
@@ -355,6 +360,7 @@ export default class ReadOnlyNiceDag implements IReadOnlyNiceDag, ViewModelChang
             viewConfig: this.config
         });
         this.rootModel.addModelChangeListener(this);
+        this.destoried = false;
         return this;
     }
 
@@ -414,7 +420,12 @@ export default class ReadOnlyNiceDag implements IReadOnlyNiceDag, ViewModelChang
         }
     }
 
+    get isDestoried() {
+        return this.destoried;
+    }
+
     destory(): void {
+        this.destoried = true;
         this.listeners = [];
         this.rootView.destory();
         this.minimap?.destory();
