@@ -47,11 +47,13 @@ The api can make the diagram be the center position of its parent container.
 ```jsx
 (id: string) => void
 ```
+The api make the main layer scroll to target id element.
 
 ### setDirection
 ```jsx
 (direction: NiceDagDirection) => void
 ```
+The api can set the direction of the diagram.
 #### Arguments
 | Name           | Optional | Description | Type  |
 | --------------- | -------- | ----------|------------ |
@@ -61,6 +63,7 @@ The api can make the diagram be the center position of its parent container.
 ```jsx
 () => Point
 ```
+The api can get the main layer scroll distance.
 #### Return
 | Name           | Description | Type  |
 | --------------- | -------- | ----------|
@@ -70,6 +73,7 @@ The api can make the diagram be the center position of its parent container.
 ```jsx
 () => IViewNode[]
 ```
+The api can get all nodes and return the array of IViewNode.
 #### Return
 | Name           | Description | Type  |
 | --------------- | -------- | ----------|
@@ -79,6 +83,7 @@ The api can make the diagram be the center position of its parent container.
 ```jsx
 () => IEdge[]
 ```
+The api can gey all edges and return the array of IEdge.
 #### Return 
 | Name            | Description | Type  |
 | --------------- | -------- | ----------|
@@ -87,6 +92,7 @@ The api can make the diagram be the center position of its parent container.
 ```jsx
 (nodes: Node[]) => NiceDag
 ```
+The api deal with init nodes and generate model and view.
 #### Arguments
 | Name            | Optional | Description | Type  |
 | --------------- | -------- | ----------|------------ |
@@ -103,18 +109,22 @@ The follow APIs are only applicable for editable DAG diagram.
 ```jsx
 () => void
 ```
+The api is to start editing.
 ### stopEditing
 ```jsx
 () => void
 ```
+The api is yo stop editing.
 ### prettifier
 ```jsx
 () => void
 ```
+The api is to prettify the diagram and get neat layout.
 ### startEdgeDragging
 ```jsx
 (node: IViewNode, e: MouseEvent) => void
 ```
+The api allows the edge start dargging, which is used as a MouseEvent listener.
 #### Arguments
 | Name            | Optional | Description | Type  |
 | --------------- | -------- | ----------|------------ |
@@ -125,6 +135,7 @@ The follow APIs are only applicable for editable DAG diagram.
 ```jsx
 (node: IViewNode, e: MouseEvent) => void
 ```
+The api allows the node start dargging, which is used as a MouseEvent listener.
 #### Arguments
 | Name            | Optional | Description | Type  |
 | --------------- | -------- | ----------|------------ |
@@ -135,6 +146,7 @@ The follow APIs are only applicable for editable DAG diagram.
 ```jsx
 (node: Node, point: Point, targetNodeId?: string) => void
 ```
+The api can add a node to target position. If set targetNodeId, it will add a child node of targetNodeId.
 #### Arguments
 | Name            | Optional | Description | Type  |
 | --------------- | -------- | ----------|------------ |
@@ -146,11 +158,11 @@ The follow APIs are only applicable for editable DAG diagram.
 ```jsx
 (node: Node, point: Point, targetNodeId?: string) => void
 ```
-
+The api can add a joint node to target position. If set targetNodeId, it will add a child joint node of targetNodeId.
 #### Arguments
 | Name            | Optional | Description | Type  |
 | --------------- | -------- | ----------|------------ |
 | node           | No       | Node | [IViewNode](../dag-model/node.md#node)  |
 | point          | Yes      | Target positon | [Point](../api-ref/api-ref.md#point) |
-| targetNodeId   | Yes      |  | string
+| targetNodeId   | Yes      | Parent node id | string
 
