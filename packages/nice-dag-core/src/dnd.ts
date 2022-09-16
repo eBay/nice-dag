@@ -47,6 +47,10 @@ export default class NiceDagDnd {
         this._rootContainer = rootContainer;
         this._glassStyles = glassStyles;
         this.mapEdgeToPoints = mapEdgeToPoints;
+        this.buildGlass();
+    }
+
+    buildGlass = () => {
         const editableGlass = utils.createElementIfAbsent(document.body, GLASS_NODE_CLS).withStyle({
             ...GLASS_STYLE,
             cursor: this._glassStyles?.cursor || 'pointer',

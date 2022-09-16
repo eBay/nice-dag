@@ -3,7 +3,7 @@ import { Grid, Line, IDndProvider } from './dndTypes';
 import {
     Bounds, NiceDagInitArgs, NiceDag, HtmlElementBounds,
     Point, Size, IWritableNiceDag, Node,
-    IViewModelChangeEvent, ViewModelChangeEventType, ViewModelChangeListener, IViewNode
+    IViewModelChangeEvent, ViewModelChangeEventType, ViewModelChangeListener, IViewNode, StyleObjectType
 } from './types';
 import NiceDagDnd from './dnd';
 import * as utils from './utils';
@@ -228,10 +228,10 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
     private svgDndBkg: SVGElement;
     private editorBkgContainer: HTMLElement;
     private _grid: NiceDagGrid;
+    private glassStyles: StyleObjectType;
 
     constructor(args: NiceDagInitArgs) {
         super(args);
-
         this._dnd = new NiceDagDnd(this.mainLayer, args.glassStyles, this._config.mapEdgeToPoints);
         this.editorBkgContainer = utils.createElementIfAbsent(this.mainLayer, EDITOR_BKG_CLS).htmlElement;
         this.svgGridBkg = utils.createSvgIfAbsent(this.editorBkgContainer, null, `${this.uid}-${SVG_BKG_ARROW_ID}`)
@@ -302,6 +302,20 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
         this.getAllNodes().forEach(node => node.editing = false);
         this._dnd.setEnabled(false);
         this.setGridVisible(false);
+    }
+
+    withNodes(nodes: Node[]): NiceDag {
+        const _destoried = this.isDestoried;
+        super.withNodes(nodes);
+        if (_destoried) {
+            this._dnd = new NiceDagDnd(this.mainLayer, this.glassStyles, this._config.mapEdgeToPoints);
+            if (this._editing) { 
+                this.startEditing();
+            } else {
+                this.stopEditing();
+            }
+        }
+        return this;
     }
 
     get editing() {
