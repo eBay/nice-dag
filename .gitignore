@@ -112,3 +112,5 @@ lib
 
 .npmrc
 .DS_Store
+
+build/*
