@@ -198,15 +198,6 @@ export function isEmpty(arr?: Array<any>): boolean {
   return !arr || arr.length === 0;
 }
 
-export function getPaddingStyle(padding: Padding = {}): StyleObjectType {
-  return {
-    paddintTop: padding.top || 0,
-    paddintLeft: padding.left || 0,
-    paddintRight: padding.right || 0,
-    paddintBottom: padding.bottom || 0,
-  };
-}
-
 export function uuid() {
   return Math.random()
     .toString(16)
@@ -214,6 +205,7 @@ export function uuid() {
 }
 
 export function float2Int(v: number): number {
+  if (v === Infinity) return Infinity
   return parseInt(`${Math.round(v + Number.EPSILON)}`);
 }
 
