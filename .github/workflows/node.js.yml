@@ -28,5 +28,5 @@ jobs:
       with:
         # Version of pnpm to install
         version: 7.8.0
-    - run: pnpm i
+    - run: pnpm install --no-frozen-lockfile
     - run: pnpm test
