@@ -4,11 +4,11 @@ sidebar_position: 1
 
 # Nice-DAG Overview
 
-Nice-DAG is a lightweight javascript library, which is used to present a DAG diagram. Essentially, it uses dagre to layout nodes and edges on a DAG diagram. However, the functions that Nice-DAG gives are far beyond that of dagre. 
+Nice-DAG is a lightweight javascript library, which is used to present a DAG diagram. Essentially, it uses dagre to layout nodes and edges on a DAG diagram. However, the functions that Nice-DAG gives are far beyond that of dagre.
 
-Compared with **dagre**, **dagre** provides the position coordinates of DAG nodes, while Nice-DAG provides a DOM container of DAG diagram as well as DOM elements as the host of DAG nodes and edges. Based on the visual container, Nice-DAG also provides some generic visual features like **zoom in/out**, **mini-map** widget, etc. In addition, Nice-DAG facilities editing features, which allows the user to **drag and drop** nodes, to **connect** one node to the other, and to **create/remove** nodes or edges. When developers use Nice-DAG, they can focus on the rendering of node and edge according to their own requirements rather than the implementation of the general functions as above mentioned. Moreover, developers have complete control over the container's placement and look and feel.
+Compared with **dagre**, **dagre** provides the position coordinates of DAG nodes, while Nice-DAG provides a DOM container of DAG diagram as well as DOM elements as the host of DAG nodes and edges. Based on the visual container, Nice-DAG also provides some generic visual features like **zoom in/out**, **mini-map** widget, etc. In addition, Nice-DAG facilitates editing features, which allows the user to **drag and drop** nodes, to **connect** one node to the other, and to **create/remove** nodes or edges. Using Nice-DAG, developers can focus on the rendering of nodes and edges, according to their own requirements, rather than on the implementation of general functions, as above mentioned. Moreover, developers have complete control over the container's placement, as well as the look and feel.
 
-In terms of usage, Nice-DAG provides two kinds of view, **read-only view** and **editable view**. For **read-only** view, it provies a set of api which allows the user to customize nodes and edges renderer. **Editable view** extends the capabilities of read-only and it provides a set of dragging&dropping api which can be applied to the nodes or edges renderers.
+In terms of usage, Nice-DAG provides two views: **read-only view** and **editable view**. The **read-only** view provides a set of APIs which allows the user to customize node and edge renderers. **Editable view** extends the capabilities of read-only view, providing a set of drag & drop APIs which can be applied to the node or edge renderers.
 
 ![nice-dag-modules](../static/img/tutorial/nice-dag-modules.png)
 
