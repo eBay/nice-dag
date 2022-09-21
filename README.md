@@ -5,6 +5,8 @@
 [![Demo](https://img.shields.io/badge/demo-link-orange.svg)](https://opensource.ebay.com/nice-dag/examples/index.html)
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/eBay/nice-dag/blob/main/LICENSE.md)
 
+https://user-images.githubusercontent.com/3853/191567804-6e3dfb37-f1fd-4a70-976a-8aa543feff4e.mov
+
 ## Overview
 
 Nice-DAG is a lightweight javascript library, which is used to present a DAG diagram. Essentially, it uses dagre to layout nodes and edges on a DAG diagram. However, the functions that Nice-DAG gives are far beyond that of dagre.
