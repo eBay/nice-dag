@@ -1,13 +1,14 @@
 {
   "name": "@ebay/nice-dag-react",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "license": "MIT",
   "main": "./lib/cjs/index.js",
   "module": "./lib/esm/index.js",
   "types": "./lib/esm/index.d.ts",
-  "repository": "https://github.corp.ebay.com/nice-dag",
+  "repository": "https://github.com/eBay/nice-dag",
   "publishConfig": {
-    "registry": "https://artifactory.corp.ebay.com/artifactory/api/npm/npm-nice-dag-kernel/"
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
     "build": "rm -rf lib && pnpm build:esm && pnpm build:cjs",

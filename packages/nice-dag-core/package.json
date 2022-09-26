@@ -6,6 +6,10 @@
   "module": "./lib/esm/index.js",
   "types": "./lib/esm/index.d.ts",
   "repository": "https://github.com/eBay/nice-dag",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "private": false,
   "scripts": {
     "build": "rm -rf lib && pnpm build:esm && pnpm build:cjs",
