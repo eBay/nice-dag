@@ -2,8 +2,8 @@
 
 # Nice-DAG
 
-[![NPM](https://img.shields.io/npm/v/@ebay/nice-dag-core.svg)](https://www.npmjs.com/package/@ebay/nice-dag-core)
-[![NPM](https://img.shields.io/npm/v/@ebay/nice-dag-react.svg)](https://www.npmjs.com/package/@ebay/nice-dag-react)
+[![NPM nice-dag-core](https://img.shields.io/npm/v/@ebay/nice-dag-core.svg)](https://www.npmjs.com/package/@ebay/nice-dag-core)
+[![NPM nice-dag-react](https://img.shields.io/npm/v/@ebay/nice-dag-react.svg)](https://www.npmjs.com/package/@ebay/nice-dag-react)
 [![Demo](https://img.shields.io/badge/demo-link-orange.svg)](https://opensource.ebay.com/nice-dag/examples/index.html)
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/eBay/nice-dag/blob/main/LICENSE.md)
 
