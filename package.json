@@ -7,7 +7,7 @@
     "build": "pnpm --filter=...nice-dag-core --filter=!./example build",
     "dev": "pnpm --filter=...nice-dag-core --parallel dev",
     "test:e2e": "pnpm --filter=nice-dag-example start",
-    "test": "pnpm --filter \"./packages/nice-dag**\" test"
+    "test": "pnpm --filter \"./packages/nice-dag-**\" test"
   },
   "repository": {
     "type": "git",
