@@ -1,4 +1,8 @@
 # nice-dag-core
+[![NPM](https://img.shields.io/npm/v/@ebay/nice-dag-core.svg)](https://www.npmjs.com/package/@ebay/nice-dag-core)
+[![Downloads](https://img.shields.io/npm/dm/@ebay/nice-dag-core.svg)](https://www.npmjs.com/package/@ebay/nice-dag-core)
+[![Demo](https://img.shields.io/badge/demo-link-orange.svg)](https://opensource.ebay.com/nice-dag/examples/index.html)
+[![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/eBay/nice-dag/blob/main/LICENSE.md)
 
 ## What is nice-dag-core?
 
