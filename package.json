@@ -9,10 +9,6 @@
     "test:e2e": "pnpm --filter=nice-dag-example start",
     "test": "pnpm --filter \"./packages/nice-dag-**\" test"
   },
-  "repository": {
-    "type": "git",
-    "url": "git@github.corp.ebay.com:nice-dag/nice-dag-kernel.git"
-  },
   "keywords": [],
   "author": "",
   "license": "ISC",
