@@ -1,5 +1,4 @@
 import {
-  Padding,
   Node,
   StyleObjectType,
   ElementAttributesType,
