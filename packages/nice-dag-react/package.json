@@ -1,6 +1,6 @@
 {
   "name": "@ebay/nice-dag-react",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "license": "MIT",
   "main": "./lib/cjs/index.js",
   "module": "./lib/esm/index.js",
