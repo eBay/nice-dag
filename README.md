@@ -50,7 +50,7 @@ npm install @ebay/nice-dag-react
 - Support scaling. The DAG diagram can be zoomed in/out.
 - Support Mini-Map. For large diagrams, navigation can be done via a mini-map.
 - Powerful Dragging & Dropping. Both nodes and edges can support DnD. Moreover, the page can auto-scroll and the size can be auto-scaled.
-- Rich API. Comprehensive API to control nodes and edges.
+- Rich APIs. Comprehensive APIs to control nodes and edges.
 
 # Motivation
 
