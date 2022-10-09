@@ -66,5 +66,23 @@
     "@types/dagre": "^0.7.46",
     "dagre": "^0.8.5",
     "html2canvas": "^1.4.1"
-  }
+  },
+  "tags": [
+    "dag",
+    "flow",
+    "editor",
+    "dom",
+    "dagre",
+    "dnd"
+  ],
+  "keywords": [
+    "react",
+    "react-hook",
+    "dag",
+    "flow",
+    "editor",
+    "dom",
+    "dagre",
+    "dnd"
+  ]
 }
