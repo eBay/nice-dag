@@ -1,13 +1,13 @@
 import { NiceDag } from "./types";
 
-const NiceDag: {
+const NiceDagHolder: {
     [key: string]: NiceDag
 } = {};
 
 export function use(id: string): NiceDag {
-    return NiceDag[id];
+    return NiceDagHolder[id];
 }
 
 export function set(id: string, niceDag: NiceDag): void {
-    NiceDag[id] = niceDag;
+    NiceDagHolder[id] = niceDag;
 }
