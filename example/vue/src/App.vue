@@ -1,6 +1,5 @@
 <template>
   <img alt="Vue logo" src="./assets/logo.png" />
-  <div id="my-modal" />
   <ReadOnlyView msg="Welcome to Your Vue.js App" />
 </template>
 

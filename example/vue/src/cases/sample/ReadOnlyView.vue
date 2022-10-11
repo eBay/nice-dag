@@ -3,12 +3,9 @@
     <div className="readonly-sample-content">
       <div className="readonly-sample-content-nice-dag" ref="niceDagEl" />
     </div>
-    <teleport to="#my-modal">
-      <div>AAAA</div>
-    </teleport>
-    <!-- <teleport v-for="node in viewNodes" v-bind:key="node.id">
-      <div>AAAA</div>
-    </teleport> -->
+    <Fragment v-if="test">
+      <VueDagNode v-for="node in viewNodes" v-bind:key="node.id" :node="node"/>
+    </Fragment>
   </div>
 </template>
 
@@ -16,6 +13,7 @@
 import { HierarchicalModel } from "../data/ReadOnlyViewData";
 import NiceDag from "@ebay/nice-dag-core";
 import { ref, onMounted } from "vue";
+import VueDagNode from "./VueDagNode.vue";
 
 const NODE_WIDTH = 150;
 const NODE_HEIGHT = 60;
@@ -39,10 +37,13 @@ export default {
   props: {
     // initNodes: HierarchicalModel,
   },
+  components: {
+    VueDagNode,
+  },
   setup() {
     const viewNodes = ref([]);
     const niceDagEl = ref(null);
-    const test = ref(0);
+    const test = ref(false);
     onMounted(() => {
       const nideDag = NiceDag.init(
         {
@@ -53,6 +54,7 @@ export default {
       );
       nideDag.withNodes(HierarchicalModel).render();
       viewNodes.value = nideDag.getAllNodes();
+      test.value = true;
       console.log(`the component is now mounted.`);
     });
     return {
