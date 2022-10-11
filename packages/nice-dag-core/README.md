@@ -10,6 +10,6 @@
 
 Besides DAG diagram layout, it also provides build-in functions for **Flow Editor** interactions like **dragging**, **dropping**, creating or removing nodes and edges. Developers can use these functions according to their customized use cases. 
 
-Ideally, `nice-dag-core` is framework agnostic. But for the current version, `nice-dag-core` should be used with [![nice-dag-react](https://img.shields.io/npm/dm/@ebay/nice-dag-react.svg)](https://www.npmjs.com/package/@ebay/nice-dag-react). 
+Ideally, `nice-dag-core` is framework agnostic. But for the current version, `nice-dag-core` should be used with [nice-dag-react](https://www.npmjs.com/package/@ebay/nice-dag-react). 
 
 For more details, please you can visit [Doc Portal](https://opensource.ebay.com/nice-dag/docs/intro).
