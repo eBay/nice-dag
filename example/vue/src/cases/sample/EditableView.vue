@@ -63,7 +63,7 @@ const getNodeSize = (node) => {
 };
 
 export default {
-  name: "HelloWorld",
+  name: "EditableView",
   props: {
     // initNodes: HierarchicalModel,
   },
@@ -93,13 +93,12 @@ export default {
           container: niceDagEl.value,
           getNodeSize,
           minimapContainer: minimapEl.value,
-          editable: true,
           jointEdgeConnectorType: 'CENTER_OF_BORDER',
           minimapConfig: {
             viewBoxClassName: "readonly-sample-minimap-viewbox",
           },
         },
-        false
+        true
       );
       niceDagRef.value.withNodes(HierarchicalModel).render();
       niceDagRef.value.addNiceDagChangeListener(onNiceDagChange);
@@ -107,7 +106,7 @@ export default {
       niceDagRef.value.center({
         width: bounds.width,
         height: 400,
-      });
+      }).startEditing();
     });
     return {
       patchVersion,

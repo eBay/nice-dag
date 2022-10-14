@@ -1,5 +1,6 @@
 import ShrinkSvg from '../../assets/svgs/shrink.vue';
 import PlusSvg from '../../assets/svgs/plus.vue';
+import MoveSvg from '../../assets/svgs/move.vue';
 import MyButton from '../../components/MyButton.vue';
 
 export const StartNode = <div className="readonly-sample-start-node" />;
@@ -35,12 +36,13 @@ const GroupControl = {
 }
 
 const NodeControl = {
-  props: ['node'],
-  emits: ['update:node'],
+  props: ['node', 'niceDag'],
+  emits: ['update:node', 'update:niceDag'],
   render() {
     return (
       <div className="readonly-sample-node-content">
         <span>{this.node.data?.label || this.node.id}</span>
+        {this.niceDag.editing && <MoveSvg />}
         {(this.node.children?.length > 0 || this.node.data?.lazyLoadingChildren) && (
           <MyButton onClick={() => {
             if (this.node.data?.lazyLoadingChildren) {

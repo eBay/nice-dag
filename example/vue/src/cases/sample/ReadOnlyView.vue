@@ -63,7 +63,7 @@ const getNodeSize = (node) => {
 };
 
 export default {
-  name: "HelloWorld",
+  name: "ReadOnlyView",
   props: {
     // initNodes: HierarchicalModel,
   },
