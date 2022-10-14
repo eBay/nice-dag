@@ -93,6 +93,8 @@ export default {
           container: niceDagEl.value,
           getNodeSize,
           minimapContainer: minimapEl.value,
+          editable: true,
+          jointEdgeConnectorType: 'CENTER_OF_BORDER',
           minimapConfig: {
             viewBoxClassName: "readonly-sample-minimap-viewbox",
           },
