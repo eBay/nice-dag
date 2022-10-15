@@ -22,16 +22,19 @@
     "suppressImplicitAnyIndexErrors": true,
     "sourceMap": false,
     "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
     "typeRoots": [
       "node_modules/@types"
     ],
   },
   "include": [
-    "src"
+    "src",
+    "package.json",
+    "vite.config*.ts"
   ],
   "exclude": [
     "node_modules",
     "lib",
     "src/setupTests.ts"
-  ]
+  ],
 }
