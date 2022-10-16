@@ -1,6 +1,5 @@
 import ShrinkSvg from '../../assets/svgs/shrink.vue';
 import PlusSvg from '../../assets/svgs/plus.vue';
-import MoveSvg from '../../assets/svgs/move.vue';
 import MyButton from '../../components/MyButton.vue';
 
 export const StartNode = <div className="readonly-sample-start-node" />;

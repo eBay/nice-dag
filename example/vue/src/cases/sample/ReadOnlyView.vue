@@ -41,7 +41,7 @@
 import { HierarchicalModel } from "../data/ReadOnlyViewData";
 import NiceDag from "@ebay/nice-dag-core";
 import { ref, onMounted } from "vue";
-import { StartNode, EndNode, SampleNode, Joint, Edge } from "./ExampleNodes";
+import { StartNode, EndNode, SampleNode, Joint, Edge } from "./ReadOnlyNodes";
 import NiceDagNodes from "./NiceDagNodes.vue";
 import NiceDagEdges from "./NiceDagEdges.vue";
 
@@ -195,7 +195,7 @@ export default {
       position: relative;
       width: 100%;
       height: 100%;
-      border: 1px solid #8799c1;
+      border: 1px solid #999999;
       border-radius: 10px;
       display: flex;
       flex-direction: column;

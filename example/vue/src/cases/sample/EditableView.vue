@@ -41,7 +41,7 @@
 import { HierarchicalModel } from "../data/ReadOnlyViewData";
 import NiceDag from "@ebay/nice-dag-core";
 import { ref, onMounted } from "vue";
-import { StartNode, EndNode, SampleNode, Joint, Edge } from "./ExampleNodes";
+import { StartNode, EndNode, SampleNode, Joint, Edge } from "./EditableNodes";
 import NiceDagNodes from "./NiceDagNodes.vue";
 import NiceDagEdges from "./NiceDagEdges.vue";
 

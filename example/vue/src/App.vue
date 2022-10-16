@@ -2,8 +2,8 @@
   <div className="app">
     <div className="sider">
       <h1>
-        <span className="header-name">@ebay/nice-dag</span>
-        <span className="example-title">Examples</span>
+        <span className="header-name">@ebay/nice-dag-vue</span>
+        <span className="example-title">Vue Examples</span>
       </h1>
       <div className="scroll-container" id="scroll-container">
         <ul>
@@ -111,7 +111,9 @@ body {
   position: relative;
   background-color: #f0f0f0;
   padding: 10px 0 10px 28px;
-  height: 80px;
+  height: 44px;
+  margin-bottom: 0.5em;
+  margin-top: 0;
 }
 .app .sider h1 .header-name {
   display: block;
