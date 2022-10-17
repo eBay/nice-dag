@@ -12,7 +12,7 @@ export default defineConfig({
         fileName: 'index'
       },
       rollupOptions: {
-        external: [...Object.keys(pkg.dependencies || {})]
+        // external: [...Object.keys(pkg.dependencies || {})]
       }
     },
     plugins: [
