@@ -1,20 +1,27 @@
 {
   "name": "@ebay/nice-dag-react",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "license": "MIT",
-  "main": "./lib/cjs/index.js",
-  "module": "./lib/esm/index.js",
-  "types": "./lib/esm/index.d.ts",
+  "type": "module",
+  "main": "./lib/index.cjs",
+  "module": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./lib/index.js",
+      "require": "./lib/index.cjs"
+    }
+  },
   "repository": "https://github.com/eBay/nice-dag",
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
-    "build": "rm -rf lib && pnpm build:esm && pnpm build:cjs",
-    "build:esm": "tsc",
-    "build:cjs": "tsc --module commonjs --outDir lib/cjs",
-    "dev": "tsc -w",
+    "build": "rm -rf lib && pnpm build:esm && pnpm build:umd",
+    "build:esm": "vite build",
+    "build:umd": "vite build -c vite.config.umd.ts",
+    "dev": "vite build -w",
     "codecov": "codecov",
     "gendoc": "typedoc",
     "test": "jest",
@@ -72,6 +79,7 @@
     "@types/react-dom": "18.0.6",
     "@typescript-eslint/eslint-plugin": "^4.28.2",
     "@typescript-eslint/parser": "^4.28.2",
+    "@vitejs/plugin-react": "^2.1.0",
     "babel-preset-react-app": "^10.0.0",
     "codecov": "^3.8.3",
     "eslint": "^7.30.0",
@@ -85,10 +93,9 @@
     "react-app-polyfill": "^3.0.0",
     "react-dom": "^18.2.0",
     "typedoc": "^0.21.7",
-    "typescript": "^4.3.5"
-  },
-  "resolutions": {
-    "glob-parent": "6.0.1"
+    "typescript": "^4.3.5",
+    "vite": "^3.1.8",
+    "vite-plugin-dts": "^1.6.6"
   },
   "dependencies": {
     "@ebay/nice-dag-core": "workspace:^"
