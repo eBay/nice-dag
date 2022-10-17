@@ -71,6 +71,7 @@ export default {
       getCurrentExample(key) {
         return examples[key];
       },
+      handleClick() {},
       isActive(key) {
         return current.value === key;
       },

@@ -8,10 +8,22 @@
         v-if="niceDagRef"
         :patchVersion="patchVersion"
       >
-        <StartNode v-if="slotProps.node.id === 'start'" />
-        <EndNode v-if="slotProps.node.id === 'end'" />
-        <Joint v-if="slotProps.node.joint" />
-        <SampleNode
+        <EditableStartNode
+          v-if="slotProps.node.id === 'start'"
+          :niceDag="niceDagRef"
+          :node="slotProps.node"
+        />
+        <EditableEndNode
+          v-if="slotProps.node.id === 'end'"
+          :niceDag="niceDagRef"
+          :node="slotProps.node"
+        />
+        <EditableJoint
+          v-if="slotProps.node.joint"
+          :niceDag="niceDagRef"
+          :node="slotProps.node"
+        />
+        <EditableNode
           :node="slotProps.node"
           :niceDag="niceDagRef"
           v-if="
@@ -26,7 +38,7 @@
         v-if="niceDagRef"
         :patchVersion="patchVersion"
       >
-        <Edge />
+        <EditableEdge />
       </NiceDagEdges>
     </div>
     <div className="readonly-sample-content-minimap-row">
@@ -41,9 +53,13 @@
 import { HierarchicalModel } from "../data/ReadOnlyViewData";
 import NiceDag from "@ebay/nice-dag-core";
 import { ref, onMounted } from "vue";
-import { StartNode, EndNode, SampleNode, Joint, Edge } from "./EditableNodes";
 import NiceDagNodes from "./NiceDagNodes.vue";
 import NiceDagEdges from "./NiceDagEdges.vue";
+import EditableNode from "./EditableNode";
+import EditableEdge from "./EditableEdge";
+import EditableStartNode from "./EditableStartNode";
+import EditableEndNode from "./EditableEndNode";
+import EditableJoint from "./EditableJoint";
 import "./EditableView.less";
 
 const NODE_WIDTH = 150;
@@ -71,11 +87,11 @@ export default {
   components: {
     NiceDagNodes,
     NiceDagEdges,
-    StartNode,
-    EndNode,
-    SampleNode,
-    Joint,
-    Edge,
+    EditableStartNode,
+    EditableNode,
+    EditableJoint,
+    EditableEdge,
+    EditableEndNode,
   },
   setup() {
     const viewNodes = ref([]);

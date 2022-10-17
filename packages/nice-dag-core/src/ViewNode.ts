@@ -70,7 +70,6 @@ export default class ViewNode implements IViewNode {
                 node.dependencies = [];
             }
             node.dependencies.push(this.id);
-            debugger
             this.model.addEdge(this, node);
         }
     }

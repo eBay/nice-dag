@@ -6,7 +6,7 @@
   }
   &-edge-label {
     height: 100%;
-    width: calc(~'100% - ' @conector-size);
+    width: calc(~"100% - " @conector-size);
     margin: auto;
     display: flex;
     justify-content: center;
@@ -44,6 +44,12 @@
       text-align: center;
       padding-top: 2px;
       z-index: 1;
+
+      .nice-dag-vue-sample-icon {
+        margin-left: 0;
+        margin-top: 4px;
+        font-size: 14px;
+      }
     }
 
     &-remove-button {
@@ -51,7 +57,7 @@
       top: -10px;
       right: -2px;
       background-color: white;
-      border: 1px solid black;
+      // border: 1px solid black;
       height: 14px;
       font-size: 12px;
 
@@ -62,7 +68,7 @@
   }
 
   &-end-node::before {
-    content: '';
+    content: "";
     position: absolute;
     border: 1px solid black;
     border-radius: 50%;
@@ -74,7 +80,7 @@
   }
 
   &-square-connector,
-  &-connector {
+  &-circle-connector {
     &-in,
     &-out {
       width: @conector-size;
