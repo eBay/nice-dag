@@ -5,7 +5,7 @@
         <el-row>
           <el-button @click="prettify">Prettify</el-button>
           <el-button @click="addNode">Add Node</el-button>
-          <el-button @click="addNode">Add Joint Node</el-button>
+          <el-button @click="addJointNode">Add Joint Node</el-button>
         </el-row>
       </div>
       <div className="editable-sample-control-zoom">
@@ -138,6 +138,18 @@ export default {
       );
       nodeCtnRef = nodeCtnRef + 1;
     };
+    const addJointNode = () => {
+      niceDagRef.value.addJointNode(
+        {
+          id: `new-node-${nodeCtnRef}`,
+        },
+        {
+          x: 40,
+          y: 40,
+        }
+      );
+      nodeCtnRef = nodeCtnRef + 1;
+    };
 
     onMounted(() => {
       niceDagRef.value = NiceDag.init(
@@ -172,7 +184,8 @@ export default {
       scale,
       onScaleChange,
       prettify,
-      addNode
+      addNode,
+      addJointNode
     };
   },
 };
