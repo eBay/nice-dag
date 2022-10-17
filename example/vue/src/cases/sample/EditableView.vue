@@ -1,5 +1,18 @@
 <template>
   <div className="editable-sample">
+    <div className="editable-sample-control">
+      <div className="editable-sample-control-action">
+        <el-row>
+          <el-button @click="prettify">Prettify</el-button>
+          <el-button>Add Node</el-button>
+          <el-button>Add Joint Node</el-button>
+        </el-row>
+      </div>
+      <div className="editable-sample-control-zoom">
+        <el-slider v-model="scale" show-input @change="onScaleChange">
+        </el-slider>
+      </div>
+    </div>
     <div className="editable-sample-content">
       <div className="editable-sample-content-nice-dag" ref="niceDagEl" />
       <NiceDagNodes
@@ -99,10 +112,18 @@ export default {
     const niceDagEl = ref(null);
     const minimapEl = ref(null);
     const patchVersion = ref(0);
+    const scale = ref(100);
     const onNiceDagChange = {
       onChange: () => {
         patchVersion.value = patchVersion.value + 1;
       },
+    };
+
+    const onScaleChange = () => {
+      niceDagRef.value.setScale(scale.value / 100);
+    };
+    const prettify = () => {
+      niceDagRef.value.prettify();
     };
     onMounted(() => {
       niceDagRef.value = NiceDag.init(
@@ -133,6 +154,9 @@ export default {
       niceDagEl,
       niceDagRef,
       minimapEl,
+      scale,
+      onScaleChange,
+      prettify,
     };
   },
 };
