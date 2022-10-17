@@ -55,8 +55,11 @@ export default {
         code: "ReadOnlyView.vue",
       },
     };
-    const current = ref("read-only-view");
     const activeTab = ref("code");
+    const hashKey = window.location.hash.replace("#", "");
+    const current = ref(
+      !hashKey || hashKey === "" ? "read-only-view" : hashKey
+    );
     window.onhashchange = () => {
       const key = window.location.hash.replace("#", "");
       current.value = key;
@@ -77,6 +80,11 @@ export default {
 </script>
 
 <style lang="less">
+*,
+:after,
+:before {
+  box-sizing: border-box;
+}
 html {
   height: 100%;
   width: 100%;

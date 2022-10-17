@@ -2,27 +2,34 @@ import ShrinkSvg from '../../assets/svgs/shrink.vue';
 import PlusSvg from '../../assets/svgs/plus.vue';
 import MoveSvg from '../../assets/svgs/move.vue';
 import MyButton from '../../components/MyButton.vue';
+import SvgIcon from "../../components/SvgIcon.vue";
 
 export const StartNode = {
   props: ['node', 'niceDag'],
   emits: ['update:node', 'update:niceDag'],
   render() {
     return <div className="editable-sample-start-node">
-      <div className="editable-sample-start-node-move-hand" onMouseDown={startNodeDragging} />
-      <SquareConnector type="out" node={node} niceDag={niceDag} />
+      <div className="editable-sample-start-node-move-hand"
+        onMouseDown={(e) => {
+          console.log('click down', e)
+          // this.niceDag.startNodeDragging(this.node, e);
+        }}
+      />
+      <SquareConnector type="out" node={this.node} niceDag={this.niceDag} />
     </div>
   }
 }
 
-export const EndNode = <div className="readonly-sample-end-node" />;
+export const EndNode = <div className="editable-sample-end-node" />;
 
 export const SquareConnector = {
   props: ['type', 'node', 'niceDag'],
+  emits: ['update:node', 'update:niceDag', 'update:type'],
   render() {
-    this.niceDag.startEdgeDragging(node, e);
-    const { startEdgeDragging } = useNiceDagNode({ node, niceDag });
     return (
-      <div className={`editable-sample-square-connector-${type}`} onMouseDown={startEdgeDragging} />
+      <div className={`editable-sample-square-connector-${this.type}`} onMouseDown={(e) => {
+        this.niceDag.startEdgeDragging(this.node, e);
+      }} />
     );
   }
 }
@@ -32,20 +39,22 @@ export const Connector = {
   emits: ['update:type', 'update:node', 'update:niceDag'],
   render() {
     return (
-      <div className={`readonly-sample-connector-${this.type}`}>
+      <div className={`editable-sample-connector-${this.type}`} onMouseDown={(e) => {
+        this.niceDag.startEdgeDragging(this.node, e);
+      }}>
       </div>
     );
   }
 };
 
-export const Joint = <div className="readonly-sample-joint-node" />;
+export const Joint = <div className="editable-sample-joint-node" />;
 
 const GroupControl = {
   props: ['node', 'niceDag'],
   emits: ['update:node', 'update:niceDag'],
   components: [ShrinkSvg, MyButton],
   render() {
-    return (<div className="readonly-sample-node-group-content">
+    return (<div className="editable-sample-node-group-content">
       <div>
         {this.node.data?.label || this.node.id}
         <MyButton onClick={() => this.node.shrink()}>
@@ -59,11 +68,16 @@ const GroupControl = {
 const NodeControl = {
   props: ['node', 'niceDag'],
   emits: ['update:node', 'update:niceDag'],
+  components: [SvgIcon, MoveSvg],
   render() {
     return (
-      <div className="readonly-sample-node-content">
-        <span>{this.node.data?.label || this.node.id}</span>
-        {this.niceDag.editing && <MoveSvg />}
+      <div className="editable-sample-node-content">
+        <div className="editable-sample-node-content-bar" onMousedown={(e) => {
+          this.niceDag.startNodeDragging(this.node, e);
+        }}>
+          <span>{this.node.data?.label || this.node.id}</span>
+          {this.niceDag.editing && <SvgIcon><MoveSvg /></SvgIcon>}
+        </div>
         {(this.node.children?.length > 0 || this.node.data?.lazyLoadingChildren) && (
           <MyButton onClick={() => {
             if (this.node.data?.lazyLoadingChildren) {
@@ -89,7 +103,7 @@ const NodeControl = {
 
 export const Edge = {
   render() {
-    return <div className="readonly-sample-edge-label">to</div>;
+    return <div className="editable-sample-edge-label"></div>;
   }
 }
 
@@ -98,7 +112,7 @@ export const SampleNode = {
   emits: ['update:node', 'update:niceDag'],
   render() {
     return (
-      <div className="readonly-sample-node">
+      <div className="editable-sample-node">
         {this.node.children?.length > 0 && !this.node.collapse ? (
           <GroupControl node={this.node} niceDag={this.niceDag} />
         ) : (

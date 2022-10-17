@@ -125,8 +125,6 @@ export default {
 .readonly-sample {
   border: 1px solid #eaeaea;
   padding: 4px 4px;
-  box-sizing: border-box;
-
   &-minimap {
     width: 250px;
     height: 200px;
