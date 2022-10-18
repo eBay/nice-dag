@@ -1,20 +1,28 @@
 {
   "name": "@ebay/nice-dag-core",
-  "version": "0.1.0",
+  "version": "1.0.8",
   "license": "MIT",
-  "main": "./lib/cjs/index.js",
-  "module": "./lib/esm/index.js",
-  "types": "./lib/esm/index.d.ts",
-  "repository": "https://github.corp.ebay.com/nice-dag",
-  "private": false,
-  "publishConfig": {
-    "registry": "https://artifactory.corp.ebay.com/artifactory/api/npm/npm-nice-dag-kernel/"
+  "type": "module",
+  "main": "./lib/index.cjs",
+  "module": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./lib/index.js",
+      "require": "./lib/index.cjs"
+    }
   },
+  "repository": "https://github.com/eBay/nice-dag",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "private": false,
   "scripts": {
-    "build": "rm -rf lib && pnpm build:esm && pnpm build:cjs",
-    "build:esm": "tsc -p ./tsconfig.build.json",
-    "build:cjs": "tsc -p ./tsconfig.build.json --module commonjs --outDir lib/cjs",
-    "dev": "tsc -w",
+    "build": "rm -rf lib && pnpm build:esm && pnpm build:umd",
+    "build:esm": "vite build",
+    "build:umd": "vite build -c vite.config.umd.ts",
+    "dev": "vite build -w",
     "codecov": "codecov",
     "gendoc": "typedoc",
     "test": "jest",
@@ -56,14 +64,31 @@
     "ts-jest": "^28.0.7",
     "ts-node": "^10.9.1",
     "typedoc": "^0.21.7",
-    "typescript": "^4.3.5"
-  },
-  "resolutions": {
-    "glob-parent": "6.0.1"
+    "typescript": "^4.3.5",
+    "vite": "^3.1.8",
+    "vite-plugin-dts": "^1.6.6"
   },
   "dependencies": {
     "@types/dagre": "^0.7.46",
     "dagre": "^0.8.5",
     "html2canvas": "^1.4.1"
-  }
+  },
+  "tags": [
+    "dag",
+    "flow",
+    "editor",
+    "dom",
+    "dagre",
+    "dnd"
+  ],
+  "keywords": [
+    "react",
+    "react-hook",
+    "dag",
+    "flow",
+    "editor",
+    "dom",
+    "dagre",
+    "dnd"
+  ]
 }

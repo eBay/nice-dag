@@ -38,11 +38,8 @@ export default class Edge implements IEdge, ViewNodeChangeListener {
             || event.type === ViewNodeChangeEventType.SHRINK_NODE) {
             this.doLayout();
         } else if (event.type === ViewNodeChangeEventType.REMOVED) {
-            if (event.node === this.source) {
-                this.target.removeDependency(this.source);
-            }
-            this.ref.remove();
-            this.pathRef.remove();
+            this.remove();
+            this.destory();
         }
     }
 
