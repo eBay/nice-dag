@@ -77,6 +77,10 @@ class DagView implements ViewModelChangeListener {
         }
     }
 
+    getContentElement = (): HTMLElement => {
+        return this.contentLayer;
+    }
+
     getEdgeLabel = (sourceId: string, targetId: string): HTMLElement => {
         throw new Error(`Can't support the method with ${sourceId}, ${targetId}`);
     }
@@ -142,6 +146,7 @@ class DagView implements ViewModelChangeListener {
             }
         ).svgElement;
         this.contentLayer = utils.createElement(parentElement).withStyle(this.getContentLayerStyle()).withClassNames(DAGGER_CONTENT_LAYER_CLS).htmlElement;
+        this.appendViewElement(this.model.parentNode, this.contentLayer);
         const subViewContainers: Record<string, HTMLElement> = {};
         this.model.nodes.forEach(node => {
             this.appendNode(node);
@@ -159,6 +164,15 @@ class DagView implements ViewModelChangeListener {
             this.subViews.forEach(subView => {
                 subView.render(subViewContainers[subView.model.id]);
             });
+        }
+    }
+
+    appendViewElement = (node: Node, contentLayer: HTMLElement) => {
+        if (this.viewConfig.getViewElement) {
+            const viewElement = this.viewConfig.getViewElement(node);
+            if (viewElement) {
+                contentLayer.appendChild(viewElement);
+            }
         }
     }
 
@@ -275,6 +289,10 @@ export default class ReadOnlyNiceDag implements IReadOnlyNiceDag, ViewModelChang
         }
     }
 
+    getRootContentElement = (): HTMLElement => {
+        return this.rootView.getContentElement();
+    }
+
     setDirection(direction: NiceDagDirection): void {
         this._config.graphLabel.rankdir = direction;
         if (this.useDefaultMapEdgeToPoints) {
@@ -348,13 +366,17 @@ export default class ReadOnlyNiceDag implements IReadOnlyNiceDag, ViewModelChang
             this.minimap?.clear();
         } else {
             this.minimap?.addMinimapListener(this);
-        }        
+        }
         const hirerarchyNodes = this.config.modelType === NiceDagModelType.FLATTEN ? utils.flattenToHirerarchy(nodes) : nodes;
         /**
          * deep clone,due to the joint node will change dependencies
          */
         const _nodes = JSON.parse(JSON.stringify(hirerarchyNodes));
-        this.rootModel = new ViewModel({ dagId: this.uid, id: 'root', nodes: _nodes, vmConfig: this.config, isRootModel: true });
+        this.rootModel = new ViewModel({
+            dagId: this.uid, parentNode: {
+                id: 'root'
+            }, nodes: _nodes, vmConfig: this.config, isRootModel: true
+        });
         this.rootView = new DagView({
             model: this.rootModel,
             viewConfig: this.config
