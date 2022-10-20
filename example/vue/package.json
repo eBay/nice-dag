@@ -12,7 +12,8 @@
     "element-plus": "^2.2.18",
     "raw-loader": "^4.0.2",
     "vue": "^3.2.13",
-    "vue-prism-editor": "2.0.0-alpha.2"
+    "vue-prism-editor": "2.0.0-alpha.2",
+    "@ebay/nice-dag-vue": "workspace:^"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",

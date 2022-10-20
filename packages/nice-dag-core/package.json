@@ -10,6 +10,10 @@
     ".": {
       "import": "./lib/index.js",
       "require": "./lib/index.cjs"
+    },
+    "./lib/types": {
+      "import": "./lib/types.d.ts",
+      "require": "./lib/types.d.ts"
     }
   },
   "repository": "https://github.com/eBay/nice-dag",

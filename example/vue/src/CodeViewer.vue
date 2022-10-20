@@ -1,41 +1,42 @@
 <template>
-  <prism-editor
+  <!-- <prism-editor
     class="vue-code-editor"
     v-model="content"
     :highlight="highlighter"
     line-numbers
-  ></prism-editor>
+  ></prism-editor> -->
+  <div />
 </template>
 
 <script>
-import readOnlyViewCode from "!!raw-loader!./cases/sample/ReadOnlyView.vue";
-import { PrismEditor } from "vue-prism-editor";
-import "vue-prism-editor/dist/prismeditor.min.css"; 
-import { highlight, languages } from "prismjs/components/prism-core";
-import "prismjs/components/prism-clike";
-import "prismjs/components/prism-javascript";
+// import readOnlyViewCode from "!!raw-loader!./cases/sample/ReadOnlyView.vue";
+// import { PrismEditor } from "vue-prism-editor";
+// import "vue-prism-editor/dist/prismeditor.min.css";
+// import { highlight, languages } from "prismjs/components/prism-core";
+// import "prismjs/components/prism-clike";
+// import "prismjs/components/prism-javascript";
 
-export default {
-  name: "App",
-  props: ["filename"],
-  components: {
-    PrismEditor,
-  },
-  setup(props) {
-    const codeMap = {
-      "ReadOnlyView.vue": readOnlyViewCode,
-    };
-    const content = codeMap[props.filename];
-    return {
-      content,
-    };
-  },
-  methods: {
-    highlighter(code) {
-      return highlight(code, languages.js); 
-    },
-  },
-};
+// export default {
+//   name: "App",
+//   props: ["filename"],
+//   components: {
+//     PrismEditor,
+//   },
+//   setup(props) {
+//     const codeMap = {
+//       "ReadOnlyView.vue": readOnlyViewCode,
+//     };
+//     const content = codeMap[props.filename];
+//     return {
+//       content,
+//     };
+//   },
+//   methods: {
+//     highlighter(code) {
+//       return highlight(code, languages.js);
+//     },
+//   },
+// };
 </script>
 
 <style lang="less">

@@ -2,18 +2,13 @@
   <div className="readonly-sample">
     <div className="readonly-sample-content">
       <div className="readonly-sample-content-nice-dag" ref="niceDagEl" />
-      <NiceDagNodes
-        v-slot="slotProps"
-        :niceDagRef="niceDagRef"
-        v-if="niceDagRef"
-        :patchVersion="patchVersion"
-      >
+      <NiceDagNodes v-slot="slotProps" :id="idRef">
         <StartNode v-if="slotProps.node.id === 'start'" />
         <EndNode v-if="slotProps.node.id === 'end'" />
         <Joint v-if="slotProps.node.joint" />
         <SampleNode
           :node="slotProps.node"
-          :niceDag="niceDagRef"
+          :niceDag="use()"
           v-if="
             slotProps.node.id !== 'end' &&
             slotProps.node.id !== 'start' &&
@@ -21,11 +16,7 @@
           "
         />
       </NiceDagNodes>
-      <NiceDagEdges
-        :niceDagRef="niceDagRef"
-        v-if="niceDagRef"
-        :patchVersion="patchVersion"
-      >
+      <NiceDagEdges :id="idRef">
         <Edge />
       </NiceDagEdges>
     </div>
@@ -39,11 +30,9 @@
 
 <script>
 import { HierarchicalModel } from "../data/ReadOnlyViewData";
-import NiceDag from "@ebay/nice-dag-core";
 import { ref, onMounted } from "vue";
 import { StartNode, EndNode, SampleNode, Joint, Edge } from "./ReadOnlyNodes";
-import NiceDagNodes from "./NiceDagNodes.vue";
-import NiceDagEdges from "./NiceDagEdges.vue";
+import { NiceDagNodes, NiceDagEdges, useNiceDag } from "@ebay/nice-dag-vue";
 
 const NODE_WIDTH = 150;
 const NODE_HEIGHT = 60;
@@ -78,41 +67,32 @@ export default {
   },
   setup() {
     const viewNodes = ref([]);
-    const niceDagRef = ref(null);
-    const niceDagEl = ref(null);
-    const minimapEl = ref(null);
-    const patchVersion = ref(0);
-    const onNiceDagChange = {
-      onChange: () => {
-        patchVersion.value = patchVersion.value + 1;
-      },
-    };
-    onMounted(() => {
-      niceDagRef.value = NiceDag.init(
-        {
-          container: niceDagEl.value,
-          getNodeSize,
-          minimapContainer: minimapEl.value,
-          minimapConfig: {
-            viewBoxClassName: "readonly-sample-minimap-viewbox",
-          },
+    const { niceDagEl, minimapEl, use, idRef } = useNiceDag(
+      {
+        initNodes: HierarchicalModel,
+        getNodeSize,
+        minimapConfig: {
+          viewBoxClassName: "readonly-sample-minimap-viewbox",
         },
-        false
-      );
-      niceDagRef.value.withNodes(HierarchicalModel).render();
-      niceDagRef.value.addNiceDagChangeListener(onNiceDagChange);
-      const bounds = niceDagEl.value.getBoundingClientRect();
-      niceDagRef.value.center({
-        width: bounds.width,
-        height: 400,
-      });
+      },
+      false
+    );
+    onMounted(() => {
+      const niceDag = use();
+      if (niceDag) {
+        const bounds = niceDagEl.value.getBoundingClientRect();
+        niceDag.center({
+          width: bounds.width,
+          height: 400,
+        });
+      }
     });
     return {
-      patchVersion,
       viewNodes,
       niceDagEl,
-      niceDagRef,
       minimapEl,
+      idRef,
+      use,
     };
   },
 };

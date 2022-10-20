@@ -246,7 +246,7 @@ export default class ReadOnlyNiceDag implements IReadOnlyNiceDag, ViewModelChang
     private destoried: boolean;
 
     constructor(args: NiceDagInitArgs) {
-        this.uid = utils.uuid();
+        this.uid = args.id || utils.uuid();
         const { container, minimapContainer, minimapConfig, ...config } = withDefaultValues(args);
         this._config = config;
         this._config.mapEdgeToPoints = args.mapEdgeToPoints;
@@ -348,7 +348,7 @@ export default class ReadOnlyNiceDag implements IReadOnlyNiceDag, ViewModelChang
             this.minimap?.clear();
         } else {
             this.minimap?.addMinimapListener(this);
-        }        
+        }
         const hirerarchyNodes = this.config.modelType === NiceDagModelType.FLATTEN ? utils.flattenToHirerarchy(nodes) : nodes;
         /**
          * deep clone,due to the joint node will change dependencies

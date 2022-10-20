@@ -66,8 +66,7 @@
 import { HierarchicalModel } from "../data/ReadOnlyViewData";
 import NiceDag from "@ebay/nice-dag-core";
 import { ref, onMounted } from "vue";
-import NiceDagNodes from "./NiceDagNodes.vue";
-import NiceDagEdges from "./NiceDagEdges.vue";
+import { NiceDagNodes, NiceDagEdges } from "@ebay/nice-dag-vue";
 import EditableNode from "./EditableNode";
 import EditableEdge from "./EditableEdge";
 import EditableStartNode from "./EditableStartNode";
@@ -185,7 +184,7 @@ export default {
       onScaleChange,
       prettify,
       addNode,
-      addJointNode
+      addJointNode,
     };
   },
 };
