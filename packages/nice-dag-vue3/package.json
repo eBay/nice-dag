@@ -1,5 +1,5 @@
 {
-  "name": "@ebay/nice-dag-vue",
+  "name": "@ebay/nice-dag-vue3",
   "version": "1.0.0",
   "type": "module",
   "main": "./lib/index.cjs",

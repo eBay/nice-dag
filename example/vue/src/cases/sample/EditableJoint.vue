@@ -17,8 +17,8 @@
     <EditableConnector type="in" shape="square" />
     <EditableConnector
       type="out"
-      node="{node}"
-      niceDag="{niceDag}"
+      :node="node"
+      :niceDag="niceDag"
       shape="square"
     />
   </div>
@@ -32,7 +32,7 @@ import EditableConnector from "./EditableConnector";
 
 export default {
   name: "EditableJoint",
-  props: ["node", "niceDag", "type", "shape"],
+  props: ["node", "niceDagReactive"],
   components: {
     SvgIcon,
     MoveSvg,
@@ -41,14 +41,15 @@ export default {
   },
   setup(props) {
     return {
-      startEdgeDragging(e) {
+      startNodeDragging(e) {
         if (props.node) {
-          props.niceDag.startEdgeDragging(props.node, e);
+          props.niceDagReactive.use().startNodeDragging(props.node, e);
         }
       },
       removeNode() {
         props.node.remove();
       },
+      niceDag: props.niceDagReactive.use(),
     };
   },
 };

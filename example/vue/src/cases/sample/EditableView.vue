@@ -15,30 +15,29 @@
     </div>
     <div className="editable-sample-content">
       <div className="editable-sample-content-nice-dag" ref="niceDagEl" />
-      <NiceDagNodes
-        v-slot="slotProps"
-        :niceDagRef="niceDagRef"
-        v-if="niceDagRef"
-        :patchVersion="patchVersion"
-      >
+      <NiceDagNodes v-slot="slotProps" :niceDagReactive="niceDagReactive">
         <EditableStartNode
           v-if="slotProps.node.id === 'start'"
-          :niceDag="niceDagRef"
+          :niceDagReactive="niceDagReactive"
+          :observor="niceDagReactive.observor"
           :node="slotProps.node"
         />
         <EditableEndNode
           v-if="slotProps.node.id === 'end'"
-          :niceDag="niceDagRef"
+          :niceDagReactive="niceDagReactive"
+          :observor="niceDagReactive.observor"
           :node="slotProps.node"
         />
         <EditableJoint
           v-if="slotProps.node.joint"
-          :niceDag="niceDagRef"
+          :niceDagReactive="niceDagReactive"
+          :observor="niceDagReactive.observor"
           :node="slotProps.node"
         />
         <EditableNode
           :node="slotProps.node"
-          :niceDag="niceDagRef"
+          :niceDagReactive="niceDagReactive"
+          :observor="niceDagReactive.observor"
           v-if="
             slotProps.node.id !== 'end' &&
             slotProps.node.id !== 'start' &&
@@ -46,11 +45,7 @@
           "
         />
       </NiceDagNodes>
-      <NiceDagEdges
-        :niceDagRef="niceDagRef"
-        v-if="niceDagRef"
-        :patchVersion="patchVersion"
-      >
+      <NiceDagEdges :niceDagReactive="niceDagReactive">
         <EditableEdge />
       </NiceDagEdges>
     </div>
@@ -64,9 +59,8 @@
 
 <script>
 import { HierarchicalModel } from "../data/ReadOnlyViewData";
-import NiceDag from "@ebay/nice-dag-core";
 import { ref, onMounted } from "vue";
-import { NiceDagNodes, NiceDagEdges } from "@ebay/nice-dag-vue";
+import { NiceDagNodes, NiceDagEdges, useNiceDag } from "@ebay/nice-dag-vue3";
 import EditableNode from "./EditableNode";
 import EditableEdge from "./EditableEdge";
 import EditableStartNode from "./EditableStartNode";
@@ -107,26 +101,21 @@ export default {
   },
   setup() {
     let nodeCtnRef = 0;
-    const viewNodes = ref([]);
-    const niceDagRef = ref(null);
-    const niceDagEl = ref(null);
-    const minimapEl = ref(null);
-    const patchVersion = ref(0);
     const scale = ref(100);
-    const onNiceDagChange = {
-      onChange: () => {
-        patchVersion.value = patchVersion.value + 1;
-      },
-    };
-
+    const { niceDagEl, minimapEl, niceDagReactive } = useNiceDag({
+      initNodes: HierarchicalModel,
+      getNodeSize,
+      jointEdgeConnectorType: "CENTER_OF_BORDER",
+      editable: true,
+    });
     const onScaleChange = () => {
-      niceDagRef.value.setScale(scale.value / 100);
+      niceDagReactive.use().setScale(scale.value / 100);
     };
     const prettify = () => {
-      niceDagRef.value.prettify();
+      niceDagReactive.use().prettify();
     };
     const addNode = () => {
-      niceDagRef.value.addNode(
+      niceDagReactive.use().addNode(
         {
           id: `new-node-${nodeCtnRef}`,
         },
@@ -138,7 +127,7 @@ export default {
       nodeCtnRef = nodeCtnRef + 1;
     };
     const addJointNode = () => {
-      niceDagRef.value.addJointNode(
+      niceDagReactive.use().addJointNode(
         {
           id: `new-node-${nodeCtnRef}`,
         },
@@ -149,36 +138,23 @@ export default {
       );
       nodeCtnRef = nodeCtnRef + 1;
     };
-
     onMounted(() => {
-      niceDagRef.value = NiceDag.init(
-        {
-          container: niceDagEl.value,
-          getNodeSize,
-          minimapContainer: minimapEl.value,
-          jointEdgeConnectorType: "CENTER_OF_BORDER",
-          minimapConfig: {
-            viewBoxClassName: "readonly-sample-minimap-viewbox",
-          },
-        },
-        true
-      );
-      niceDagRef.value.withNodes(HierarchicalModel).render();
-      niceDagRef.value.addNiceDagChangeListener(onNiceDagChange);
-      const bounds = niceDagEl.value.getBoundingClientRect();
-      niceDagRef.value
-        .center({
-          width: bounds.width,
-          height: 400,
-        })
-        .startEditing();
+      const niceDag = niceDagReactive.use();
+      if (niceDag) {
+        const bounds = niceDagEl.value.getBoundingClientRect();
+        niceDag
+          .center({
+            width: bounds.width,
+            height: 400,
+          })
+          .startEditing();
+      }
     });
+
     return {
       nodeCtnRef,
-      patchVersion,
-      viewNodes,
       niceDagEl,
-      niceDagRef,
+      niceDagReactive,
       minimapEl,
       scale,
       onScaleChange,

@@ -2,8 +2,9 @@ import NiceDag from "@ebay/nice-dag-core";
 import NiceDagEdges from './components/NiceDagEdges.vue';
 import NiceDagNodes from './components/NiceDagNodes.vue';
 import NiceDagTypes from '@ebay/nice-dag-core/lib/types';
-import MutationObversor from './mutationObversor';
-import { ref, onMounted } from "vue";
+import NiceDagReactive from './niceDagReactive';
+import { ref, onMounted, onUnmounted } from "vue";
+import type { NiceDagReactiveType } from './niceDagReactive';
 import type { Ref } from 'vue';
 import type { MinimapConfig } from '@ebay/nice-dag-core/lib/types';
 
@@ -18,8 +19,7 @@ export type UseNiceDagArgs = Omit<NiceDagTypes.NiceDagInitArgs, 'container'> & {
 export type UseNiceDagType = {
     niceDagEl: Ref<HTMLElement | undefined>;
     minimapEl: Ref<HTMLElement | undefined>;
-    idRef: Ref<String>;
-    use: () => NiceDagTypes.NiceDag | undefined;
+    niceDagReactive: NiceDagReactiveType;
     reset: () => void;
 };
 
@@ -30,22 +30,22 @@ function uuid() {
 }
 
 function useNiceDag(args: UseNiceDagArgs): UseNiceDagType {
-    const { onMount, scrollPosition, initNodes, ...niceDagConfig } = args;
+    const { onMount, scrollPosition, initNodes, getNodeSize, ...niceDagConfig } = args;
     const niceDagEl = ref<HTMLElement | undefined>();
     const minimapEl = ref<HTMLElement | undefined>();
-    const idRef = ref<string>(uuid());
-    MutationObversor.create(idRef.value);
+    const niceDagReactive = NiceDagReactive.create(uuid());
 
     const onNiceDagChange = {
         onChange: () => {
-            MutationObversor.inc(idRef.value);
+            NiceDagReactive.inc(niceDagReactive.id);
         },
     };
     onMounted(() => {
         const niceDag = NiceDag.init(
             {
-                id: idRef.value,
+                id: niceDagReactive.id,
                 container: niceDagEl.value as HTMLElement,
+                getNodeSize,
                 ...niceDagConfig,
                 minimapContainer: minimapEl.value,
             },
@@ -54,24 +54,20 @@ function useNiceDag(args: UseNiceDagArgs): UseNiceDagType {
         niceDag.withNodes(initNodes).render();
         onMount && onMount();
         niceDag.addNiceDagChangeListener(onNiceDagChange);
-        MutationObversor.inc(idRef.value);
-        console.log('inc')
+        NiceDagReactive.inc(niceDagReactive.id);
+    });
+
+    onUnmounted(() => {
+        NiceDag.use(niceDagReactive.id)?.destory();
+        NiceDagReactive.remove(niceDagReactive.id);
     });
 
     return {
-        idRef,
+        niceDagReactive,
         niceDagEl,
         minimapEl,
-        // mutationObversor: MutationObserver.get(idRef.current)
-        use: () => {
-            const id = idRef.value;
-            return id ? NiceDag.use(id) : undefined;
-        },
         reset: (): void => {
-            const id = idRef.value;
-            if (id) {
-                NiceDag.use(id)?.destory();
-            }
+            NiceDag.use(niceDagReactive.id)?.destory();
         }
     }
 }

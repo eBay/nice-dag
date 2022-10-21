@@ -2,7 +2,7 @@
   <div className="app">
     <div className="sider">
       <h1>
-        <span className="header-name">@ebay/nice-dag-vue</span>
+        <span className="header-name">@ebay/nice-dag-vue3</span>
         <span className="example-title">Vue Examples</span>
       </h1>
       <div className="scroll-container" id="scroll-container">
@@ -21,11 +21,21 @@
       <EditableView v-if="current === 'editable-view'" />
       <el-tabs v-model="activeTab" @tab-click="handleClick">
         <el-tab-pane label="Code" name="code">
-          <div className="code-viewer-title">{{ examples[current].code }}</div>
-          <CodeViewer :filename="`${examples[current].code}`"
-        /></el-tab-pane>
-        <el-tab-pane label="Less" name="less">Less</el-tab-pane>
-        <el-tab-pane label="Data" name="data">Data</el-tab-pane>
+          <div v-for="code in examples[current].codes" :key="code">
+            <div className="code-viewer-title">
+              {{ code }}
+            </div>
+            <CodeViewer :filename="code" />
+          </div>
+        </el-tab-pane>
+        <el-tab-pane label="Less" name="less">
+          <div className="code-viewer-title">Less</div>
+          <CodeViewer :filename="examples[current].less" />
+        </el-tab-pane>
+        <el-tab-pane label="Data" name="data">
+          <div className="code-viewer-title">Data</div>
+          <CodeViewer :filename="examples[current].data" />
+        </el-tab-pane>
       </el-tabs>
     </div>
   </div>
@@ -48,11 +58,25 @@ export default {
     const examples = {
       "read-only-view": {
         name: "Read Only View",
-        code: "ReadOnlyView.vue",
+        codes: ["ReadOnlyView.vue", "ReadOnlyNodes.js"],
+        less: "ReadOnlyView.less",
+        data: "ReadOnlyViewData.js",
       },
       "editable-view": {
         name: "Editable View",
-        code: "ReadOnlyView.vue",
+        codes: [
+          "EditableView.vue",
+          "EditableNode.vue",
+          "EditableJoint.vue",
+          "EditableStartNode.vue",
+          "EditableEndNode.vue",
+          "EditableConnector.vue",
+          "EditableEdge.vue",
+          "EditableNodeControl.vue",
+          "EditableGroupControl.vue",
+        ],
+        less: "EditableView.less",
+        data: "ReadOnlyViewData.js",
       },
     };
     const activeTab = ref("code");

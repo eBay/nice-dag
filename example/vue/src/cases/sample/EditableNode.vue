@@ -3,15 +3,15 @@
     <EditableGroupControl
       v-if="showGroupCtrl()"
       :node="node"
-      :niceDag="niceDag"
+      :niceDag="niceDagReactive.use()"
     />
     <EditableNodeControl
       v-if="!showGroupCtrl()"
       :node="node"
-      :niceDag="niceDag"
+      :niceDag="niceDagReactive.use()"
     />
     <EditableConnector type="in" />
-    <EditableConnector type="out" :node="node" :niceDag="niceDag" />
+    <EditableConnector type="out" :node="node" :niceDag="niceDagReactive.use()" />
   </div>
 </template>
 
@@ -22,7 +22,7 @@ import EditableNodeControl from "./EditableNodeControl";
 
 export default {
   name: "EditableNode",
-  props: ["node", "niceDag"],
+  props: ["node", "niceDagReactive"],
   components: {
     EditableConnector,
     EditableGroupControl,
