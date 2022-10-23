@@ -41,7 +41,7 @@ export default class ViewModel implements IViewModel, ViewNodeChangeListener, Vi
 
     private vNodes: IViewNode[];
     private pChildVMs: ViewModel[];
-    private pId: string;
+    private _parentNode: Node;
     private vmConfig: ViewModelConfig;
     private pEdges: IEdge[];
     private pSize: Size;
@@ -49,10 +49,10 @@ export default class ViewModel implements IViewModel, ViewNodeChangeListener, Vi
     private isRootModel: boolean;
     private _dagId: string;
 
-    constructor({ dagId, id, nodes, vmConfig, isRootModel }: { dagId: string, id: string, nodes: Node[], vmConfig: ViewModelConfig, isRootModel?: boolean }) {
+    constructor({ dagId, parentNode, nodes, vmConfig, isRootModel }: { dagId: string, parentNode: Node, nodes: Node[], vmConfig: ViewModelConfig, isRootModel?: boolean }) {
         const _nodes = nodes;
         this._dagId = dagId;
-        this.pId = id;
+        this._parentNode = parentNode;
         this.vmConfig = vmConfig;
         this.isRootModel = isRootModel;
         this.pChildVMs = _nodes.filter(node => !node.collapse && !utils.isEmpty(node.children)).map(
@@ -278,7 +278,7 @@ export default class ViewModel implements IViewModel, ViewNodeChangeListener, Vi
     private createChildVm(node: Node, children: Node[]): ViewModel {
         const childVm = new ViewModel({
             dagId: this._dagId,
-            id: node.id, nodes: children, vmConfig: this.vmConfig
+            parentNode: node, nodes: children, vmConfig: this.vmConfig
         });
         childVm.addModelChangeListener(this);
         return childVm;
@@ -504,8 +504,12 @@ export default class ViewModel implements IViewModel, ViewNodeChangeListener, Vi
         });
     }
 
+    get parentNode(): Node {
+        return this._parentNode;
+    }
+
     get id(): string {
-        return this.pId;
+        return this._parentNode?.id;
     }
 
     size = (withPadding: boolean = true): Size => {

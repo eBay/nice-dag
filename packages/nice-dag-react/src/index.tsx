@@ -6,6 +6,7 @@ import NiceDagTypes, { IEdge, MinimapConfig } from '@ebay/nice-dag-core/lib/type
 export type UseNiceDagArgs = Omit<NiceDagTypes.NiceDagInitArgs, 'container'> & {
     renderNode: (props: NiceDagNodeProps) => React.Component<any, any, any>;
     renderEdge?: (props: NiceDagEdgeProps) => React.Component<any, any, any>;
+    renderRootView?: (niceDag: NiceDagTypes.NiceDag) => React.Component<any, any, any>;
     scrollPosition?: NiceDagTypes.Point;
     initNodes?: NiceDagTypes.Node[];
     onMount?: () => void;
@@ -38,6 +39,11 @@ export interface NiceDagEdgeProps {
     patchVersion: number;
 }
 
+export interface NiceDagRootViewProps {
+    niceDag: NiceDagTypes.NiceDag;
+    render: (niceDag: NiceDagTypes.NiceDag) => React.Component<any, any, any>;
+}
+
 export class NiceDagNode extends React.Component<NiceDagNodeProps, any> {
 
     render() {
@@ -61,6 +67,20 @@ export class NiceDagEdge extends React.Component<NiceDagEdgeProps, any> {
             return ReactDOM.createPortal(
                 <>{this.props.render(this.props)}</>,
                 this.props.edge.ref,
+            );
+        }
+        return null;
+    }
+};
+
+class NiceDagRootView extends React.Component<NiceDagRootViewProps, any> {
+
+    render() {
+        if (this.props.niceDag) {
+            const elm = this.props.niceDag.getRootContentElement();
+            return ReactDOM.createPortal(
+                <>{this.props.render(this.props.niceDag)}</>,
+                elm,
             );
         }
         return null;
@@ -126,7 +146,7 @@ function validateProps(args: UseNiceDagArgs): void {
 
 export function useNiceDag(args: UseNiceDagArgs): UseNiceDagType {
     validateProps(args);
-    const { onMount, renderNode, renderEdge, scrollPosition, initNodes, minimapConfig, ...niceDagConfig } = args;
+    const { onMount, renderNode, renderRootView, renderEdge, scrollPosition, initNodes, minimapConfig, ...niceDagConfig } = args;
     const niceDagEl = useRef(null);
     const minimapEl = useRef(null);
     const niceDagRef = useRef<NiceDagTypes.NiceDag>(null);
@@ -196,6 +216,9 @@ export function useNiceDag(args: UseNiceDagArgs): UseNiceDagType {
                     niceDag={niceDagRef.current}
                     patchVersion={patchVersion}
                 />) : null;
+                if (renderRootView) {
+                    elements = [...elements, <NiceDagRootView niceDag={(niceDagRef.current)} render={renderRootView} />];
+                }
                 if (renderEdge) {
                     const allEdges: NiceDagTypes.IEdge[] = niceDagRef.current.getAllEdges();
                     const edgeElements = allEdges?.length > 0 ? allEdges.map(edge =>

@@ -121,6 +121,7 @@ export interface EdgePoints {
 export type MapNodeToElement = (node: Node) => HTMLElement;
 export type MapEdgeToElement = (edge: IEdge) => HTMLElement;
 export type MapEdgeToPoints = (edge: IEdge) => EdgePoints;
+export type GetViewElement = (node?: Node) => HTMLElement;
 export type GetNodeSize = (node: Node) => Size;
 export type GetEdgeAttributes = (edge: IEdge) => EdgeAttributes;
 export type GetGateElement = (node: Node) => HTMLElement;
@@ -142,6 +143,7 @@ export interface NiceDagConfig {
     mapNodeToElement?: MapNodeToElement;
     mapEdgeToElement?: MapEdgeToElement;
     mapEdgeToPoints?: MapEdgeToPoints;
+    getViewElement?: GetViewElement;
     getNodeSize: GetNodeSize;
     getEdgeAttributes?: GetEdgeAttributes;
     getGateElement?: GetGateElement;
@@ -161,7 +163,7 @@ export interface NiceDagConfig {
 export type ViewModelConfig = Pick<NiceDagConfig, 'subViewPadding' | 'mode' | 'modelType' | 'edgeConnectorType' | 'jointEdgeConnectorType'>;
 
 export type DagViewConfig = ViewModelConfig & Pick<NiceDagConfig,
-    'mapEdgeToPoints' | 'mapNodeToElement' | 'mapEdgeToElement' | 'subViewPadding' | 'getGateElement' | 'getEdgeAttributes'>;
+    'mapEdgeToPoints' | 'mapNodeToElement' | 'mapEdgeToElement' | 'getViewElement' | 'subViewPadding' | 'getGateElement' | 'getEdgeAttributes'>;
 
 export interface NiceDagInitArgs extends NiceDagConfig {
     container: HTMLElement;
@@ -223,6 +225,7 @@ export interface NiceDag {
     getAllNodes: () => IViewNode[];
     getAllEdges: () => IEdge[];
     getElementByNodeId: (id: string) => HTMLElement;
+    getRootContentElement: () => HTMLElement;
     getEdgeLabel: (sourceId: string, targetId: string) => HTMLElement;
     withNodes: (nodes: Node[]) => NiceDag;
     findNodeById: (id: String) => IViewNode;

@@ -116,12 +116,17 @@ const renderEdge = ({ edge, niceDag }) => {
   return <div className="readonly-sample-edge-label">to</div>;
 };
 
+const renderRootView = ()=>{
+  return <div className="readonly-sample-root-view">This diagram shows a read-only view sample.</div>
+}
+
 export default function ReadOnlyView() {
   const { niceDag, niceDagEl, minimapEl, render } = useNiceDag({
     initNodes: HierarchicalModel,
     getNodeSize,
     renderNode,
     renderEdge,
+    renderRootView,
     minimapConfig: {
       viewBoxClassName: 'readonly-sample-minimap-viewbox',
     }
