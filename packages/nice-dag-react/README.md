@@ -1,7 +1,7 @@
 # nice-dag-react
 [![NPM](https://img.shields.io/npm/v/@ebay/nice-dag-react.svg)](https://www.npmjs.com/package/@ebay/nice-dag-react)
 [![Downloads](https://img.shields.io/npm/dm/@ebay/nice-dag-react.svg)](https://www.npmjs.com/package/@ebay/nice-dag-react)
-[![Demo](https://img.shields.io/badge/demo-link-orange.svg)](https://opensource.ebay.com/nice-dag/examples/index.html)
+[![Demo](https://img.shields.io/badge/demo-link-orange.svg)](https://opensource.ebay.com/nice-dag/examples/react/index.html)
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/eBay/nice-dag/blob/main/LICENSE.md)
 
 ## What is nice-dag-react?
