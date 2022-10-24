@@ -73,7 +73,7 @@ In this example, the task is a node which contains a sub DAG view. The differenc
 **Notes:**
 Whether to use hierarchical structure or flatten structure, the node `id` MUST be unique. This is due to the `renderNode` function is unaware of the node layers. It is called by a [React.createPortal](https://reactjs.org/docs/portals.html) component which is associated to a DOM node by the unique id. 
 
-If you use the flatten structure, you don't need any change of [useNiceDag](../api-ref/useNiceDag.md) parameters because `modelType` is `FLATTEN` in default. 
+If you use the flatten structure, you don't need any change of [useNiceDag](../api-ref/useNiceDag.md) parameters but set `modelType` to `FLATTEN`. 
 
 ```jsx
 export function MyFirstDag() {
@@ -114,7 +114,7 @@ function GroupControl({ node }) {
     <div className="my-first-dag-node-group-content">
       <div>
         {node.id}
-        <button onClick={onClick}/>
+        <button onClick={onClick}>-</button>
       </div>
     </div>
   );
@@ -128,7 +128,7 @@ function NodeControl({ node }) {
     <div className="my-first-dag-node-group-content">
       <div>
         {node.id}
-        {node.children?.length > 0 && <button onClick={onClick}/>}
+        {node.children?.length > 0 && <button onClick={onClick}>+</button>}
       </div>
     </div>
   );

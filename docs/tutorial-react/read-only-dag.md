@@ -94,7 +94,7 @@ Essentically, the dom operations is handled by **nice-dag-core**, we give a DOM 
 <div className="my-first-dag" ref={niceDagEl} />
 ```
 
-## Step 2: Render DAG node
+## Step 2: Render DAG nodes
 
 **Nice-Dag** doesn't give any default render for node. To create a renderer for a node, you need to pass [useNiceDag](../api-ref/useNiceDag.md) an function argument.
 
@@ -217,7 +217,7 @@ export function MyFirstDag() {
       const bounds = niceDagEl.current.getBoundingClientRect();
       niceDag.center({
         width: bounds.width,
-        height: 600,
+        height: 400,
       });
     };
   }, [niceDag, niceDagEl]);

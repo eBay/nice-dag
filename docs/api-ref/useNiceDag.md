@@ -2,7 +2,7 @@
 sidebar_position: 8
 ---
 
-# useNiceDag
+# useNiceDag(React)
 
 In terms of React applications, you can simply use this customized react hook which is given by `nice-dag-react` module. Essentially, it's a wrapper of the API of `nice-dag-core`.
 

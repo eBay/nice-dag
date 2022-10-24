@@ -2,7 +2,7 @@
 sidebar_position: 9
 ---
 
-# useNiceDagNode
+# useNiceDagNode(React)
 
 The method is used to get utilities methods for node deletion and listeners of edge dragging and node dragging.
 

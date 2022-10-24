@@ -2,7 +2,7 @@
 sidebar_position: 10
 ---
 
-# useNiceDagEdge
+# useNiceDagEdge(React)
 
 The method is used to get utilities methods for edge deletion and node inserting.
 

@@ -16,4 +16,4 @@ Ideally, the Nice-DAG is framework agnostic. The DOM operations are covered by `
 
 ![nice-dag-adaptors](../static/img/tutorial/nice-dag-adaptors.png)
 
-Currently, Nice-DAG provides a React adaptor in the manner of a React hook.
+Currently, Nice-DAG provides a **React** adaptor and a **Vue3** adaptor.
