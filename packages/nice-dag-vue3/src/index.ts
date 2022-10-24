@@ -1,6 +1,7 @@
 import NiceDag from "@ebay/nice-dag-core";
 import NiceDagEdges from './components/NiceDagEdges.vue';
 import NiceDagNodes from './components/NiceDagNodes.vue';
+import NiceDagRootView from './components/NiceDagRootView.vue';
 import NiceDagTypes from '@ebay/nice-dag-core/lib/types';
 import NiceDagReactive from './niceDagReactive';
 import { ref, onMounted, onUnmounted } from "vue";
@@ -75,5 +76,6 @@ function useNiceDag(args: UseNiceDagArgs): UseNiceDagType {
 export {
     useNiceDag,
     NiceDagEdges,
-    NiceDagNodes
+    NiceDagNodes,
+    NiceDagRootView,
 }

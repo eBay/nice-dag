@@ -49,11 +49,6 @@
         <EditableEdge />
       </NiceDagEdges>
     </div>
-    <div className="readonly-sample-content-minimap-row">
-      <div className="readonly-sample-content-minimap">
-        <div className="readonly-sample-content-minimap-body" ref="minimapEl" />
-      </div>
-    </div>
   </div>
 </template>
 
@@ -102,7 +97,7 @@ export default {
   setup() {
     let nodeCtnRef = 0;
     const scale = ref(100);
-    const { niceDagEl, minimapEl, niceDagReactive } = useNiceDag({
+    const { niceDagEl, niceDagReactive } = useNiceDag({
       initNodes: HierarchicalModel,
       getNodeSize,
       jointEdgeConnectorType: "CENTER_OF_BORDER",
@@ -155,7 +150,6 @@ export default {
       nodeCtnRef,
       niceDagEl,
       niceDagReactive,
-      minimapEl,
       scale,
       onScaleChange,
       prettify,
