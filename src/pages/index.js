@@ -8,8 +8,8 @@ import HomepageFeatures from '@site/src/components/HomepageFeatures';
 
 function HomepageHeader() {
   const { siteConfig } = useDocusaurusContext();
-  const onLiveDemoClick = (()=>{
-    window.location.href= 'https://opensource.ebay.com//nice-dag/examples/index.html';
+  const onLiveDemoClick = ((fwk) => () => {
+    window.location.href = `https://opensource.ebay.com/nice-dag/examples/${fwk}/index.html`;
   });
   return (
     <header className={clsx('hero hero--primary', styles.heroBanner)}>
@@ -17,8 +17,13 @@ function HomepageHeader() {
         <h1 className="hero__title">{siteConfig.title}</h1>
         <div
           className="button button--secondary button--lg"
-          onClick={onLiveDemoClick}>
-          Live Demo
+          onClick={onLiveDemoClick('react')} style={{ marginRight: 8 }}>
+          Live Demo (React)
+        </div>
+        <div
+          className="button button--secondary button--lg"
+          onClick={onLiveDemoClick('vue3')}>
+          Live Demo (VUE3)
         </div>
         <p className="hero__subtitle">{siteConfig.tagline}</p>
         <div className={styles.buttons}>

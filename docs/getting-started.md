@@ -4,20 +4,32 @@ sidebar_position: 2
 
 # Getting Started
 
-## Install
+## Install (React)
 
 If your project is using yarn, you can run the command.
 
 ```
-yarn add @ebay/nice-dag-core
 yarn add @ebay/nice-dag-react
 ```
 
 If your projet is using npm, you can run the command.
 
 ```
-npm install @ebay/nice-dag-core
 npm install @ebay/nice-dag-react
+```
+
+## Install (Vue3)
+
+If your project is using yarn, you can run the command.
+
+```
+yarn add @ebay/nice-dag-vue3
+```
+
+If your projet is using npm, you can run the command.
+
+```
+npm install @ebay/nice-dag-vue3
 ```
 
 ## My First DAG
