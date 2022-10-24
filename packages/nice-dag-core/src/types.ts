@@ -65,7 +65,7 @@ export interface Node {
      * if yes, doesn't show children diagram
      */
     collapse?: boolean;
-    
+
     edgeConnectorType?: EdgeConnectorType;
 }
 
@@ -139,6 +139,7 @@ export interface MinimapConfig {
 }
 
 export interface NiceDagConfig {
+    id?: string;
     mapNodeToElement?: MapNodeToElement;
     mapEdgeToElement?: MapEdgeToElement;
     mapEdgeToPoints?: MapEdgeToPoints;

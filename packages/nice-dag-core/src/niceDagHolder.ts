@@ -4,8 +4,8 @@ const NiceDagHolder: {
     [key: string]: NiceDag
 } = {};
 
-export function use(id: string): NiceDag {
-    return NiceDagHolder[id];
+export function use(id: string | undefined): NiceDag | undefined {
+    return id ? NiceDagHolder[id] : undefined;
 }
 
 export function set(id: string, niceDag: NiceDag): void {

@@ -260,7 +260,7 @@ export default class ReadOnlyNiceDag implements IReadOnlyNiceDag, ViewModelChang
     private destoried: boolean;
 
     constructor(args: NiceDagInitArgs) {
-        this.uid = utils.uuid();
+        this.uid = args.id || utils.uuid();
         const { container, minimapContainer, minimapConfig, ...config } = withDefaultValues(args);
         this._config = config;
         this._config.mapEdgeToPoints = args.mapEdgeToPoints;

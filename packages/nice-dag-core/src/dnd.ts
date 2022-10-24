@@ -233,6 +233,7 @@ export default class NiceDagDnd {
             y: this._rootContainer.scrollTop - this.originalScrollPosition.y,
         };
         const scale = this.context.provider.scale || 1;
+        let targetNode;
         if (!this.isDraggingEdge) {
             this.draggingNode.setPoint(
                 {
@@ -241,7 +242,7 @@ export default class NiceDagDnd {
                 }
             );
         } else {
-            const targetNode = this.findPotentialEdgeTarget(mPoint);
+            targetNode = this.findPotentialEdgeTarget(mPoint);
             if (targetNode) {
                 this.draggingNode.connect(targetNode);
             }
@@ -252,6 +253,11 @@ export default class NiceDagDnd {
         utils.editHtmlElement(this.context.provider.svgDndBackground).withStyle({
             display: 'none'
         });
+        if (!this.isDraggingEdge) {
+            this.context.provider.endNodeDragging(this.draggingNode);
+        } else {
+            this.context.provider.endEdgeDragging(this.draggingNode, targetNode);
+        }
         this.isDraggingEdge = false;
     }
 

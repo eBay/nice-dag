@@ -52,7 +52,7 @@ function App() {
       <div className="sider">
         <h1>
           <span className="header-name">@ebay/nice-dag</span>
-          <span className="example-title">Examples</span>
+          <span className="example-title">React Examples</span>
         </h1>
         <div className="scroll-container" id="scroll-container">
           <ul>

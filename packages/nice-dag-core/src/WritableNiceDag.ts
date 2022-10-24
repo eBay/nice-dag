@@ -220,7 +220,7 @@ class NiceDagGrid implements Grid {
     }
 }
 
-export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProvider, ViewModelChangeListener, IWritableNiceDag {
+export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProvider, ViewModelChangeListener, IWritableNiceDag, I {
 
     private _dnd: NiceDagDnd;
     private _editing: boolean;
@@ -250,6 +250,14 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
             }).svgElement;
     }
 
+    endNodeDragging(): void {
+        this.fireMinimapChange();
+    }
+
+    endEdgeDragging(): void {
+        this.fireMinimapChange();
+    }
+
     get svgDndBackground(): SVGElement {
         return this.svgDndBkg;
     }
@@ -260,7 +268,10 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
             if (this._editing) {
                 this.doBackgroundLayout();
                 this._grid.redraw();
+                this.fireMinimapChange();
             }
+        } else if (event.type === ViewModelChangeEventType.REMOVE_NODE) {
+            this.fireMinimapChange();
         }
     }
 
@@ -309,7 +320,7 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
         super.withNodes(nodes);
         if (_destoried) {
             this._dnd = new NiceDagDnd(this.mainLayer, this.glassStyles, this._config.mapEdgeToPoints);
-            if (this._editing) { 
+            if (this._editing) {
                 this.startEditing();
             } else {
                 this.stopEditing();
