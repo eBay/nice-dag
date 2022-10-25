@@ -4,10 +4,18 @@
         <title>Nice-DAG Blog</title>
         <link>https://github.com/nice-dag/blog</link>
         <description>Nice-DAG Blog</description>
-        <lastBuildDate>Thu, 15 Sep 2022 00:00:00 GMT</lastBuildDate>
+        <lastBuildDate>Tue, 25 Oct 2022 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>en</language>
+        <item>
+            <title><![CDATA[Nice-DAG supports Vue3]]></title>
+            <link>https://github.com/nice-dag/blog/vue3-support</link>
+            <guid>vue3-support</guid>
+            <pubDate>Tue, 25 Oct 2022 00:00:00 GMT</pubDate>
+            <description><![CDATA[Hey Vue3 developers, Nice DAG starts to support Vue3 application. As the design of Nice DAG, we deliver a Vue3 adaptor which wraps operations given by nice-dag-core. To know more details of vue3 usage, you can check Vue3 tutorial.]]></description>
+            <content:encoded><![CDATA[<p>Hey Vue3 developers, Nice DAG starts to support Vue3 application. As the design of Nice DAG, we deliver a Vue3 adaptor which wraps operations given by <a href="https://www.npmjs.com/package/@ebay/nice-dag-core" target="_blank" rel="noopener noreferrer">nice-dag-core</a>. To know more details of vue3 usage, you can check <a href="https://opensource.ebay.com/nice-dag/docs/tutorial-vue3/read-only-dag" target="_blank" rel="noopener noreferrer">Vue3 tutorial</a>.</p>]]></content:encoded>
+        </item>
         <item>
             <title><![CDATA[Welcome Nice-DAG]]></title>
             <link>https://github.com/nice-dag/blog/welcome</link>
