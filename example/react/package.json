@@ -2,6 +2,7 @@
   "name": "example",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://opensource.ebay.com/nice-dag/examples/react",
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
     "@babel/core": "^7.16.0",

@@ -17,9 +17,10 @@
 import EditableConnector from "./EditableConnector";
 export default {
   components: { EditableConnector },
-  props: ["niceDag", "node"],
+  props: ["niceDagReactive", "node"],
   setup(props) {
     return {
+      niceDag: props.niceDagReactive.use(),
       startNodeDragging(e) {
         props.niceDag.startNodeDragging(props.node, e);
       },
