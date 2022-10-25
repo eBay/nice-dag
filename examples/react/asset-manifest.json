@@ -1,16 +1,15 @@
 {
   "files": {
-    "main.css": "/static/css/main.0c896c89.css",
-    "main.js": "/static/js/main.06575b83.js",
-    "static/js/188.ca54b4d4.chunk.js": "/static/js/188.ca54b4d4.chunk.js",
-    "index.html": "/index.html",
-    "static/media/logo.svg": "/static/media/logo.dfe32fee2137538291082d9fac646cc7.svg",
-    "main.0c896c89.css.map": "/static/css/main.0c896c89.css.map",
-    "main.06575b83.js.map": "/static/js/main.06575b83.js.map",
-    "188.ca54b4d4.chunk.js.map": "/static/js/188.ca54b4d4.chunk.js.map"
+    "main.css": "/nice-dag/examples/react/static/css/main.0c896c89.css",
+    "main.js": "/nice-dag/examples/react/static/js/main.c7d8371d.js",
+    "static/js/188.ca54b4d4.chunk.js": "/nice-dag/examples/react/static/js/188.ca54b4d4.chunk.js",
+    "index.html": "/nice-dag/examples/react/index.html",
+    "main.0c896c89.css.map": "/nice-dag/examples/react/static/css/main.0c896c89.css.map",
+    "main.c7d8371d.js.map": "/nice-dag/examples/react/static/js/main.c7d8371d.js.map",
+    "188.ca54b4d4.chunk.js.map": "/nice-dag/examples/react/static/js/188.ca54b4d4.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.0c896c89.css",
-    "static/js/main.06575b83.js"
+    "static/js/main.c7d8371d.js"
   ]
 }
