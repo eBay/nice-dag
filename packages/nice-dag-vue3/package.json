@@ -46,5 +46,23 @@
     "typescript": "~4.7.4",
     "vite": "^3.0.9",
     "vue-tsc": "^0.40.7"
-  }
+  },
+  "tags": [
+    "dag",
+    "flow",
+    "editor",
+    "dom",
+    "dagre",
+    "dnd"
+  ],
+  "keywords": [
+    "vue",
+    "vue3",
+    "dag",
+    "flow",
+    "editor",
+    "dom",
+    "dagre",
+    "dnd"
+  ]
 }
