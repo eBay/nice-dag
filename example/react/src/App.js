@@ -5,6 +5,7 @@ import React from 'react';
 import ReadOnlyView from './cases/sample/ReadOnlyView';
 import EditableView from './cases/sample/EditableView';
 import ComplexHierarchicalView from './cases/sample/ComplexHierarchicalView';
+import LogoSvg from './assets/svgs/logo.svg';
 
 const { TabPane } = Tabs;
 
@@ -52,7 +53,7 @@ function App() {
     <div className="app">
       <div className="sider">
         <h1>
-          {/* <img src={LogoSvg} alt="" height={28} width={28} /> */}
+          <img src={LogoSvg} alt="" height={28} width={28} />
           <div className="header-info">
             <span className="example-title">React Example</span>
             <span className="header-name">@ebay/nice-dag-react</span>
