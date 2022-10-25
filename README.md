@@ -25,20 +25,32 @@ Currently, Nice-DAG provides a React adaptor in the manner of a React hook.
 
 For more details information, you can visit the [Doc Portal](https://opensource.ebay.com/nice-dag/) and the [Demo Portal](https://opensource.ebay.com/nice-dag/examples/index.html).
 
-## Installation
+## Installation (React App)
 
 If your project is using yarn, you can run the command.
 
 ```
-yarn add @ebay/nice-dag-core
 yarn add @ebay/nice-dag-react
 ```
 
 If your projet is using npm, you can run the command.
 
 ```
-npm install @ebay/nice-dag-core
 npm install @ebay/nice-dag-react
+```
+
+## Installation (Vue3 App)
+
+If your project is using yarn, you can run the command.
+
+```
+yarn add @ebay/nice-dag-vue3
+```
+
+If your projet is using npm, you can run the command.
+
+```
+npm install @ebay/nice-dag-vue3
 ```
 
 # Key Features

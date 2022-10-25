@@ -117,7 +117,7 @@ const renderEdge = ({ edge, niceDag }) => {
 };
 
 const renderRootView = ()=>{
-  return <div className="readonly-sample-root-view">This diagram shows a read-only view sample.</div>
+  return <div className="readonly-sample-root-view">Your diagram description</div>
 }
 
 export default function ReadOnlyView() {
