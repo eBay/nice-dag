@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkecdx=self.webpackChunkecdx||[]).push([[904],{4397:e=>{e.exports=JSON.parse('{"permalink":"/nice-dag/blog","page":1,"postsPerPage":10,"totalPages":1,"totalCount":1,"blogDescription":"Blog","blogTitle":"Blog"}')}}]);

@@ -2,19 +2,11 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://github.com/nice-dag/blog</id>
     <title>Nice-DAG Blog</title>
-    <updated>2022-10-25T00:00:00.000Z</updated>
+    <updated>2022-09-15T00:00:00.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://github.com/nice-dag/blog"/>
     <subtitle>Nice-DAG Blog</subtitle>
     <icon>https://github.com/nice-dag/img/favicon.ico</icon>
-    <entry>
-        <title type="html"><![CDATA[Nice-DAG supports Vue3]]></title>
-        <id>vue3-support</id>
-        <link href="https://github.com/nice-dag/blog/vue3-support"/>
-        <updated>2022-10-25T00:00:00.000Z</updated>
-        <summary type="html"><![CDATA[Hey Vue3 developers, Nice DAG starts to support Vue3 application. As the design of Nice DAG, we deliver a Vue3 adaptor which wraps operations given by nice-dag-core. To know more details of vue3 usage, you can check Vue3 tutorial.]]></summary>
-        <content type="html"><![CDATA[<p>Hey Vue3 developers, Nice DAG starts to support Vue3 application. As the design of Nice DAG, we deliver a Vue3 adaptor which wraps operations given by <a href="https://www.npmjs.com/package/@ebay/nice-dag-core" target="_blank" rel="noopener noreferrer">nice-dag-core</a>. To know more details of vue3 usage, you can check <a href="https://opensource.ebay.com/nice-dag/docs/tutorial-vue3/read-only-dag" target="_blank" rel="noopener noreferrer">Vue3 tutorial</a>.</p>]]></content>
-    </entry>
     <entry>
         <title type="html"><![CDATA[Welcome Nice-DAG]]></title>
         <id>welcome</id>
