@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkecdx=self.webpackChunkecdx||[]).push([[535],{5641:e=>{e.exports=JSON.parse('{"title":"Recent posts","items":[{"title":"Nice-DAG supports Vue3","permalink":"/nice-dag/blog/vue3-support"},{"title":"Welcome Nice-DAG","permalink":"/nice-dag/blog/welcome"}]}')}}]);
