@@ -11,6 +11,10 @@
       "require": "./lib/index.cjs"
     }
   },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "files": [
     "lib"
   ],
