@@ -217,7 +217,7 @@ export function useNiceDag(args: UseNiceDagArgs): UseNiceDagType {
                     patchVersion={patchVersion}
                 />) : null;
                 if (renderRootView) {
-                    elements = [...elements, <NiceDagRootView niceDag={(niceDagRef.current)} render={renderRootView} />];
+                    elements = [...elements, <NiceDagRootView key="root-view" niceDag={(niceDagRef.current)} render={renderRootView} />];
                 }
                 if (renderEdge) {
                     const allEdges: NiceDagTypes.IEdge[] = niceDagRef.current.getAllEdges();

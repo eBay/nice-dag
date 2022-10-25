@@ -5,6 +5,7 @@ import React from 'react';
 import ReadOnlyView from './cases/sample/ReadOnlyView';
 import EditableView from './cases/sample/EditableView';
 import ComplexHierarchicalView from './cases/sample/ComplexHierarchicalView';
+import LogoSvg from './assets/svgs/logo.svg';
 
 const { TabPane } = Tabs;
 
@@ -51,8 +52,11 @@ function App() {
     <div className="app">
       <div className="sider">
         <h1>
-          <span className="header-name">@ebay/nice-dag</span>
-          <span className="example-title">React Examples</span>
+          <img src={LogoSvg} alt="" height={28} width={28} />
+          <div className="header-info">
+            <span className="example-title">React Example</span>
+            <span className="header-name">@ebay/nice-dag-react</span>
+          </div>
         </h1>
         <div className="scroll-container" id="scroll-container">
           <ul>
@@ -64,6 +68,10 @@ function App() {
               </li>
             ))}
           </ul>
+        </div>
+        <div className="footer-info">
+          <span className="footer-label">Other Reference</span>
+          <a href="../vue/index.html#read-only-view">Vue.js Example</a>
         </div>
       </div>
       <div className="sample-content">

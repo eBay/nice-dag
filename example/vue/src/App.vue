@@ -1,11 +1,14 @@
 <template>
-  <div className="app">
-    <div className="sider">
+  <div class="app">
+    <div class="sider">
       <h1>
-        <span className="header-name">@ebay/nice-dag-vue3</span>
-        <span className="example-title">Vue Examples</span>
+        <LogoSvg />
+        <div class="header-info">
+          <span class="example-title">Vue.js Example</span>
+          <span class="header-name">@ebay/nice-dag-vue3</span>
+        </div>
       </h1>
-      <div className="scroll-container" id="scroll-container">
+      <div class="scroll-container" id="scroll-container">
         <ul>
           <li v-for="(example, key) in examples" :key="key">
             <a :href="`#${key}`" :class="{ active: isActive(key) }">
@@ -14,26 +17,32 @@
           </li>
         </ul>
       </div>
+      <div class="footer-info">
+        <span class="footer-label">Other Reference</span>
+        <a href="../react/index.html#read-only-view">React.js Example</a>
+      </div>
     </div>
-    <div className="sample-content">
-      <h2>{{ getCurrentExample(current).name }}</h2>
+    <div class="sample-content">
+      <h1>
+        <span>{{ getCurrentExample(current).name }}</span>
+      </h1>
       <ReadOnlyView v-if="current === 'read-only-view'" />
       <EditableView v-if="current === 'editable-view'" />
       <el-tabs v-model="activeTab" @tab-click="handleClick">
         <el-tab-pane label="Code" name="code">
           <div v-for="code in examples[current].codes" :key="code">
-            <div className="code-viewer-title">
+            <div class="code-viewer-title">
               {{ code }}
             </div>
             <CodeViewer :filename="code" />
           </div>
         </el-tab-pane>
         <el-tab-pane label="Less" name="less">
-          <div className="code-viewer-title">Less</div>
+          <div class="code-viewer-title">Less</div>
           <CodeViewer :filename="examples[current].less" />
         </el-tab-pane>
         <el-tab-pane label="Data" name="data">
-          <div className="code-viewer-title">Data</div>
+          <div class="code-viewer-title">Data</div>
           <CodeViewer :filename="examples[current].data" />
         </el-tab-pane>
       </el-tabs>
@@ -45,6 +54,7 @@
 import ReadOnlyView from "./cases/sample/ReadOnlyView.vue";
 import EditableView from "./cases/sample/EditableView.vue";
 import CodeViewer from "./CodeViewer.vue";
+import LogoSvg from "./assets/svgs/logo.vue";
 import { ref } from "vue";
 
 export default {
@@ -53,6 +63,7 @@ export default {
     ReadOnlyView,
     EditableView,
     CodeViewer,
+    LogoSvg,
   },
   setup() {
     const examples = {
@@ -136,6 +147,28 @@ body {
   left: 0px;
   background-color: #f7f7f7;
 }
+.app .sider .footer-info {
+  position: fixed;
+  bottom: 20px;
+  width: 240px;
+}
+.app .sider .footer-info > span {
+  font-size: 18px;
+  color: darkgray;
+}
+.app .sider .footer-info > span,
+.app .sider .footer-info > a {
+  padding: 4px 4px;
+  display: block;
+  text-align: center;
+  width: 100%;
+}
+
+.app .sider .footer-info > a {
+  color: #1890ff;
+  cursor: pointer;
+  font-size: 16px;
+}
 
 .sample-content {
   padding: 16px 16px;
@@ -150,17 +183,26 @@ body {
 }
 
 .app .sider h1 {
+  display: flex;
   position: relative;
-  background-color: #f0f0f0;
+  // background-color: #f0f0f0;
   padding: 10px 0 10px 28px;
-  height: 44px;
+  height: 64px;
   margin-bottom: 0.5em;
   margin-top: 0;
+  align-items: center;
+  padding-left: 8px;
+  border-bottom: 1px solid #f0f0f0;
 }
 .app .sider h1 .header-name {
   display: block;
   font-size: 12px;
-  color: #999;
+  color: rgb(95, 93, 93);
+  margin-top: 4px;
+}
+
+.header-info {
+  padding-left: 8px;
 }
 
 .app .sider img.logo {
@@ -170,10 +212,14 @@ body {
   width: 32px;
 }
 
+.app .sample-content > h1 {
+  margin-top: 0;
+}
+
+.app .sample-content > h1 > span,
 .app .sider h1 span.example-title {
   font-size: 20px;
   display: block;
-  margin-top: 5px;
   color: #333;
   display: inline-block;
 }
