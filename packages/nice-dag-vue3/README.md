@@ -6,6 +6,6 @@
 
 ## What is nice-dag-vue3?
 
-`nice-dag-vue3` is a wrapper of DOM operations given by `nice-dag-core`. In terms of **Vue (3.0)** based **DAG Diagram** or **Flow Editor**, you can simply use this customized **vue hook** which is given by `nice-dag-vue` module. 
+`nice-dag-vue3` is a wrapper of DOM operations given by `nice-dag-core`. In terms of **Vue (3.0)** based **DAG Diagram** or **Flow Editor**, you can simply use this customized **vue hook** which is given by `nice-dag-vue3` module. 
 
 For more details, please you can visit [Doc Portal](https://opensource.ebay.com/nice-dag/docs/tutorial-vue3/read-only-dag).
