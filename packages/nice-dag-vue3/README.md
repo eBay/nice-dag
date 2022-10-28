@@ -8,4 +8,20 @@
 
 `nice-dag-vue3` is a wrapper of DOM operations given by `nice-dag-core`. In terms of **Vue (3.0)** based **DAG Diagram** or **Flow Editor**, you can simply use this customized **vue hook** which is given by `nice-dag-vue3` module. 
 
+## Installation
+
+If your project is using yarn, you can run the command.
+
+```
+yarn add @ebay/nice-dag-core
+yarn add @ebay/nice-dag-vue3
+```
+
+If your projet is using npm, you can run the command.
+
+```
+npm install @ebay/nice-dag-vue3
+npm install @ebay/nice-dag-vue3
+```
+
 For more details, please you can visit [Doc Portal](https://opensource.ebay.com/nice-dag/docs/tutorial-vue3/read-only-dag).
