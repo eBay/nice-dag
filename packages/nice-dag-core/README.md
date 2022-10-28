@@ -26,6 +26,6 @@ If your projet is using npm, you can run the command.
 npm install @ebay/nice-dag-core
 ```
 
-If you are working on pure JS appliation, you can add `/node_modules/@ebay/nice-dag-core/lib/index.umd.cjs` to html <script> directly.
+Besides, you can add `/node_modules/@ebay/nice-dag-core/lib/index.umd.cjs` to html <script> directly if you are not working on `react` or `vue3` framework.
 
 For more details, please you can visit [Doc Portal](https://opensource.ebay.com/nice-dag/docs/intro).
