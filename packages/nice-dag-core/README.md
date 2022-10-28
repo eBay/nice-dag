@@ -12,4 +12,20 @@ Besides DAG diagram layout, it also provides build-in functions for **Flow Edito
 
 Ideally, `nice-dag-core` is framework agnostic. For the current version, `nice-dag-core` can be used with [nice-dag-react](https://www.npmjs.com/package/@ebay/nice-dag-react) or with [nice-dag-vue3](https://www.npmjs.com/package/@ebay/nice-dag-vue3). 
 
+## Installation
+
+If your project is using yarn, you can run the command.
+
+```
+yarn add @ebay/nice-dag-core
+```
+
+If your projet is using npm, you can run the command.
+
+```
+npm install @ebay/nice-dag-core
+```
+
+If you are working on pure JS appliation, you can add `/node_modules/@ebay/nice-dag-core/lib/index.umd.cjs` to html <script> directly.
+
 For more details, please you can visit [Doc Portal](https://opensource.ebay.com/nice-dag/docs/intro).
