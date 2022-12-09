@@ -183,7 +183,11 @@ export enum NiceDagMode {
 export interface IViewModel {
     id: string;
     findNodeById(id: string): IViewNode;
+    findNodesByDependencies(dependencies: string[]): IViewNode[];
+    findNodesByPrecedentNodeId(id: string): IViewNode[];
     removeEdge(edge: IEdge): void;
+    findEdgesBySourceId(id: string): IEdge[];
+    findEdgesByTargetId(id: string): IEdge[];
     addEdge(source: IViewNode, target: IViewNode): void;
     addNode(node: Node, point: Point): IViewNode;
     addNodes(nodes: Node[], point: Point, offset?: number): IViewNode[];
@@ -206,11 +210,13 @@ export interface IViewNode extends Node, Bounds {
     removeDependency: (source: IViewNode) => void;
     doLayout: () => void;
     resize: (size: Size) => void;
-    addChildNode: (node: Node, point: Point) => void;
+    addChildNode: (node: Node, point: Point) => Node;
     setPoint: (point: Point) => void;
     model: IViewModel;
     destory: () => void;
     fireNodeChange: (e: ViewNodeChangeEvent) => void;
+    findEdgesAsSource(): IEdge[];
+    findEdgesAsTarget(): IEdge[];
 }
 
 export interface NiceDag {

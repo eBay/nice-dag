@@ -1,4 +1,4 @@
-import { NodeData, Node, Bounds, Point, Size, IViewModel, IViewNode, ViewNodeChangeListener, ViewNodeChangeEventType, ViewNodeChangeEvent, EdgeConnectorType } from "./types";
+import { NodeData, Node, Bounds, Point, Size, IViewModel, IViewNode, ViewNodeChangeListener, ViewNodeChangeEventType, ViewNodeChangeEvent, EdgeConnectorType, IEdge } from "./types";
 import * as utils from './utils';
 import { NODE_ID_ATTR, NICE_DAG_NODE_CLS } from './constants';
 
@@ -43,7 +43,7 @@ export default class ViewNode implements IViewNode {
         this.fireNodeChange({ type: ViewNodeChangeEventType.RESIZE, node: this });
     }
 
-    addChildNode(node: Node, point: Point): void {
+    addChildNode(node: Node, point: Point): Node {
         const isCollapsed = this.collapse || !this.children || this.children.length === 0;
         if (!this.children) {
             this.children = [];
@@ -56,6 +56,7 @@ export default class ViewNode implements IViewNode {
                 sourceNode: node
             }
         });
+        return this.model.findNodeById(node.id);
     }
 
     removeDependency(node: IViewNode): boolean {
@@ -72,6 +73,20 @@ export default class ViewNode implements IViewNode {
             node.dependencies.push(this.id);
             this.model.addEdge(this, node);
         }
+    }
+
+    findConnected(runAfter: boolean = false): Node[] {
+        if (!runAfter) {
+            return this.model.findNodesByDependencies(this.dependencies);
+        }
+        return this.model.findNodesByPrecedentNodeId(this.id);
+    }
+
+    findEdgesAsSource(): IEdge[] {
+        return this.model.findEdgesBySourceId(this.id);
+    }
+    findEdgesAsTarget(): IEdge[] {
+        return this.model.findEdgesByTargetId(this.id);
     }
 
     doLayout(): void {

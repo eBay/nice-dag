@@ -220,7 +220,7 @@ class NiceDagGrid implements Grid {
     }
 }
 
-export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProvider, ViewModelChangeListener, IWritableNiceDag, I {
+export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProvider, ViewModelChangeListener, IWritableNiceDag {
 
     private _dnd: NiceDagDnd;
     private _editing: boolean;
@@ -283,21 +283,27 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
         return 3;
     }
 
-    addJointNode(node: Node, point: Point, targetNodeId: string = 'root'): void {
+    addJointNode(node: Node, point: Point = {
+        x: 0,
+        y: 0
+    }, targetNodeId: string = 'root'): Node {
         if (targetNodeId === 'root') {
-            this.rootModel.addNode(node, point, true);
+            return this.rootModel.addNode(node, point, true);
         } else {
             const parentNode = this.rootModel.findNodeById(targetNodeId) as IViewNode;
-            parentNode.addChildNode(node, point);
+            return parentNode.addChildNode(node, point);
         }
     }
 
-    addNode(node: Node, point: Point, targetNodeId: string = 'root'): void {
+    addNode(node: Node, point: Point = {
+        x: 0,
+        y: 0
+    }, targetNodeId: string = 'root'): Node {
         if (targetNodeId === 'root') {
-            this.rootModel.addNode(node, point);
+            return this.rootModel.addNode(node, point);
         } else {
             const parentNode = this.rootModel.findNodeById(targetNodeId) as IViewNode;
-            parentNode.addChildNode(node, point);
+            return parentNode.addChildNode(node, point);
         }
     }
 
@@ -378,8 +384,11 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
     prettify(): void {
         const _editing = this.editing;
         this.stopEditing();
-        this.rootModel.doLayout(true, true);
-        this.justifyCenter(this.parentSize);
+        const resized = this.rootModel.doLayout(true, true);
+        if (!resized) {
+            //justify center is called if resizing needs.
+            this.justifyCenter(this.parentSize);
+        }
         if (_editing) {
             this.startEditing();
         }
