@@ -95,7 +95,10 @@ export default class ViewModel implements IViewModel, ViewNodeChangeListener, Vi
         const viewNode = this.toViewNode(node);
         viewNode.editing = true;
         viewNode.joint = joint;
-        const { getNodeSize } = niceDagHolder.use(this.dagId).config;
+        const { getNodeSize, jointEdgeConnectorType } = niceDagHolder.use(this.dagId).config;
+        if (joint) {
+            viewNode.edgeConnectorType = jointEdgeConnectorType;
+        }
         this.vNodes.push(viewNode);
         const nodeSize = getNodeSize(viewNode);
         viewNode.width = nodeSize.width;
@@ -132,6 +135,14 @@ export default class ViewModel implements IViewModel, ViewNodeChangeListener, Vi
         return false;
     }
 
+    findEdgesBySourceId(id: string): IEdge[] {
+        return this.pEdges.filter(edge => edge.source.id === id);
+    }
+
+    findEdgesByTargetId(id: string): IEdge[] {
+        return this.pEdges.filter(edge => edge.target.id === id);
+    }
+
     refreshJointNodes(): void {
         if (this.vmConfig.mode === NiceDagMode.WITH_JOINT_NODES) {
             const toDeleteJointNodes = this.vNodes.filter(vNode => vNode.joint && vNode.dependencies.length === 1);
@@ -165,12 +176,6 @@ export default class ViewModel implements IViewModel, ViewNodeChangeListener, Vi
         });
         newEdge.doLayout();
         return newEdge;
-    }
-
-    findPrecedentedNodes(node: IViewNode): IViewNode[] {
-        return this.pEdges.filter(edge => edge.target.id === node.id).map(edge => {
-            return this.findNodeById(edge.source.id);
-        });
     }
 
     // createJointNodeIfAbsent(source: IViewNode, target: IViewNode): IViewNode {
@@ -331,6 +336,18 @@ export default class ViewModel implements IViewModel, ViewNodeChangeListener, Vi
         return vNode;
     }
 
+    findNodesByPrecedentNodeId(id: string): IViewNode[] {
+        return this.vNodes.filter(node => {
+            const dependenciesSet = new Set(node.dependencies || []);
+            return dependenciesSet.has(id);
+        });
+    }
+
+    findNodesByDependencies = (dependencies: string[]): IViewNode[] => {
+        const dependenciesSet = new Set(dependencies);
+        return this.vNodes.filter(node => dependenciesSet.has(node.id));
+    }
+
     private init = (_nodes: Node[]) => {
         this.buildVNodes(_nodes);
         this.buildEdges();
@@ -430,7 +447,7 @@ export default class ViewModel implements IViewModel, ViewNodeChangeListener, Vi
         return this.vmConfig.subViewPadding;
     }
 
-    resize = (fireModelChange: boolean): void => {
+    resize = (fireModelChange: boolean): boolean => {
         const oldSize = this.pSize;
         const subViewPadding = this.vmConfig.subViewPadding;
         let maxRight = 0;
@@ -457,11 +474,13 @@ export default class ViewModel implements IViewModel, ViewNodeChangeListener, Vi
                     source: this,
                     type: ViewModelChangeEventType.RESIZE
                 });
+                return true;
             }
         }
+        return false;
     }
 
-    doLayout = (fireModelChange: boolean, cascade: boolean): void => {
+    doLayout = (fireModelChange: boolean, cascade: boolean): boolean => {
         if (cascade) {
             this.childVMs.forEach(childVM => {
                 childVM.doLayout(fireModelChange, cascade);
@@ -485,10 +504,11 @@ export default class ViewModel implements IViewModel, ViewNodeChangeListener, Vi
             }
             i++;
         });
-        this.resize(fireModelChange);
+        const resized = this.resize(fireModelChange);
         this.pEdges.forEach(edge => {
             edge.doLayout();
         });
+        return resized;
     }
 
     buildEdges = (): void => {

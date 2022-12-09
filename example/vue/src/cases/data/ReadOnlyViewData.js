@@ -28,7 +28,6 @@ export const HierarchicalModel = [
     dependencies: ['mvn', 'security-check'],
     data: {
       label: 'Build',
-      lazyLoadingChildren: true
     },
   },
   {
