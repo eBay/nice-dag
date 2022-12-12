@@ -148,6 +148,7 @@ export interface NiceDagConfig {
     getEdgeAttributes?: GetEdgeAttributes;
     getGateElement?: GetGateElement;
     subViewPadding?: Padding,
+    rootViewPadding?: Padding,
     mode?: NiceDagMode;
     graphLabel?: dagre.GraphLabel;
     glassStyles?: StyleObjectType;
@@ -160,7 +161,7 @@ export interface NiceDagConfig {
 
 
 
-export type ViewModelConfig = Pick<NiceDagConfig, 'subViewPadding' | 'mode' | 'modelType' | 'edgeConnectorType' | 'jointEdgeConnectorType'>;
+export type ViewModelConfig = Pick<NiceDagConfig, 'rootViewPadding' | 'subViewPadding' | 'mode' | 'modelType' | 'edgeConnectorType' | 'jointEdgeConnectorType'>;
 
 export type DagViewConfig = ViewModelConfig & Pick<NiceDagConfig,
     'mapEdgeToPoints' | 'mapNodeToElement' | 'mapEdgeToElement' | 'getViewElement' | 'subViewPadding' | 'getGateElement' | 'getEdgeAttributes'>;

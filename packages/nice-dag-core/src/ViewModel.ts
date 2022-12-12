@@ -449,25 +449,17 @@ export default class ViewModel implements IViewModel, ViewNodeChangeListener, Vi
 
     resize = (fireModelChange: boolean): boolean => {
         const oldSize = this.pSize;
-        const subViewPadding = this.vmConfig.subViewPadding;
+        const subViewPadding = this.isRoot ? this.vmConfig.rootViewPadding : this.vmConfig.subViewPadding;
         let maxRight = 0;
         let maxBottom = 0;
         this.vNodes.forEach(vNode => {
             maxRight = Math.max(vNode.x + vNode.width, maxRight);
             maxBottom = Math.max(vNode.y + vNode.height, maxBottom);
         });
-        if (!this.isRoot) {
-            this.pSize = {
-                width: maxRight + subViewPadding.left + subViewPadding.right,
-                height: maxBottom + subViewPadding.top + subViewPadding.bottom
-            };
-        } else {
-            //todo: enlarge the view if necessary
-            this.pSize = {
-                width: maxRight,
-                height: maxBottom
-            };
-        }
+        this.pSize = {
+            width: maxRight + subViewPadding.left + subViewPadding.right,
+            height: maxBottom + subViewPadding.top + subViewPadding.bottom
+        };
         if (fireModelChange) {
             if (this.pSize.width !== oldSize.width || this.pSize.height !== oldSize.height) {
                 this.fireModelChange({
@@ -533,10 +525,10 @@ export default class ViewModel implements IViewModel, ViewNodeChangeListener, Vi
     }
 
     size = (withPadding: boolean = true): Size => {
-        if (withPadding || this.isRoot) {
+        if (withPadding) {
             return this.pSize;
         }
-        const padding = this.vmConfig.subViewPadding;
+        const padding = this.isRoot ? this.vmConfig.rootViewPadding : this.subViewPadding;
         return {
             width: this.pSize.width - padding.left - padding.right,
             height: this.pSize.height - padding.top - padding.bottom,
