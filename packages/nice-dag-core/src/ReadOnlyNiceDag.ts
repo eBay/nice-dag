@@ -25,12 +25,14 @@ const _100_PECTANGLE_SIZE_STYLE = {
 function withDefaultValues(args: NiceDagInitArgs): NiceDagInitArgs {
     const graphLabel = InitArgs.graphLabelWithDefaultValues(args.graphLabel);
     const subViewPadding = InitArgs.paddingWithDefaultValues(args.subViewPadding, InitArgs.DEFAULT_SUBVIEW_PADDING);
+    const rootViewPadding = InitArgs.paddingWithDefaultValues(args.rootViewPadding, InitArgs.ZERO_PADDING);
     return {
         ...args,
         getEdgeAttributes: args.getEdgeAttributes || InitArgs.getDefaultEdgesAttributes,
         graphLabel,
         mode: args.mode || NiceDagMode.WITH_JOINT_NODES,
         subViewPadding,
+        rootViewPadding,
         gridConfig: utils.withDefaultValues(args.gridConfig, InitArgs.DEFAULT_GRID_CONFIG),
         edgeConnectorType: args.edgeConnectorType || EdgeConnectorType.CENTER_OF_BORDER,
         jointEdgeConnectorType: args.jointEdgeConnectorType || EdgeConnectorType.CENTER,
@@ -129,15 +131,13 @@ class DagView implements ViewModelChangeListener {
     }
 
     render = (parentElement: HTMLElement): void => {
-        if (!this.model.isRoot) {
-            const padding = this.viewConfig.subViewPadding;
-            utils.editHtmlElement(parentElement).withStyle({
-                'padding-top': `${padding.top}px`,
-                'padding-bottom': `${padding.bottom}px`,
-                'padding-left': `${padding.left}px`,
-                'padding-right': `${padding.right}px`,
-            });
-        }
+        const padding = this.model.isRoot ? this.viewConfig.rootViewPadding : this.viewConfig.subViewPadding;
+        utils.editHtmlElement(parentElement).withStyle({
+            'padding-top': `${padding.top}px`,
+            'padding-bottom': `${padding.bottom}px`,
+            'padding-left': `${padding.left}px`,
+            'padding-right': `${padding.right}px`,
+        });
         this.nodesLayer = utils.createElement(parentElement).withStyle(this.getNodeLayerSizeStyle()).withClassNames(DAGGER_NODES_LAYER_CLS).htmlElement;
         this.svgLayer = utils.createSvgIfAbsent(this.nodesLayer, null, `${this.model.dagId}-nice-dag-svg-arrow`).withAttributes(
             {
