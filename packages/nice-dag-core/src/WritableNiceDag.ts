@@ -312,6 +312,7 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
         this.getAllNodes().forEach(node => node.editing = true);
         this._dnd.setEnabled(true);
         this.setGridVisible(true);
+        this.justCenterWhenStartEditing();
     }
 
     stopEditing = (): void => {
@@ -450,22 +451,50 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
     }
 
     justifyCenter(size: Size): void {
-        if (!this._editing && size) {
+        if (!this._editing) {
+            super.justifyCenter(size);
+        }
+    }
+
+    setScale(scale: number): void {
+        super.setScale(scale);
+        if (this._editing) {
+            this.editorBkgContainer.style.transform = `scale(${scale})`;
+            this.editorBkgContainer.style.transformOrigin = `left top`;
+            this.doBackgroundLayout();
+            this._grid.scale = scale;
+            if (this.grid.visible) {
+                this._grid.redraw();
+            }
+        }
+    }
+
+    justCenterWhenStartEditing(): void {
+        if (this.parentSize) {
             const zoomLayerBounds = this.zoomLayer.getBoundingClientRect();
             let offsetX: number = 0;
             let offsetY: number = 0;
             let width: number = 0;
             let height: number = 0;
-            if (size.width > zoomLayerBounds.width) {
-                offsetX = (size.width - zoomLayerBounds.width) / 2;
-                width = utils.float2Int(size.width / this.scale);
+            let shouldResize;
+            if (this.parentSize.width > zoomLayerBounds.width) {
+                offsetX = (this.parentSize.width - zoomLayerBounds.width) / 2;
+                width = utils.float2Int(this.parentSize.width / this.scale);
+                shouldResize = true;
             }
-            if (size.height > zoomLayerBounds.height) {
-                offsetY = (size.height - zoomLayerBounds.height) / 2;
-                height = utils.float2Int(size.height / this.scale);
+            if (this.parentSize.height > zoomLayerBounds.height) {
+                offsetY = (this.parentSize.height - zoomLayerBounds.height) / 2;
+                height = utils.float2Int(this.parentSize.height / this.scale);
+                shouldResize = true;
             }
+            utils.editHtmlElement(this.zoomLayer).withAbsolutePosition({
+                x: 0,
+                y: 0,
+                width,
+                height,
+            });
             this.rootView.justifySize({ width, height });
-            if (offsetX > 0 || offsetY > 0) {
+            if (shouldResize) {
                 (this.rootModel as ViewModel).setRootOffset({
                     offsetX: utils.float2Int(offsetX / this.scale),
                     offsetY: utils.float2Int(offsetY / this.scale)
@@ -475,14 +504,9 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
         }
     }
 
-    setScale(scale: number): void {
-        super.setScale(scale);
-        this.editorBkgContainer.style.transform = `scale(${scale})`;
-        this.editorBkgContainer.style.transformOrigin = `left top`;
-        this.doBackgroundLayout();
-        this._grid.scale = scale;
-        if (this.grid.visible) {
-            this._grid.redraw();
+    adaptSizeWhenSetScale(scale: number): void {
+        if (!this._editing) {
+            super.adaptSizeWhenSetScale(scale);
         }
     }
 

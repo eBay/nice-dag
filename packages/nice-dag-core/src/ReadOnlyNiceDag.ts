@@ -458,6 +458,10 @@ export default class ReadOnlyNiceDag implements IReadOnlyNiceDag, ViewModelChang
         this.zoomLayer.style.transform = `scale(${scale})`;
         this.zoomLayer.style.transformOrigin = `left top`;
         this.zoomLayer.setAttribute('data-zoom-ratio-key', `${scale}`);
+        this.adaptSizeWhenSetScale(scale);
+    }
+
+    adaptSizeWhenSetScale(scale: number): void {
         if (this.parentSize) {
             this.justifyCenter(this.parentSize);
         }
