@@ -5,7 +5,7 @@ import { NICE_DAG_NODE_CLS, NODE_ID_ATTR, SVG_DND_ARROW_ID } from './constants';
 import { XDirection, YDirection } from './dndTypes';
 import * as niceDagHolder from './niceDagHolder';
 
-const GLASS_NODE_CLS = 'dnd-glass';
+const GLASS_NODE_CLS = 'nice-dag-dnd-glass';
 
 const GLASS_STYLE = {
     position: 'fixed',
