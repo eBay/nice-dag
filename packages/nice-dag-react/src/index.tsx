@@ -27,16 +27,16 @@ export type UseNiceDagType = {
 
 export interface NiceDagNodeProps {
     node: NiceDagTypes.IViewNode,
-    render: RenderNodeType;
-    niceDag: NiceDagTypes.NiceDag;
-    patchVersion: number;
+    render?: RenderNodeType;
+    niceDag?: NiceDagTypes.NiceDag;
+    patchVersion?: number;
 }
 
 export interface NiceDagEdgeProps {
-    niceDag: NiceDagTypes.NiceDag;
+    niceDag?: NiceDagTypes.NiceDag;
     edge: NiceDagTypes.IEdge,
-    render: RenderEdgeType;
-    patchVersion: number;
+    render?: RenderEdgeType;
+    patchVersion?: number;
 }
 
 export interface NiceDagRootViewProps {
