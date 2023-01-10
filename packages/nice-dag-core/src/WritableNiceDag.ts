@@ -457,14 +457,12 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
 
     setScale(scale: number): void {
         super.setScale(scale);
-        if (this._editing) {
-            this.editorBkgContainer.style.transform = `scale(${scale})`;
-            this.editorBkgContainer.style.transformOrigin = `left top`;
-            this.doBackgroundLayout();
-            this._grid.scale = scale;
-            if (this.grid.visible) {
-                this._grid.redraw();
-            }
+        this.editorBkgContainer.style.transform = `scale(${scale})`;
+        this.editorBkgContainer.style.transformOrigin = `left top`;
+        this.doBackgroundLayout();
+        this._grid.scale = scale;
+        if (this.grid.visible) {
+            this._grid.redraw();
         }
     }
 
