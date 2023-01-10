@@ -39,6 +39,11 @@ function withDefaultValues(args: NiceDagInitArgs): NiceDagInitArgs {
     }
 }
 
+type NodeMapWithId = {
+    id: string,
+    node: IViewNode
+}
+
 export type ViewChangeCallback = () => void;
 
 class DagView implements ViewModelChangeListener {
@@ -234,8 +239,30 @@ class DagView implements ViewModelChangeListener {
         }
     }
 
-    getAllNodes(): IViewNode[] {
-        return this.model.getAllNodes();
+    getAllNodes(omitJointNode?: boolean): IViewNode[] {
+        const allNodes: IViewNode[] = this.model.getAllNodes();
+        if (omitJointNode) {
+            const jointNodeMapper: NodeMapWithId = {} as NodeMapWithId;
+            allNodes.filter(node => node.joint).forEach(node => {
+                jointNodeMapper[node.id] = node;
+            });
+            return allNodes.filter(node => !node.joint).map(node => {
+                const { dependencies } = node;
+                let dependenciesOmittingJointNode: string[] = [];
+                dependencies.forEach(dependentId => {
+                    if (jointNodeMapper[dependentId]) {
+                        dependenciesOmittingJointNode = [...dependenciesOmittingJointNode, ...jointNodeMapper[dependentId].dependencies];
+                    } else {
+                        dependenciesOmittingJointNode.push(dependentId);
+                    }
+                });
+                return {
+                    ...node,
+                    dependencies: dependenciesOmittingJointNode
+                }
+            });
+        }
+        return allNodes;
     }
 
     getAllEdges(): IEdge[] {
@@ -402,8 +429,8 @@ export default class ReadOnlyNiceDag implements IReadOnlyNiceDag, ViewModelChang
         return this.rootView.getEdgeLabel(sourceId, targetId);
     }
 
-    getAllNodes(): IViewNode[] {
-        return this.rootView.getAllNodes();
+    getAllNodes(omitJointNode?: boolean): IViewNode[] {
+        return this.rootView.getAllNodes(omitJointNode);
     }
 
     getAllEdges(): IEdge[] {
