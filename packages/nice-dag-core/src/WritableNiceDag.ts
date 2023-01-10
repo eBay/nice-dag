@@ -312,7 +312,6 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
         this.getAllNodes().forEach(node => node.editing = true);
         this._dnd.setEnabled(true);
         this.setGridVisible(true);
-        // this.justCenterWhenStartEditing();
     }
 
     stopEditing = (): void => {
