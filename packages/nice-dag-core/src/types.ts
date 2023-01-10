@@ -229,7 +229,7 @@ export interface NiceDag {
     scrollTo: (id: string) => void;
     setDirection: (direction: NiceDagDirection) => void;
     getScrollPosition: () => Point;
-    getAllNodes: () => IViewNode[];
+    getAllNodes: (omitJointNode?: boolean) => IViewNode[];
     getAllEdges: () => IEdge[];
     getElementByNodeId: (id: string) => HTMLElement;
     getRootContentElement: () => HTMLElement;

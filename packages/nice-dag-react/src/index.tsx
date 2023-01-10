@@ -3,9 +3,19 @@ import ReactDOM from 'react-dom';
 import NiceDag from '@ebay/nice-dag-core';
 import NiceDagTypes, { IEdge, MinimapConfig } from '@ebay/nice-dag-core/lib/types';
 
+export type RenderNodeArgs = {
+    niceDag: NiceDagTypes.NiceDag;
+    node: NiceDagTypes.IViewNode,
+};
+
+export type RenderEdgeArgs = {
+    niceDag: NiceDagTypes.NiceDag;
+    edge: NiceDagTypes.IEdge,
+};
+
 export type UseNiceDagArgs = Omit<NiceDagTypes.NiceDagInitArgs, 'container'> & {
-    renderNode: (props: NiceDagNodeProps) => React.Component<any, any, any>;
-    renderEdge?: (props: NiceDagEdgeProps) => React.Component<any, any, any>;
+    renderNode: (props: RenderNodeArgs) => React.Component<any, any, any>;
+    renderEdge?: (props: RenderEdgeArgs) => React.Component<any, any, any>;
     renderRootView?: (niceDag: NiceDagTypes.NiceDag) => React.Component<any, any, any>;
     scrollPosition?: NiceDagTypes.Point;
     initNodes?: NiceDagTypes.Node[];
@@ -25,14 +35,14 @@ export type UseNiceDagType = {
     reset: () => void;
 };
 
-export interface NiceDagNodeProps {
+interface NiceDagNodeProps {
     node: NiceDagTypes.IViewNode,
     render?: RenderNodeType;
     niceDag?: NiceDagTypes.NiceDag;
     patchVersion?: number;
 }
 
-export interface NiceDagEdgeProps {
+interface NiceDagEdgeProps {
     niceDag?: NiceDagTypes.NiceDag;
     edge: NiceDagTypes.IEdge,
     render?: RenderEdgeType;
@@ -51,7 +61,10 @@ export class NiceDagNode extends React.Component<NiceDagNodeProps, any> {
             const domRef = this.props.niceDag.getElementByNodeId(this.props.node.id);
             if (domRef) {
                 return ReactDOM.createPortal(
-                    <>{this.props.render(this.props)}</>,
+                    <>{this.props.render({
+                        node: this.props.node,
+                        niceDag: this.props.niceDag
+                    })}</>,
                     domRef,
                 );
             }
@@ -65,7 +78,10 @@ export class NiceDagEdge extends React.Component<NiceDagEdgeProps, any> {
     render() {
         if (this.props.niceDag && this.props.edge.ref) {
             return ReactDOM.createPortal(
-                <>{this.props.render(this.props)}</>,
+                <>{this.props.render({
+                    edge: this.props.edge,
+                    niceDag: this.props.niceDag
+                })}</>,
                 this.props.edge.ref,
             );
         }
@@ -235,4 +251,3 @@ export function useNiceDag(args: UseNiceDagArgs): UseNiceDagType {
         reset
     };
 }
-

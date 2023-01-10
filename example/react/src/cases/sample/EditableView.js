@@ -277,6 +277,14 @@ export default function EditableDagView() {
           >
             Add Joint Node
           </Button>
+          <Button
+            size="small"
+            onClick={() => {
+              console.log(niceDag.getAllNodes(true));
+            }}
+          >
+            Show All Nodes
+          </Button>
           <ZoomInOutSlider onScaleChange={value => niceDag.setScale(value / 100)} />
         </Space>
       </div>
