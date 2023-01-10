@@ -261,6 +261,7 @@ export type IWritableNiceDag = IReadOnlyNiceDag & {
     startNodeDragging: (node: IViewNode, e: MouseEvent) => void;
     addNode: (node: Node, point: Point, targetNodeId?: string) => void;
     addJointNode(node: Node, point: Point, targetNodeId?: string): void;
+    setGridVisible: (visible: boolean) => void;
 };
 
 export interface NiceDagChangeListener {
