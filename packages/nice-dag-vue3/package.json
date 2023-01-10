@@ -1,6 +1,6 @@
 {
   "name": "@ebay/nice-dag-vue3",
-  "version": "1.0.1",
+  "version": "1.0.8",
   "type": "module",
   "main": "./lib/index.cjs",
   "module": "./lib/index.js",
@@ -11,6 +11,7 @@
       "require": "./lib/index.cjs"
     }
   },
+  "repository": "https://github.com/eBay/nice-dag",
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
