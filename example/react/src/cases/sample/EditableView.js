@@ -220,6 +220,9 @@ const renderNode = ({ node, niceDag }) => {
 export default function EditableDagView() {
   const { niceDag, niceDagEl, render } = useNiceDag({
     initNodes: HierarchicalModel,
+    gridConfig: {
+      visible: true
+    },
     getNodeSize,
     renderNode,
     editable: true,

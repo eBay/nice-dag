@@ -227,6 +227,7 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
     constructor(args: NiceDagInitArgs) {
         super(args);
         this._dnd = new NiceDagDnd(this.mainLayer, args.glassStyles, this._config.mapEdgeToPoints);
+        this._gridVisible  = this._config.gridConfig?.visible;
         this.editorBkgContainer = utils.createElementIfAbsent(this.mainLayer, EDITOR_BKG_CLS).htmlElement;
         this.svgGridBkg = utils.createSvgIfAbsent(this.editorBkgContainer, null, `${this.uid}-${SVG_BKG_ARROW_ID}`)
             .withStyle({
@@ -396,14 +397,11 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
     prettify(): IWritableNiceDag {
         const _editing = this.editing;
         this.stopEditing();
-        const resized = this.rootModel.doLayout(true, true);
-        if (!resized) {
-            //justify center is called if resizing needs.
-            this.justifyCenter(this.parentSize);
-        }
+        this.rootModel.doLayout(true, true);
         if (_editing) {
             this.startEditing();
         }
+        this.justifyCenter(this.parentSize);
         return this;
     }
 
