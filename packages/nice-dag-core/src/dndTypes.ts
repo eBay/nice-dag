@@ -2,7 +2,6 @@ import { Bounds, HtmlElementBounds, IViewNode, Point } from "./types";
 
 export interface Grid {
     gridPoint: (p: Point) => Point;
-    visible: boolean;
 }
 
 export interface Line {

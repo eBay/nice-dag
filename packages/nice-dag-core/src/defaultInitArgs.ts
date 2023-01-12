@@ -18,6 +18,7 @@ const DEFAULT_GRAPH_LABEL = {
 export const DEFAULT_GRID_CONFIG = {
   color: "blue",
   size: 40,
+  visible: true
 };
 
 export const DEFAULT_SUBVIEW_PADDING = {

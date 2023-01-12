@@ -347,8 +347,15 @@ export default class ReadOnlyNiceDag implements IReadOnlyNiceDag, ViewModelChang
         if (event.type === ViewModelChangeEventType.RESIZE
             || event.type === ViewModelChangeEventType.ADD_SUB_VIEW
             || event.type === ViewModelChangeEventType.REMOVE_SUB_VIEW) {
-            this.justifyCenter(this.parentSize);
+            this.justifyCenterWhenResizing();
         }
+    }
+
+    /**
+     * Just make the writable nice dag to overwrite
+     */
+    justifyCenterWhenResizing() {
+        this.justifyCenter(this.parentSize);
     }
 
     get config(): NiceDagConfig {

@@ -229,12 +229,11 @@ export default function EditableDagView() {
   useEffect(() => {
     if (niceDag) {
       const bounds = document.querySelector('.editable-sample').getBoundingClientRect();
-      niceDag
+      niceDag.startEditing()
         .center({
           width: bounds.width,
           height: 400,
-        })
-        .startEditing();
+        });
     }
   }, [niceDag]);
   return (

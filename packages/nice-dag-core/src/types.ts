@@ -131,6 +131,7 @@ export type ElementAttributesType = any;
 export interface GridConfig {
     size?: number;
     color?: string;
+    visible?: boolean;
 }
 
 export interface MinimapConfig {
@@ -253,15 +254,15 @@ export interface NiceDag {
 export type IReadOnlyNiceDag = NiceDag;
 
 export type IWritableNiceDag = IReadOnlyNiceDag & {
-    startEditing: () => void;
-    stopEditing: () => void;
-    prettify: () => void;
+    startEditing: () => IWritableNiceDag;
+    stopEditing: () => IWritableNiceDag;
+    prettify: () => IWritableNiceDag;
     editing: boolean;
     startEdgeDragging: (node: IViewNode, e: MouseEvent) => void;
     startNodeDragging: (node: IViewNode, e: MouseEvent) => void;
     addNode: (node: Node, point: Point, targetNodeId?: string) => void;
     addJointNode(node: Node, point: Point, targetNodeId?: string): void;
-    setGridVisible: (visible: boolean) => void;
+    gridVisible: boolean;
 };
 
 export interface NiceDagChangeListener {
