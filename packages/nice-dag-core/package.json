@@ -1,6 +1,6 @@
 {
   "name": "@ebay/nice-dag-core",
-  "version": "1.0.20",
+  "version": "1.0.21",
   "license": "MIT",
   "type": "module",
   "main": "./lib/index.cjs",
