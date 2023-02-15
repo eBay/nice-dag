@@ -221,6 +221,10 @@ export interface IViewNode extends Node, Bounds {
     findEdgesAsTarget(): IEdge[];
 }
 
+export interface NodesMapper {
+    [Key: string]: IViewNode;
+}
+
 export interface NiceDag {
     id: string;
     render: () => void;
@@ -231,6 +235,7 @@ export interface NiceDag {
     setDirection: (direction: NiceDagDirection) => void;
     getScrollPosition: () => Point;
     getAllNodes: (omitJointNode?: boolean) => IViewNode[];
+    getAllNodesMapper: (omitJointNode?: boolean) => NodesMapper;
     getAllEdges: () => IEdge[];
     getElementByNodeId: (id: string) => HTMLElement;
     getRootContentElement: () => HTMLElement;

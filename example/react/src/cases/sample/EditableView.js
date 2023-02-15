@@ -283,6 +283,7 @@ export default function EditableDagView() {
             size="small"
             onClick={() => {
               console.log(niceDag.getAllNodes(true));
+              console.log(niceDag.getAllNodesMapper(true));
             }}
           >
             Show All Nodes
