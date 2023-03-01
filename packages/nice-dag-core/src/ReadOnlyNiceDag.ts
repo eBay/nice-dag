@@ -36,6 +36,7 @@ function withDefaultValues(args: NiceDagInitArgs): NiceDagInitArgs {
         gridConfig: utils.withDefaultValues(args.gridConfig, InitArgs.DEFAULT_GRID_CONFIG),
         edgeConnectorType: args.edgeConnectorType || EdgeConnectorType.CENTER_OF_BORDER,
         jointEdgeConnectorType: args.jointEdgeConnectorType || EdgeConnectorType.CENTER,
+        omitJointBeforeEnd: typeof args.omitJointBeforeEnd === 'undefined' ? true : args.omitJointBeforeEnd,
     }
 }
 

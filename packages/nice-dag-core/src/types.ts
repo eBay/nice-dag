@@ -158,11 +158,12 @@ export interface NiceDagConfig {
     edgeConnectorType?: EdgeConnectorType;
     jointEdgeConnectorType?: EdgeConnectorType;
     minimapConfig?: MinimapConfig;
+    omitJointBeforeEnd?: boolean;
 }
 
 
 
-export type ViewModelConfig = Pick<NiceDagConfig, 'rootViewPadding' | 'subViewPadding' | 'mode' | 'modelType' | 'edgeConnectorType' | 'jointEdgeConnectorType'>;
+export type ViewModelConfig = Pick<NiceDagConfig, 'rootViewPadding' | 'subViewPadding' | 'mode' | 'modelType' | 'edgeConnectorType' | 'jointEdgeConnectorType' | 'omitJointBeforeEnd'>;
 
 export type DagViewConfig = ViewModelConfig & Pick<NiceDagConfig,
     'mapEdgeToPoints' | 'mapNodeToElement' | 'mapEdgeToElement' | 'getViewElement' | 'subViewPadding' | 'getGateElement' | 'getEdgeAttributes'>;
