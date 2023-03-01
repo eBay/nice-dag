@@ -88,8 +88,12 @@ export const HierarchicalModel = [
     dependencies: ['integration-test'],
   },
   {
+    id: 'prod-deployment1',
+    dependencies: ['integration-test'],
+  },
+  {
     id: 'end',
-    dependencies: ['prod-deployment'],
+    dependencies: ['prod-deployment', 'prod-deployment1'],
   },
 ];
 

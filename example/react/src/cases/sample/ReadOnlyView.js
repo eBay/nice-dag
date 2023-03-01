@@ -129,7 +129,8 @@ export default function ReadOnlyView() {
     renderRootView,
     minimapConfig: {
       viewBoxClassName: 'readonly-sample-minimap-viewbox',
-    }
+    },
+    omitJointBeforeEnd: false
   });
   useEffect(() => {
     if (niceDag) {

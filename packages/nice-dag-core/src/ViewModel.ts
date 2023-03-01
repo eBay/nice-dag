@@ -178,49 +178,7 @@ export default class ViewModel implements IViewModel, ViewNodeChangeListener, Vi
         return newEdge;
     }
 
-    // createJointNodeIfAbsent(source: IViewNode, target: IViewNode): IViewNode {
-    //     const precendentedNodes = this.findPrecedentedNodes(target);
-    //     let jointNode = precendentedNodes.find(node => node.joint);
-    //     if (!jointNode) {
-    //         const id = `joint-${target.dependencies.join('-')}`;
-    //         const node: Node = {
-    //             id,
-    //             dependencies: [...target.dependencies],
-    //         };
-    //         const vNode = new ViewNode(node, true, this, this.vmConfig.jointEdgeConnectorType);
-    //         const jointNodePoint = spaceUtils.getCenter([source, ...precendentedNodes],
-    //             target, niceDagHolder.use(this._dagId).config.graphLabel);
-    //         const { getNodeSize } = niceDagHolder.use(this.dagId).config;
-    //         const nodeSize = getNodeSize(vNode);
-    //         jointNode = this.addNode(vNode,
-    //             {
-    //                 x: jointNodePoint.x - nodeSize.width / 2,
-    //                 y: jointNodePoint.y - nodeSize.height / 2
-    //             }, true);
-    //         target.dependencies = [jointNode.id];
-    //         const targetEdge = this.createEdgeAndFireModelChange(jointNode, target);
-    //         targetEdge.doLayout();
-    //     }
-    //     return jointNode;
-    // }
-
     addEdge(source: IViewNode, target: IViewNode): IEdge {
-        // const endNodes = utils.findEndNodes(this.vNodes);
-        // const isEndNode = endNodes.some(item => item.id === target.id);
-        // if (this.vmConfig.mode === NiceDagMode.WITH_JOINT_NODES && !target.joint && target.dependencies?.length > 1 && !isEndNode) {
-        //     /**
-        //      * target dependencies has already added source dependencies
-        //      */
-        //     const existingEdges = this.pEdges.filter(edge => edge.target.id === target.id && !edge.source.joint);
-        //     const jointNode = this.createJointNodeIfAbsent(source, target);
-        //     existingEdges.forEach(existingEdge => {
-        //         existingEdge.target = jointNode;
-        //         existingEdge.doLayout();
-        //     });
-        //     const sourceToJointEdge = this.createEdgeAndFireModelChange(source, jointNode);
-        //     niceDagHolder.use(this._dagId).fireNiceDagChange();
-        //     return sourceToJointEdge;
-        // } else {
         const newEdge = this.createEdgeAndFireModelChange(source, target);
         niceDagHolder.use(this._dagId).fireNiceDagChange();
         return newEdge;
@@ -400,7 +358,7 @@ export default class ViewModel implements IViewModel, ViewNodeChangeListener, Vi
         const gateIds = new Set();
         this.vNodes.forEach(node => {
             const isEndNode = endNodes.some(item => item.id === node.id);
-            if (node.dependencies?.length > 1 && !isEndNode) {
+            if (node.dependencies?.length > 1 && (!isEndNode || !this.vmConfig.omitJointBeforeEnd)) {
                 const id = `joint-${node.dependencies.join('-')}`;
                 if (!gateIds.has(id)) {
                     const jointViewNode = new ViewNode({
