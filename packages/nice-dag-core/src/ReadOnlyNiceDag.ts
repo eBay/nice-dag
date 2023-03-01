@@ -3,7 +3,7 @@ import {
     IReadOnlyNiceDag, StyleObjectType, Size,
     NiceDagModelType,
     NiceDagChangeListener, NiceDag, NiceDagMode,
-    IViewModelChangeEvent, ViewModelChangeEventType, ViewModelChangeListener, NiceDagDirection, EdgeConnectorType
+    IViewModelChangeEvent, ViewModelChangeEventType, ViewModelChangeListener, NiceDagDirection, EdgeConnectorType, NodesMapper
 } from './types';
 import ViewModel from './ViewModel';
 import * as utils from './utils';
@@ -347,8 +347,15 @@ export default class ReadOnlyNiceDag implements IReadOnlyNiceDag, ViewModelChang
         if (event.type === ViewModelChangeEventType.RESIZE
             || event.type === ViewModelChangeEventType.ADD_SUB_VIEW
             || event.type === ViewModelChangeEventType.REMOVE_SUB_VIEW) {
-            this.justifyCenter(this.parentSize);
+            this.justifyCenterWhenResizing();
         }
+    }
+
+    /**
+     * Just make the writable nice dag to overwrite
+     */
+    justifyCenterWhenResizing() {
+        this.justifyCenter(this.parentSize);
     }
 
     get config(): NiceDagConfig {
@@ -431,6 +438,14 @@ export default class ReadOnlyNiceDag implements IReadOnlyNiceDag, ViewModelChang
 
     getAllNodes(omitJointNode?: boolean): IViewNode[] {
         return this.rootView.getAllNodes(omitJointNode);
+    }
+
+    getAllNodesMapper(omitJointNode?: boolean): NodesMapper {
+        const nodesMapper = {};
+        this.rootView.getAllNodes(omitJointNode)?.forEach(node => {
+            nodesMapper[node.id] = node;
+        });
+        return nodesMapper;
     }
 
     getAllEdges(): IEdge[] {

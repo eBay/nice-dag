@@ -231,7 +231,7 @@ export function useNiceDag(args: UseNiceDagArgs): UseNiceDagType {
                     key={node.id}
                     niceDag={niceDagRef.current}
                     patchVersion={patchVersion}
-                />) : null;
+                />) : [];
                 if (renderRootView) {
                     elements = [...elements, <NiceDagRootView key="root-view" niceDag={(niceDagRef.current)} render={renderRootView} />];
                 }

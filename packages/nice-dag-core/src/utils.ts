@@ -215,15 +215,15 @@ export function resetBoundsWithRatio(
   return ratio === 1 || !ratio
     ? bounds
     : {
-        x: float2Int(bounds.x / ratio),
-        y: float2Int(bounds.y / ratio),
-        top: float2Int(bounds.top / ratio),
-        left: float2Int(bounds.left / ratio),
-        width: float2Int(bounds.width / ratio),
-        height: float2Int(bounds.height / ratio),
-        bottom: float2Int(bounds.bottom / ratio),
-        right: float2Int(bounds.right / ratio),
-      };
+      x: float2Int(bounds.x / ratio),
+      y: float2Int(bounds.y / ratio),
+      top: float2Int(bounds.top / ratio),
+      left: float2Int(bounds.left / ratio),
+      width: float2Int(bounds.width / ratio),
+      height: float2Int(bounds.height / ratio),
+      bottom: float2Int(bounds.bottom / ratio),
+      right: float2Int(bounds.right / ratio),
+    };
 }
 
 export function htmlElementBounds(
@@ -245,7 +245,11 @@ export function htmlElementBounds(
 export function withDefaultValues(target: any, defaultValues: any): any {
   const values = { ...target };
   const keys = Object.keys(defaultValues || {});
-  keys.forEach((key) => (values[key] = values[key] || defaultValues[key]));
+  keys.forEach((key) => {
+    if (typeof values[key] === 'undefined') {
+      values[key] = defaultValues[key];
+    }
+  });
   return values;
 }
 

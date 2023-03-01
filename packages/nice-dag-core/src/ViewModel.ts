@@ -447,6 +447,18 @@ export default class ViewModel implements IViewModel, ViewNodeChangeListener, Vi
         return this.vmConfig.subViewPadding;
     }
 
+    setViewSize(size: Size, withPadding: boolean = true): void {
+        this.pSize = size;
+        let subViewPadding: Padding = { left: 0, right: 0, top: 0, bottom: 0 };
+        if (withPadding) {
+            subViewPadding = this.isRoot ? this.vmConfig.rootViewPadding : this.vmConfig.subViewPadding;
+        }
+        this.pSize = {
+            width: size.width - subViewPadding.left - subViewPadding.right,
+            height: size.height - subViewPadding.top - subViewPadding.bottom
+        };
+    }
+
     resize = (fireModelChange: boolean): boolean => {
         const oldSize = this.pSize;
         const subViewPadding = this.isRoot ? this.vmConfig.rootViewPadding : this.vmConfig.subViewPadding;

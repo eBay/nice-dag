@@ -220,6 +220,9 @@ const renderNode = ({ node, niceDag }) => {
 export default function EditableDagView() {
   const { niceDag, niceDagEl, render } = useNiceDag({
     initNodes: HierarchicalModel,
+    gridConfig: {
+      visible: true
+    },
     getNodeSize,
     renderNode,
     editable: true,
@@ -229,12 +232,11 @@ export default function EditableDagView() {
   useEffect(() => {
     if (niceDag) {
       const bounds = document.querySelector('.editable-sample').getBoundingClientRect();
-      niceDag
+      niceDag.startEditing()
         .center({
           width: bounds.width,
           height: 400,
-        })
-        .startEditing();
+        });
     }
   }, [niceDag]);
   return (
@@ -281,6 +283,7 @@ export default function EditableDagView() {
             size="small"
             onClick={() => {
               console.log(niceDag.getAllNodes(true));
+              console.log(niceDag.getAllNodesMapper(true));
             }}
           >
             Show All Nodes

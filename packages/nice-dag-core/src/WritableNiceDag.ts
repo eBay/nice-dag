@@ -22,17 +22,11 @@ class NiceDagGrid implements Grid {
     private _yArr: number[];
     private xLines: SVGElement[] = [];
     private yLines: SVGElement[] = [];
-    private _visible: boolean;
 
     constructor(svg: SVGElement, gridSize: number, _scale: number) {
         this.gridSize = gridSize;
         this.svg = svg;
         this._scale = _scale || 1;
-        this._visible = false;
-    }
-
-    get visible(): boolean {
-        return this._visible;
     }
 
     clear() {
@@ -202,7 +196,6 @@ class NiceDagGrid implements Grid {
     }
 
     render = () => {
-        this._visible = true;
         this.clear();
         this.doLayout();
         const xLines = this.getLines();
@@ -229,10 +222,12 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
     private editorBkgContainer: HTMLElement;
     private _grid: NiceDagGrid;
     private glassStyles: StyleObjectType;
+    private _gridVisible: boolean;
 
     constructor(args: NiceDagInitArgs) {
         super(args);
         this._dnd = new NiceDagDnd(this.mainLayer, args.glassStyles, this._config.mapEdgeToPoints);
+        this._gridVisible  = this._config.gridConfig?.visible;
         this.editorBkgContainer = utils.createElementIfAbsent(this.mainLayer, EDITOR_BKG_CLS).htmlElement;
         this.svgGridBkg = utils.createSvgIfAbsent(this.editorBkgContainer, null, `${this.uid}-${SVG_BKG_ARROW_ID}`)
             .withStyle({
@@ -267,7 +262,7 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
         if (event.type === ViewModelChangeEventType.RESIZE) {
             if (this._editing) {
                 this.doBackgroundLayout();
-                this._grid.redraw();
+                this.redrawGrid();
                 this.fireMinimapChange();
             }
         } else if (event.type === ViewModelChangeEventType.REMOVE_NODE) {
@@ -307,18 +302,20 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
         }
     }
 
-    startEditing = (): void => {
+    startEditing = (): IWritableNiceDag => {
         this._editing = true;
         this.getAllNodes().forEach(node => node.editing = true);
         this._dnd.setEnabled(true);
-        this.setGridVisible(true);
+        this.showGrid();
+        return this;
     }
 
-    stopEditing = (): void => {
+    stopEditing = (): IWritableNiceDag => {
         this._editing = false;
         this.getAllNodes().forEach(node => node.editing = false);
         this._dnd.setEnabled(false);
-        this.setGridVisible(false);
+        this.hideGrid();
+        return this;
     }
 
     withNodes(nodes: Node[]): NiceDag {
@@ -339,11 +336,17 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
         return this._editing;
     }
 
-    center(size: Size): NiceDag {
+    justifyCenterWhenResizing() {
         if (!this._editing) {
-            super.center(size);
+            super.justifyCenterWhenResizing();
+        }
+    }
+
+    center(size: Size): NiceDag {
+        super.center(size);
+        if (!this._editing) {
             this.doBackgroundLayout();
-            this.setGridVisible(this._editing);
+            this.showGrid();
         }
         return this;
     }
@@ -373,25 +376,33 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
         utils.editHtmlElement(this.editorBkgContainer).withAbsolutePosition(bounds);
     }
 
-    setGridVisible(visible: boolean): void {
-        if (visible) {
+    set gridVisible(visible: boolean) {
+        this._gridVisible = visible;
+    }
+
+    get gridVisible(): boolean {
+        return this._gridVisible;
+    }
+
+    showGrid() {
+        if (this._gridVisible) {
             this._grid.render();
-        } else {
-            this._grid.clear();
         }
     }
 
-    prettify(): void {
+    hideGrid() {
+        this._grid.clear();
+    }
+
+    prettify(): IWritableNiceDag {
         const _editing = this.editing;
         this.stopEditing();
-        const resized = this.rootModel.doLayout(true, true);
-        if (!resized) {
-            //justify center is called if resizing needs.
-            this.justifyCenter(this.parentSize);
-        }
+        this.rootModel.doLayout(true, true);
         if (_editing) {
             this.startEditing();
         }
+        this.justifyCenter(this.parentSize);
+        return this;
     }
 
     resizeBackground(parentElement: HTMLElement | SVGElement, bounds: HtmlElementBounds) {
@@ -414,16 +425,24 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
     resizeIfNeeded(globalBounds: Bounds): boolean {
         const ifNeeded = this.resizeBackground(this.svgGridBkg, globalBounds);
         if (ifNeeded) {
-            this._grid.redraw();
+            this.redrawGrid();
         }
         return ifNeeded;
+    }
+
+    redrawGrid(): void {
+        if (this._gridVisible) {
+            this._grid.redraw();
+        }
     }
 
     render(): void {
         super.render();
         this.doBackgroundLayout();
         this._grid = new NiceDagGrid(this.svgGridBkg, this.config.gridConfig?.size, this._scale);
-        this.setGridVisible(this._editing);
+        if (this._editing) {
+            this.showGrid();
+        }
     }
 
     startEdgeDragging = (node: IViewNode, e: MouseEvent) => {
@@ -452,6 +471,40 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
     justifyCenter(size: Size): void {
         if (!this._editing) {
             super.justifyCenter(size);
+        } else {
+            const viewSize = this.rootModel.size(true);
+            let offsetX = 0;
+            let offsetY = 0;
+            let zoomLayerWidth = viewSize.width;
+            let zoomLayerHeight = viewSize.height;
+            if (size.width > viewSize.width) {
+                offsetX = (size.width - viewSize.width) / 2;
+                zoomLayerWidth = utils.float2Int(size.width / this.scale);
+            }
+            if (size.height > viewSize.height) {
+                offsetY = (size.height - viewSize.height) / 2;
+                zoomLayerHeight = utils.float2Int(size.height / this.scale);
+            }
+            if (size.width < viewSize.width) {
+                offsetX = 0;
+            }
+            if (size.height < viewSize.height) {
+                offsetY = 0;
+            }
+            if (offsetX > 0 || offsetY > 0) {
+                this.rootModel.setRootOffset({
+                    offsetX: utils.float2Int(offsetX / this.scale),
+                    offsetY: utils.float2Int(offsetY / this.scale)
+                });
+                utils.editHtmlElement(this.zoomLayer).withAbsolutePosition({
+                    x: 0, y: 0, width: zoomLayerWidth, height: zoomLayerHeight
+                });
+                this.rootView.justifySize({ width: zoomLayerWidth, height: zoomLayerHeight });
+                this.rootModel.setViewSize({
+                    width: zoomLayerWidth,
+                    height: zoomLayerHeight
+                });
+            }
         }
     }
 
@@ -461,9 +514,7 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
         this.editorBkgContainer.style.transformOrigin = `left top`;
         this.doBackgroundLayout();
         this._grid.scale = scale;
-        if (this.grid.visible) {
-            this._grid.redraw();
-        }
+        this.redrawGrid();
     }
 
     justCenterWhenStartEditing(): void {
