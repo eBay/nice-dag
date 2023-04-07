@@ -35,6 +35,7 @@ export default class NiceDagDnd {
     private draggingElement: HTMLElement | SVGElement;
     private _enabled: boolean;
     private editableGlass: HTMLElement;
+    private editorForeContainer: HTMLElement;
     private context: DndContext;
     private isDraggingEdge: boolean;
     private mapEdgeToPoints: MapEdgeToPoints;
@@ -43,10 +44,11 @@ export default class NiceDagDnd {
     private originalScrollPosition: Point;
 
     constructor(rootContainer: HTMLElement, glassStyles: StyleObjectType,
-        mapEdgeToPoints: MapEdgeToPoints) {
+        mapEdgeToPoints: MapEdgeToPoints, editorForeContainer: HTMLElement) {
         this._rootContainer = rootContainer;
         this._glassStyles = glassStyles;
         this.mapEdgeToPoints = mapEdgeToPoints;
+        this.editorForeContainer = editorForeContainer;
         this.buildGlass();
     }
 
@@ -102,20 +104,24 @@ export default class NiceDagDnd {
                 x: e.pageX,
                 y: e.pageY
             });
-            this.draggingElement = utils.editHtmlElement(node.ref.cloneNode(true) as HTMLElement).withStyle({
-                'transform': `scale(${this.context.provider.scale})`,
-                'transformOrigin': `top left`
-            }).htmlElement;
-            const lastBounds = this.context.lastBounds();
+            this.draggingElement = node.ref.cloneNode(true) as HTMLElement;
             utils.editHtmlElement(this.draggingElement).withStyle({
                 'user-select': 'none',
                 'z-index': 9
-            }).withAbsolutePoint({
-                x: lastBounds.left,
-                y: lastBounds.top
             });
-            this.editableGlass.appendChild(this.draggingElement);
+            this.moveDraggingElement();
+            this.editorForeContainer.appendChild(this.draggingElement);
         }
+    }
+
+    moveDraggingElement = () => {
+        const lastBounds = this.context.lastBounds(true, true);
+        utils.editHtmlElement(this.draggingElement).withAbsolutePosition({
+            x: lastBounds.left,
+            y: lastBounds.top,
+            width: lastBounds.width,
+            height: lastBounds.height
+        });
     }
 
     startEdgeDragging = (node: IViewNode, e: MouseEvent): void => {
@@ -209,16 +215,10 @@ export default class NiceDagDnd {
     }
 
     onDraggingNode(xDirection: XDirection, yDirection: YDirection): void {
-        const lastBounds = this.context.lastBounds();
         this.scrollIfNeeded({
             xDirection, yDirection
         });
-        utils.editHtmlElement(this.draggingElement).withAbsolutePoint(
-            {
-                x: lastBounds.left,
-                y: lastBounds.top
-            }
-        );
+        this.moveDraggingElement();
     }
 
     endDragging = (event: MouseEvent): void => {
@@ -285,7 +285,7 @@ export default class NiceDagDnd {
     private scrollIfNeeded = ({ xDirection, yDirection }: { xDirection: XDirection, yDirection: YDirection }) => {
         const rootBounds = this._rootContainer.getBoundingClientRect();
         const lastGlobalBounds = utils.htmlElementBounds(this.draggingElement as HTMLElement);
-        this.context.provider.resizeIfNeeded(lastGlobalBounds);
+        this.context.provider.resizeIfNeeded(this.context.lastBounds(true, true));
         let xDelta = 0;
         let yDelta = 0;
         if (xDirection === XDirection.LeftToRight && lastGlobalBounds.right > rootBounds.right) {

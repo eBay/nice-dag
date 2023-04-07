@@ -12,6 +12,7 @@ import { NODE_ID_ATTR } from './constants';
 import Minimap, { MinimapListener, IMinimapDraggingEvent } from './Minimap';
 
 const DAGGER_MAIN_LAYER_CLS = 'nice-dag-main-layer';
+const DAGGER_FRAME_LAYER_CLS = 'nice-dag-frame-layer';
 const DAGGER_ZOOM_LAYER_CLS = 'nice-dag-zoom-layer';
 const DAGGER_CONTENT_LAYER_CLS = 'nice-dag-content-layer';
 const DAGGER_NODES_LAYER_CLS = 'nice-dag-nodes-layer';
@@ -296,8 +297,14 @@ export default class ReadOnlyNiceDag implements IReadOnlyNiceDag, ViewModelChang
             this._config.mapEdgeToPoints = InitArgs.mapEdgeToPointsWithDir[this._config.graphLabel.rankdir];
             this.useDefaultMapEdgeToPoints = true;
         }
-
-        this._rootContainer = container;
+        this._rootContainer = utils.createElementIfAbsent(container, DAGGER_FRAME_LAYER_CLS).withStyle(
+            {
+                'position': 'relative',
+                'height': '100%',
+                'width': '100%',
+                'overflow': 'hidden'
+            }
+        ).htmlElement;
         this.mainLayer = utils.createElementIfAbsent(this.rootContainer, DAGGER_MAIN_LAYER_CLS).withStyle(
             { ..._100_PECTANGLE_SIZE_STYLE, overflow: 'auto' }
         ).htmlElement;

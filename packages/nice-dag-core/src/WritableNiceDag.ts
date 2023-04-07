@@ -8,25 +8,28 @@ import {
 import NiceDagDnd from './dnd';
 import * as utils from './utils';
 import DndContext from "./dndContext";
-import { resetBoundsWithRatio } from "./utils";
-import { EDITOR_BKG_CLS, SVG_BKG_ARROW_ID, SVG_BKG_CLS, SVG_DND_ARROW_ID, SVG_DND_CLS, ZERO_BOUNDS } from "./constants";
+// import { resetBoundsWithRatio } from "./utils";
+import { EDITOR_BKG_CLS, SVG_BKG_ARROW_ID, SVG_BKG_CLS, SVG_DND_ARROW_ID, SVG_DND_CLS, ZERO_BOUNDS, EDITOR_FOREGROUND_CLS } from "./constants";
 import ViewModel from "./ViewModel";
 
 const SVGNS = "http://www.w3.org/2000/svg";
 
+const EDITOR_BACKGROUND_SIZE = {
+    width: 100000,
+    height: 100000
+};
+
 class NiceDagGrid implements Grid {
     private readonly gridSize: number;
     private readonly svg: SVGElement;
-    private _scale: number;
     private _xArr: number[];
     private _yArr: number[];
     private xLines: SVGElement[] = [];
     private yLines: SVGElement[] = [];
 
-    constructor(svg: SVGElement, gridSize: number, _scale: number) {
+    constructor(svg: SVGElement, gridSize: number) {
         this.gridSize = gridSize;
         this.svg = svg;
-        this._scale = _scale || 1;
     }
 
     clear() {
@@ -36,30 +39,26 @@ class NiceDagGrid implements Grid {
     }
 
     doLayout = (): void => {
-        const parentBounds = this.svg.getBoundingClientRect();
-        const bounds = resetBoundsWithRatio(parentBounds, this._scale || 1);
         this._xArr = [];
-        for (let v = 0; v <= bounds.width;) {
+        for (let v = 0; v <= EDITOR_BACKGROUND_SIZE.width;) {
             this._xArr.push(v);
             v += this.gridSize;
         }
         this._yArr = [];
-        for (let v = 0; v <= bounds.height;) {
+        for (let v = 0; v <= EDITOR_BACKGROUND_SIZE.height;) {
             this._yArr.push(v);
             v += this.gridSize;
         }
     }
 
     private getLines = (isYAxis = false): Line[] => {
-        const parentBounds = this.svg.getBoundingClientRect();
-        const _bounds = resetBoundsWithRatio(parentBounds, this._scale || 1);
         const points: number[] = isYAxis ? this._yArr : this._xArr;
         const lines = points.map((value) => {
             if (isYAxis) {
                 return {
                     x1: 0,
                     y1: value,
-                    x2: _bounds.width,
+                    x2: EDITOR_BACKGROUND_SIZE.width,
                     y2: value,
                 };
             }
@@ -67,7 +66,7 @@ class NiceDagGrid implements Grid {
                 x1: value,
                 y1: 0,
                 x2: value,
-                y2: _bounds.height,
+                y2: EDITOR_BACKGROUND_SIZE.height,
             };
         });
         return lines;
@@ -87,17 +86,15 @@ class NiceDagGrid implements Grid {
      * @returns {row, column}
      */
     gridPoint = (p: Point): Point => {
-        const parentBounds = this.svg.getBoundingClientRect();
         const point = {
             x: utils.float2Int(p.x / this.scale),
             y: utils.float2Int(p.y / this.scale)
         }
-        const pBounds = resetBoundsWithRatio(parentBounds, this.scale);
         const { xArr, yArr } = this;
         const location = { column: -1, row: -1 };
-        if (point.x >= pBounds.left + xArr[0]) {
+        if (point.x >= xArr[0]) {
             for (let i = 0; i < xArr.length; i++) {
-                if (point.x < pBounds.left + xArr[i]) {
+                if (point.x < xArr[i]) {
                     location.column = i - 1;
                     break;
                 }
@@ -109,9 +106,9 @@ class NiceDagGrid implements Grid {
                 location.column = xArr.length - 2;
             }
         }
-        if (point.y >= pBounds.top + yArr[0]) {
+        if (point.y >= yArr[0]) {
             for (let i = 0; i < yArr.length; i++) {
-                if (point.y < pBounds.top + yArr[i]) {
+                if (point.y < yArr[i]) {
                     location.row = i - 1;
                     break;
                 }
@@ -125,12 +122,12 @@ class NiceDagGrid implements Grid {
         }
         if (location.column >= 0 && location.row >= 0) {
             return {
-                x: xArr[location.column] + parentBounds.left,
-                y: yArr[location.row] + parentBounds.top
+                x: xArr[location.column],
+                y: yArr[location.row]
             };
         }
         return {
-            x: parentBounds.left, y: parentBounds.top
+            x: 0, y: 0
         };
     }
 
@@ -207,10 +204,6 @@ class NiceDagGrid implements Grid {
             this.appendLine(line, true);
         });
     }
-
-    set scale(value: number) {
-        this._scale = value;
-    }
 }
 
 export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProvider, ViewModelChangeListener, IWritableNiceDag {
@@ -220,22 +213,27 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
     private svgGridBkg: SVGElement;
     private svgDndBkg: SVGElement;
     private editorBkgContainer: HTMLElement;
+    private editorForeContainer: HTMLElement;
     private _grid: NiceDagGrid;
     private glassStyles: StyleObjectType;
     private _gridVisible: boolean;
 
     constructor(args: NiceDagInitArgs) {
         super(args);
-        this._dnd = new NiceDagDnd(this.mainLayer, args.glassStyles, this._config.mapEdgeToPoints);
-        this._gridVisible  = this._config.gridConfig?.visible;
-        this.editorBkgContainer = utils.createElementIfAbsent(this.mainLayer, EDITOR_BKG_CLS).htmlElement;
+        this._dnd = new NiceDagDnd(this.mainLayer, args.glassStyles, this._config.mapEdgeToPoints, this.editorForeContainer);
+        this._gridVisible = this._config.gridConfig?.visible;
+        this.editorBkgContainer = utils.createElementIfAbsent(this.rootContainer, EDITOR_BKG_CLS)
+            .withAbsolutePosition({
+                x: 0, y: 0, ...EDITOR_BACKGROUND_SIZE,
+            }).htmlElement;
+        this.editorForeContainer = utils.createElementIfAbsent(this.mainLayer, EDITOR_FOREGROUND_CLS).htmlElement;
         this.svgGridBkg = utils.createSvgIfAbsent(this.editorBkgContainer, null, `${this.uid}-${SVG_BKG_ARROW_ID}`)
             .withStyle({
                 width: '100%',
                 height: '100%'
             })
             .withClassNames(SVG_BKG_CLS).svgElement;
-        this.svgDndBkg = utils.createSvgIfAbsent(this.editorBkgContainer, null, `${this.uid}-${SVG_DND_ARROW_ID}`)
+        this.svgDndBkg = utils.createSvgIfAbsent(this.editorForeContainer, null, `${this.uid}-${SVG_DND_ARROW_ID}`)
             .withClassNames(SVG_DND_CLS)
             .withAbsolutePosition(ZERO_BOUNDS).withStyle({
                 width: '100%',
@@ -261,8 +259,7 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
         super.onModelChange(event);
         if (event.type === ViewModelChangeEventType.RESIZE) {
             if (this._editing) {
-                this.doBackgroundLayout();
-                this.redrawGrid();
+                this.doForegroundLayout();
                 this.fireMinimapChange();
             }
         } else if (event.type === ViewModelChangeEventType.REMOVE_NODE) {
@@ -322,7 +319,7 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
         const _destoried = this.isDestoried;
         super.withNodes(nodes);
         if (_destoried) {
-            this._dnd = new NiceDagDnd(this.mainLayer, this.glassStyles, this._config.mapEdgeToPoints);
+            this._dnd = new NiceDagDnd(this.mainLayer, this.glassStyles, this._config.mapEdgeToPoints, this.editorForeContainer);
             if (this._editing) {
                 this.startEditing();
             } else {
@@ -345,13 +342,13 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
     center(size: Size): NiceDag {
         super.center(size);
         if (!this._editing) {
-            this.doBackgroundLayout();
+            this.doForegroundLayout();
             this.showGrid();
         }
         return this;
     }
 
-    doBackgroundLayout(): void {
+    doForegroundLayout(): void {
         const zoomLayerBounds = this.zoomLayer.getBoundingClientRect();
         const { scale = 1 } = this;
         /**
@@ -373,7 +370,7 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
             y: 0,
             ...size
         };
-        utils.editHtmlElement(this.editorBkgContainer).withAbsolutePosition(bounds);
+        utils.editHtmlElement(this.editorForeContainer).withAbsolutePosition(bounds);
     }
 
     set gridVisible(visible: boolean) {
@@ -405,32 +402,41 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
         return this;
     }
 
-    resizeBackground(parentElement: HTMLElement | SVGElement, bounds: HtmlElementBounds) {
-        const backgroundBounds = parentElement.getBoundingClientRect();
-        const relativeRight = bounds.x + bounds.width - backgroundBounds.x;
-        const relativeBottom = bounds.y + bounds.height - backgroundBounds.y;
-        if (backgroundBounds.width < relativeRight) {
-            const width = utils.float2Int(relativeRight / (this._scale || 1));
-            utils.editHtmlElement(this.svgDndBackground).withWidth(width);
-            utils.editHtmlElement(this.svgGridBkg).withWidth(width);
+    resizeForeground(bounds: HtmlElementBounds) {
+        /**
+         * The last dragging bounds is reset to original bounds, so that it needs to * _scale
+         */
+        const backgroundBounds = this.editorForeContainer.getBoundingClientRect();
+        const relativeRight = bounds.x + bounds.width;
+        const relativeBottom = bounds.y + bounds.height;
+        let width = utils.float2Int(backgroundBounds.width / this._scale);
+        let height = utils.float2Int(backgroundBounds.height / this._scale);
+        let shouldResize;
+        if (width < relativeRight) {
+            width = relativeRight;
+            shouldResize = true;
         }
-        if (backgroundBounds.height < relativeBottom) {
-            const height = utils.float2Int(relativeBottom / (this._scale || 1));
-            utils.editHtmlElement(this.svgDndBackground).withHeight(height);
-            utils.editHtmlElement(this.svgGridBkg).withHeight(height);
+        if (height < relativeBottom) {
+            height = relativeBottom;
+            shouldResize = true;
         }
-        return backgroundBounds.width < relativeRight || backgroundBounds.height < relativeBottom;
+        if (shouldResize) {
+            const _bounds = {
+                x: 0,
+                y: 0,
+                width, height
+            };
+            utils.editHtmlElement(this.editorForeContainer).withAbsolutePosition(_bounds);
+        }
+        return shouldResize;
     }
 
-    resizeIfNeeded(globalBounds: Bounds): boolean {
-        const ifNeeded = this.resizeBackground(this.svgGridBkg, globalBounds);
-        if (ifNeeded) {
-            this.redrawGrid();
-        }
+    resizeIfNeeded(lastDraggingElementBounds: Bounds): boolean {
+        const ifNeeded = this.resizeForeground(lastDraggingElementBounds);
         return ifNeeded;
     }
 
-    redrawGrid(): void {
+    drawGrid(): void {
         if (this._gridVisible) {
             this._grid.redraw();
         }
@@ -438,8 +444,8 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
 
     render(): void {
         super.render();
-        this.doBackgroundLayout();
-        this._grid = new NiceDagGrid(this.svgGridBkg, this.config.gridConfig?.size, this._scale);
+        this.doForegroundLayout();
+        this._grid = new NiceDagGrid(this.svgGridBkg, this.config.gridConfig?.size);
         if (this._editing) {
             this.showGrid();
         }
@@ -451,11 +457,16 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
                 'display': 'block'
             });
             const rootBounds: HtmlElementBounds = this._rootContainer.getBoundingClientRect();
+            const zoomLayerBounds: HtmlElementBounds = this.zoomLayer.getBoundingClientRect();
             const bounds: HtmlElementBounds = node.ref.getBoundingClientRect();
             this._dnd.withContext(new DndContext({
                 rootXy: {
                     x: rootBounds.left,
                     y: rootBounds.y
+                },
+                zoomLayerXy: {
+                    x: zoomLayerBounds.left,
+                    y: zoomLayerBounds.y
                 },
                 mPoint: {
                     x: e.pageX,
@@ -512,9 +523,10 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
         super.setScale(scale);
         this.editorBkgContainer.style.transform = `scale(${scale})`;
         this.editorBkgContainer.style.transformOrigin = `left top`;
-        this.doBackgroundLayout();
-        this._grid.scale = scale;
-        this.redrawGrid();
+        this.editorForeContainer.style.transformOrigin = `left top`;
+        this.editorForeContainer.style.transform = `scale(${scale})`;
+        this.doForegroundLayout();
+        this.drawGrid();
     }
 
     justCenterWhenStartEditing(): void {
@@ -548,7 +560,7 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
                     offsetY: utils.float2Int(offsetY / this.scale)
                 });
             }
-            this.doBackgroundLayout();
+            this.doForegroundLayout();
         }
     }
 
@@ -566,10 +578,15 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
             node.editing = true;
             const rootBounds: HtmlElementBounds = this._rootContainer.getBoundingClientRect();
             const bounds: HtmlElementBounds = node.ref.getBoundingClientRect();
+            const zoomLayerBounds = this.zoomLayer.getBoundingClientRect();
             this._dnd.withContext(new DndContext({
                 rootXy: {
                     x: rootBounds.left,
                     y: rootBounds.y
+                },
+                zoomLayerXy: {
+                    x: zoomLayerBounds.left,
+                    y: zoomLayerBounds.y
                 },
                 mPoint: {
                     x: e.pageX,

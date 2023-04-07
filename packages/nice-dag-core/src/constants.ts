@@ -7,6 +7,7 @@ const SVG_BKG_CLS = 'nice-dag-svg-background';
 const SVG_DND_ARROW_ID = 'nice-dag-svg-dnd-arrow';
 const SVG_DND_CLS = 'nice-dag-svg-dnd';
 const EDITOR_BKG_CLS = 'nice-dag-editor-bkg';
+const EDITOR_FOREGROUND_CLS = 'nice-dag-editor-foreground';
 
 const ZERO_BOUNDS = {
     x: 0,
@@ -25,5 +26,6 @@ export {
     NICE_DAG_BACKGROUND_CLS,
     SVG_BKG_ARROW_ID,
     SVG_DND_ARROW_ID,
-    EDITOR_BKG_CLS
+    EDITOR_BKG_CLS,
+    EDITOR_FOREGROUND_CLS
 };

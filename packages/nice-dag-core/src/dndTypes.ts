@@ -18,6 +18,8 @@ export interface IDndProvider {
     svgDndBackground: SVGElement;
     resizeIfNeeded: (size: Bounds) => boolean;
     getParentTopLeft: (node: IViewNode) => Point;
+    endNodeDragging: (draggingNode: IViewNode) => void;
+    endEdgeDragging: (dragginNode: IViewNode, targetNode: IViewNode) => void;
 }
 
 export enum XDirection {
