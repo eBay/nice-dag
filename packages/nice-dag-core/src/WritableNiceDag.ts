@@ -3,7 +3,7 @@ import { Grid, Line, IDndProvider } from './dndTypes';
 import {
     Bounds, NiceDagInitArgs, NiceDag, HtmlElementBounds,
     Point, Size, IWritableNiceDag, Node,
-    IViewModelChangeEvent, ViewModelChangeEventType, ViewModelChangeListener, IViewNode, StyleObjectType
+    IViewModelChangeEvent, ViewModelChangeEventType, ViewModelChangeListener, IViewNode, StyleObjectType, MapNodeToDraggingElementClass
 } from './types';
 import NiceDagDnd from './dnd';
 import * as utils from './utils';
@@ -78,57 +78,6 @@ class NiceDagGrid implements Grid {
 
     get yArr(): number[] {
         return this._yArr;
-    }
-
-    /**
-     * Return row, column
-     * @param p point in Global Coordinate System
-     * @returns {row, column}
-     */
-    gridPoint = (p: Point): Point => {
-        const point = {
-            x: utils.float2Int(p.x / this.scale),
-            y: utils.float2Int(p.y / this.scale)
-        }
-        const { xArr, yArr } = this;
-        const location = { column: -1, row: -1 };
-        if (point.x >= xArr[0]) {
-            for (let i = 0; i < xArr.length; i++) {
-                if (point.x < xArr[i]) {
-                    location.column = i - 1;
-                    break;
-                }
-            }
-            if (location.column === -1) {
-                location.column = xArr.length - 2;
-            }
-            if (location.column > xArr.length - 2) {
-                location.column = xArr.length - 2;
-            }
-        }
-        if (point.y >= yArr[0]) {
-            for (let i = 0; i < yArr.length; i++) {
-                if (point.y < yArr[i]) {
-                    location.row = i - 1;
-                    break;
-                }
-            }
-            if (location.row === -1) {
-                location.row = yArr.length - 2;
-            }
-            if (location.row > yArr.length - 2) {
-                location.row = yArr.length - 2;
-            }
-        }
-        if (location.column >= 0 && location.row >= 0) {
-            return {
-                x: xArr[location.column],
-                y: yArr[location.row]
-            };
-        }
-        return {
-            x: 0, y: 0
-        };
     }
 
     appendLine(line: Line, isYAxis: boolean): void {
@@ -217,16 +166,23 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
     private _grid: NiceDagGrid;
     private glassStyles: StyleObjectType;
     private _gridVisible: boolean;
+    private mapNodeToDraggingElementClass: MapNodeToDraggingElementClass;
 
     constructor(args: NiceDagInitArgs) {
         super(args);
-        this._dnd = new NiceDagDnd(this.mainLayer, args.glassStyles, this._config.mapEdgeToPoints, this.editorForeContainer);
+        this.mapNodeToDraggingElementClass = args.mapNodeToDraggingElementClass;
         this._gridVisible = this._config.gridConfig?.visible;
         this.editorBkgContainer = utils.createElementIfAbsent(this.rootContainer, EDITOR_BKG_CLS)
             .withAbsolutePosition({
                 x: 0, y: 0, ...EDITOR_BACKGROUND_SIZE,
             }).htmlElement;
-        this.editorForeContainer = utils.createElementIfAbsent(this.mainLayer, EDITOR_FOREGROUND_CLS).htmlElement;
+        this.editorForeContainer = utils.createElementIfAbsent(this.mainLayer, EDITOR_FOREGROUND_CLS).withStyle({
+            'z-index': 2,
+            'display': 'none'
+        }).htmlElement;
+        this._dnd = new NiceDagDnd(this.mainLayer, args.glassStyles, this._config.mapEdgeToPoints,
+            this.editorForeContainer,
+            this.mapNodeToDraggingElementClass);
         this.svgGridBkg = utils.createSvgIfAbsent(this.editorBkgContainer, null, `${this.uid}-${SVG_BKG_ARROW_ID}`)
             .withStyle({
                 width: '100%',
@@ -238,7 +194,6 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
             .withAbsolutePosition(ZERO_BOUNDS).withStyle({
                 width: '100%',
                 height: '100%',
-                'display': 'none',
                 'z-index': 99
             }).svgElement;
     }
@@ -319,7 +274,8 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
         const _destoried = this.isDestoried;
         super.withNodes(nodes);
         if (_destoried) {
-            this._dnd = new NiceDagDnd(this.mainLayer, this.glassStyles, this._config.mapEdgeToPoints, this.editorForeContainer);
+            this._dnd = new NiceDagDnd(this.mainLayer, this.glassStyles, this._config.mapEdgeToPoints,
+                this.editorForeContainer, this.mapNodeToDraggingElementClass);
             if (this._editing) {
                 this.startEditing();
             } else {
@@ -453,7 +409,7 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
 
     startEdgeDragging = (node: IViewNode, e: MouseEvent) => {
         if (this._editing) {
-            utils.editHtmlElement(this.svgDndBkg).withStyle({
+            utils.editHtmlElement(this.editorForeContainer).withStyle({
                 'display': 'block'
             });
             const rootBounds: HtmlElementBounds = this._rootContainer.getBoundingClientRect();
@@ -572,7 +528,7 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
 
     startNodeDragging = (node: IViewNode, e: MouseEvent) => {
         if (this._editing) {
-            utils.editHtmlElement(this.svgDndBkg).withStyle({
+            utils.editHtmlElement(this.editorForeContainer).withStyle({
                 'display': 'block'
             });
             node.editing = true;

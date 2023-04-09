@@ -217,12 +217,17 @@ const renderNode = ({ node, niceDag }) => {
   return <Comp node={node} niceDag={niceDag} />;
 };
 
+const mapNodeToDraggingElementClass = ({ node, niceDag }) => {
+  return 'editable-sample-dragging-node';
+}
+
 export default function EditableDagView() {
   const { niceDag, niceDagEl, render } = useNiceDag({
     initNodes: HierarchicalModel,
     gridConfig: {
       visible: true
     },
+    mapNodeToDraggingElementClass,
     getNodeSize,
     renderNode,
     editable: true,

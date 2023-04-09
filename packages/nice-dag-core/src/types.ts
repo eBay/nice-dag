@@ -65,7 +65,6 @@ export interface Node {
      * if yes, doesn't show children diagram
      */
     collapse?: boolean;
-
     edgeConnectorType?: EdgeConnectorType;
 }
 
@@ -119,6 +118,7 @@ export interface EdgePoints {
 }
 
 export type MapNodeToElement = (node: Node) => HTMLElement;
+export type MapNodeToDraggingElementClass = (node: Node) => StyleObjectType;
 export type MapEdgeToElement = (edge: IEdge) => HTMLElement;
 export type MapEdgeToPoints = (edge: IEdge) => EdgePoints;
 export type GetViewElement = (node?: Node) => HTMLElement;
@@ -159,6 +159,7 @@ export interface NiceDagConfig {
     jointEdgeConnectorType?: EdgeConnectorType;
     minimapConfig?: MinimapConfig;
     omitJointBeforeEnd?: boolean;
+    mapNodeToDraggingElementClass?: MapNodeToDraggingElementClass;
 }
 
 
@@ -205,21 +206,22 @@ export interface IViewNode extends Node, Bounds {
     refresh?: () => void;
     remove?: () => void;
     connect?: (node: IViewNode) => void;
-    joint?: boolean;
-    editing?: boolean;
-    ref: HTMLElement;
     addNodeChangeListener: (listener: ViewNodeChangeListener) => void;
     removeNodeChangeListener: (listener: ViewNodeChangeListener) => void;
     removeDependency: (source: IViewNode) => void;
     doLayout: () => void;
     resize: (size: Size) => void;
     addChildNode: (node: Node, point: Point) => Node;
-    setPoint: (point: Point) => void;
-    model: IViewModel;
     destory: () => void;
     fireNodeChange: (e: ViewNodeChangeEvent) => void;
     findEdgesAsSource(): IEdge[];
     findEdgesAsTarget(): IEdge[];
+    setPoint: (point: Point) => void;
+    joint?: boolean;
+    editing?: boolean;
+    ref: HTMLElement;
+    model: IViewModel;
+    cloneWithProps: () => IViewNode;
 }
 
 export interface NodesMapper {

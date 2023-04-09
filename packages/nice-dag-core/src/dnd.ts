@@ -1,4 +1,4 @@
-import { HtmlElementBounds, MapEdgeToPoints, Point, StyleObjectType, IViewNode, NiceDagMode } from './types';
+import { HtmlElementBounds, MapEdgeToPoints, Point, StyleObjectType, IViewNode, NiceDagMode, MapNodeToDraggingElementClass, EdgePoints } from './types';
 import * as utils from './utils';
 import DndContext from './dndContext';
 import { NICE_DAG_NODE_CLS, NODE_ID_ATTR, SVG_DND_ARROW_ID } from './constants';
@@ -32,6 +32,7 @@ export default class NiceDagDnd {
     private _rootContainer: HTMLElement;
     private _glassStyles: StyleObjectType;
     private draggingNode: IViewNode;
+    private draggingNodeMirror: IViewNode;
     private draggingElement: HTMLElement | SVGElement;
     private _enabled: boolean;
     private editableGlass: HTMLElement;
@@ -42,13 +43,17 @@ export default class NiceDagDnd {
     private draggingNodeParentBounds: HtmlElementBounds;
     private eligibleEdgeConnectors: ViewNodeWithGlobalBounds[] = [];
     private originalScrollPosition: Point;
+    private mapNodeToDraggingElementClass: MapNodeToDraggingElementClass;
+    private sourceNodesOfDraggingNode: IViewNode[];
+    private targetNodesOfDraggingNode: IViewNode[];
 
     constructor(rootContainer: HTMLElement, glassStyles: StyleObjectType,
-        mapEdgeToPoints: MapEdgeToPoints, editorForeContainer: HTMLElement) {
+        mapEdgeToPoints: MapEdgeToPoints, editorForeContainer: HTMLElement, mapNodeToDraggingElementClass: StyleObjectType) {
         this._rootContainer = rootContainer;
         this._glassStyles = glassStyles;
         this.mapEdgeToPoints = mapEdgeToPoints;
         this.editorForeContainer = editorForeContainer;
+        this.mapNodeToDraggingElementClass = mapNodeToDraggingElementClass;
         this.buildGlass();
     }
 
@@ -74,6 +79,7 @@ export default class NiceDagDnd {
             y: this._rootContainer.scrollTop
         };
         this.draggingNode = node;
+        this.draggingNodeMirror = node.cloneWithProps();
         this.draggingNodeParentBounds = utils.htmlElementBounds(node.ref.parentElement);
         const niceDagNodes = node.ref.parentElement.querySelectorAll(`:scope>.${NICE_DAG_NODE_CLS}`);
         this.eligibleEdgeConnectors = [];
@@ -94,6 +100,20 @@ export default class NiceDagDnd {
         return this;
     }
 
+    buildDraggingElement = (node: IViewNode) => {
+        const scale: number = this.context.provider.scale || 1;
+        const { width, height, x, y } = utils.resetBoundsWithRatio(utils.htmlElementBounds(node.ref), scale);
+        return utils.createElement(null, this.mapNodeToDraggingElementClass(node))
+            .withAbsolutePosition({
+                width, height, x, y
+            }).htmlElement;
+    }
+
+    computeDependenciesOfDraggingNode = (node: IViewNode) => {
+        this.targetNodesOfDraggingNode = node.findEdgesAsSource().map(edge => edge.target);
+        this.sourceNodesOfDraggingNode = node.findEdgesAsTarget().map(edge => edge.source);
+    }
+
     startNodeDragging = (node: IViewNode, e: MouseEvent): void => {
         if (this._enabled) {
             utils.editHtmlElement(this.editableGlass).withStyle({
@@ -104,7 +124,8 @@ export default class NiceDagDnd {
                 x: e.pageX,
                 y: e.pageY
             });
-            this.draggingElement = node.ref.cloneNode(true) as HTMLElement;
+            this.computeDependenciesOfDraggingNode(node);
+            this.draggingElement = (!this.mapNodeToDraggingElementClass ? node.ref.cloneNode(true) : this.buildDraggingElement(node)) as HTMLElement;
             utils.editHtmlElement(this.draggingElement).withStyle({
                 'user-select': 'none',
                 'z-index': 9
@@ -122,6 +143,36 @@ export default class NiceDagDnd {
             width: lastBounds.width,
             height: lastBounds.height
         });
+        this.renderEdgesWhenDraggingElement(lastBounds);
+    }
+
+    renderEdge = (edgePoints: EdgePoints) => {
+        const { source, target } = edgePoints;
+        const midX = (source.x + target.x) / 2;
+        const midY = (source.y + target.y) / 2;
+        const path = `M${source.x},${source.y} L${midX},${midY} L${target.x},${target.y}`;
+        utils.editHtmlElement(this.draggingElement).withAttributes({
+            'd': path
+        });
+    }
+
+    renderEdgesWhenDraggingElement = (lastBounds: HtmlElementBounds): void => {
+        // this.draggingNodeMirror.x = lastBounds.x;
+        // this.draggingNodeMirror.y = lastBounds.y;
+        // this.draggingNodeMirror.width = lastBounds.width;
+        // this.draggingNodeMirror.height = lastBounds.height;
+        // this.sourceNodesOfDraggingNode?.forEach(sourceNode => {
+        //     this.renderEdge(this.mapEdgeToPoints({
+        //         source: sourceNode,
+        //         target: this.draggingNodeMirror
+        //     }));
+        // });
+        // this.targetNodesOfDraggingNode?.forEach(targetNode => {
+        //     this.renderEdge(this.mapEdgeToPoints({
+        //         source: this.draggingNodeMirror,
+        //         target: targetNode
+        //     }));
+        // });
     }
 
     startEdgeDragging = (node: IViewNode, e: MouseEvent): void => {
@@ -147,7 +198,7 @@ export default class NiceDagDnd {
         this.editableGlass.remove();
     }
 
-    private renderDraggingEdge(mPoint: Point) {
+    private onDraggingEdge(mPoint: Point) {
         let targetNode = this.draggingNode;
         const potentialEdgeTarget = this.findPotentialEdgeTarget(mPoint);
         if (potentialEdgeTarget) {
@@ -206,7 +257,7 @@ export default class NiceDagDnd {
                 const yDirection = this.context.yDirection(mPoint, rootBounds);
                 this.updateRelativeMousePoint(mPoint);
                 if (this.isDraggingEdge) {
-                    this.renderDraggingEdge(mPoint);
+                    this.onDraggingEdge(mPoint);
                 } else {
                     this.onDraggingNode(xDirection, yDirection);
                 }
@@ -250,7 +301,7 @@ export default class NiceDagDnd {
         utils.editHtmlElement(this.editableGlass).withStyle({
             display: 'none'
         });
-        utils.editHtmlElement(this.context.provider.svgDndBackground).withStyle({
+        utils.editHtmlElement(this.editorForeContainer).withStyle({
             display: 'none'
         });
         if (!this.isDraggingEdge) {

@@ -36,6 +36,19 @@ export default class ViewNode implements IViewNode {
         }).htmlElement;
     }
 
+    cloneWithProps(): IViewNode {
+        const cloneNode: Node = {
+            id: this.id,
+            data: this.data,
+            parentId: this.parentId,
+            children: this.children,
+            dependencies: this.dependencies || [],
+            edgeConnectorType: this.edgeConnectorType,
+            collapse: this.collapse
+        };
+        return new ViewNode(cloneNode, this.joint, this.model, this.edgeConnectorType);
+    }
+
     resize(size: Size): void {
         this.width = size.width;
         this.height = size.height;
