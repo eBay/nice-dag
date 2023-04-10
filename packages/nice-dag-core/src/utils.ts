@@ -119,10 +119,13 @@ export function editHtmlElement(
   return new EditableElement(htmlElement);
 }
 
-export function createElement(parentElement?: HTMLElement): EditableElement {
+export function createElement(parentElement?: HTMLElement, className?: string): EditableElement {
   const element = document.createElement("div");
   if (parentElement) {
     parentElement.appendChild(element);
+  }
+  if (className) {
+    element.classList.add(className);
   }
   return new EditableElement(element);
 }

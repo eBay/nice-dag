@@ -1,11 +1,13 @@
 import { IDndProvider } from './dndTypes';
 import { HtmlElementBounds, Point } from './types';
 import { XDirection, YDirection } from './dndTypes';
+import * as utils from './utils';
 
 const MOUSE_ACTION_MIN_INTERVAL = 200; //millisecond
 
 interface DndContextInternalInitArgs {
     rootXy: Point;
+    zoomLayerXy: Point;
     bounds: HtmlElementBounds;
     provider?: IDndProvider;
     mPoint?: Point;
@@ -19,7 +21,7 @@ export default class DndContext {
     private _originalPoint: Point;
     private mrPoint: Point;
     private originalOffset: Point;
-    private rootXy: Point;
+    private zoomLayerXy: Point;
 
     invalidDropping: boolean;
     readonly _provider: IDndProvider;
@@ -27,10 +29,10 @@ export default class DndContext {
     readonly _scale: number;
     readonly validDndThreshold: number;
 
-    constructor({ rootXy, mPoint, bounds, scale, provider }: DndContextInternalInitArgs) {
+    constructor({ rootXy, zoomLayerXy, mPoint, bounds, scale, provider }: DndContextInternalInitArgs) {
         this.mouseDownTimestamp = new Date().getTime();
-        this.rootXy = rootXy;
-        this._scale = scale;
+        this.zoomLayerXy = zoomLayerXy;
+        this._scale = scale || 1;
         const { x, y } = rootXy;
         this._originalPoint = {
             x: (mPoint.x - x),
@@ -59,20 +61,35 @@ export default class DndContext {
         return this._originalPoint;
     }
 
-    lastBounds(relative: boolean = false): HtmlElementBounds {
+    lastBounds(relative: boolean = false, useOriginal: boolean = false): HtmlElementBounds {
         const xyDelta = this.xyDelta;
-        const { x, y } = { x: this.originalBounds.left + xyDelta.x, y: this.originalBounds.top + xyDelta.y };
-        const _x = !relative ? x : x - this.rootXy.x;
-        const _y = !relative ? y : y - this.rootXy.y;
-        return {
+        const xDelta = useOriginal ? utils.float2Int(xyDelta.x / this._scale) : xyDelta.x;
+        const yDelta = useOriginal ? utils.float2Int(xyDelta.y / this._scale) : xyDelta.y;
+
+        const _originalBounds = useOriginal ? utils.resetBoundsWithRatio(this.originalBounds, this._scale || 1) : this.originalBounds;
+        const { x, y } = { x: this.originalBounds.left, y: this.originalBounds.top };
+        let _x = !relative ? x : x - this.zoomLayerXy.x;
+        _x = useOriginal ? utils.float2Int(_x / this._scale || 1) : _x;
+        _x += xDelta;
+
+        let _y = !relative ? y : y - this.zoomLayerXy.y;
+        _y = useOriginal ? utils.float2Int(_y / this._scale || 1) : _y;
+        _y += yDelta;
+
+        const width = _originalBounds.width;
+        const height = _originalBounds.height;
+        const _bound = {
             ...this.originalBounds,
             x: _x,
             y: _y,
             left: _x,
             top: _y,
-            right: _x + this.originalBounds.width,
-            bottom: _y + this.originalBounds.height
-        }
+            width,
+            height,
+            right: _x + width,
+            bottom: _y + height
+        };
+        return _bound;
     }
 
     /**

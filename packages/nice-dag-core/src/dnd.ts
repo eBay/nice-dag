@@ -1,4 +1,4 @@
-import { HtmlElementBounds, MapEdgeToPoints, Point, StyleObjectType, IViewNode, NiceDagMode } from './types';
+import { HtmlElementBounds, MapEdgeToPoints, Point, StyleObjectType, IViewNode, NiceDagMode, MapNodeToDraggingElementClass, EdgePoints } from './types';
 import * as utils from './utils';
 import DndContext from './dndContext';
 import { NICE_DAG_NODE_CLS, NODE_ID_ATTR, SVG_DND_ARROW_ID } from './constants';
@@ -27,26 +27,40 @@ interface ViewNodeWithGlobalBounds {
     bounds: HtmlElementBounds;
 }
 
+interface DraggingEdge {
+    viewNode: IViewNode;
+    svgRef: SVGElement;
+}
+
 export default class NiceDagDnd {
 
     private _rootContainer: HTMLElement;
     private _glassStyles: StyleObjectType;
     private draggingNode: IViewNode;
+    private draggingNodeMirror: IViewNode;
     private draggingElement: HTMLElement | SVGElement;
     private _enabled: boolean;
     private editableGlass: HTMLElement;
+    private editorForeContainer: HTMLElement;
     private context: DndContext;
     private isDraggingEdge: boolean;
     private mapEdgeToPoints: MapEdgeToPoints;
     private draggingNodeParentBounds: HtmlElementBounds;
+    private svgBackgroundBounds: HtmlElementBounds;
     private eligibleEdgeConnectors: ViewNodeWithGlobalBounds[] = [];
     private originalScrollPosition: Point;
+    private mapNodeToDraggingElementClass: MapNodeToDraggingElementClass;
+    private asSourceDraggingEdges: DraggingEdge[];
+    private asTargetDraggingEdges: DraggingEdge[];
+    private documentUserSelect: string;
 
     constructor(rootContainer: HTMLElement, glassStyles: StyleObjectType,
-        mapEdgeToPoints: MapEdgeToPoints) {
+        mapEdgeToPoints: MapEdgeToPoints, editorForeContainer: HTMLElement, mapNodeToDraggingElementClass: StyleObjectType) {
         this._rootContainer = rootContainer;
         this._glassStyles = glassStyles;
         this.mapEdgeToPoints = mapEdgeToPoints;
+        this.editorForeContainer = editorForeContainer;
+        this.mapNodeToDraggingElementClass = mapNodeToDraggingElementClass;
         this.buildGlass();
     }
 
@@ -72,7 +86,10 @@ export default class NiceDagDnd {
             y: this._rootContainer.scrollTop
         };
         this.draggingNode = node;
-        this.draggingNodeParentBounds = utils.htmlElementBounds(node.ref.parentElement);
+        this.draggingNodeMirror = node.cloneWithProps();
+        const scale: number = this.context.provider.scale || 1;
+        this.draggingNodeParentBounds = utils.resetBoundsWithRatio(utils.htmlElementBounds(node.ref.parentElement), scale);
+        this.svgBackgroundBounds = utils.resetBoundsWithRatio(utils.htmlElementBounds(this.context.provider.svgDndBackground), scale);
         const niceDagNodes = node.ref.parentElement.querySelectorAll(`:scope>.${NICE_DAG_NODE_CLS}`);
         this.eligibleEdgeConnectors = [];
         niceDagNodes.forEach(niceDagNode => {
@@ -92,30 +109,125 @@ export default class NiceDagDnd {
         return this;
     }
 
+    buildDraggingElement = (node: IViewNode) => {
+        const scale: number = this.context.provider.scale || 1;
+        const { width, height, x, y } = utils.resetBoundsWithRatio(utils.htmlElementBounds(node.ref), scale);
+        return utils.createElement(null, this.mapNodeToDraggingElementClass(node))
+            .withAbsolutePosition({
+                width, height, x, y
+            }).htmlElement;
+    }
+
+    computeDependenciesOfDraggingNode = (node: IViewNode) => {
+        const svg = this.context.provider.svgDndBackground;
+        this.asSourceDraggingEdges = node.findEdgesAsSource().map(edge => {
+            return {
+                svgRef: utils.createSvgElement(svg, 'path').withAttributes({
+                    'stroke': 'rgb(204, 204, 204)', //todo:conside constant
+                    'marker-mid': `url(#${node.model.dagId}-${SVG_DND_ARROW_ID})`
+                }).svgElement,
+                viewNode: edge.target
+            };
+        });
+        this.asTargetDraggingEdges = node.findEdgesAsTarget().map(edge => {
+            return {
+                svgRef: utils.createSvgElement(svg, 'path').withAttributes({
+                    'stroke': 'rgb(204, 204, 204)', //todo:conside constant
+                    'marker-mid': `url(#${node.model.dagId}-${SVG_DND_ARROW_ID})`
+                }).svgElement,
+                viewNode: edge.source
+            };
+        })
+    }
+
+    disableUserSelect = () => {
+        this.documentUserSelect = document.body.style.userSelect;
+        utils.editHtmlElement(document.body).withStyle({
+            'user-select': 'none'
+        });
+    }
+
+    restoreUserSelect = () => {
+        utils.editHtmlElement(document.body).withStyle({
+            'user-select': this.documentUserSelect
+        });
+    }
+
     startNodeDragging = (node: IViewNode, e: MouseEvent): void => {
         if (this._enabled) {
             utils.editHtmlElement(this.editableGlass).withStyle({
                 display: 'block'
             });
+            this.disableUserSelect();
             this.initContext(node);
             this.updateRelativeMousePoint({
                 x: e.pageX,
                 y: e.pageY
             });
-            this.draggingElement = utils.editHtmlElement(node.ref.cloneNode(true) as HTMLElement).withStyle({
-                'transform': `scale(${this.context.provider.scale})`,
-                'transformOrigin': `top left`
-            }).htmlElement;
-            const lastBounds = this.context.lastBounds();
+            this.computeDependenciesOfDraggingNode(node);
+            this.draggingElement = (!this.mapNodeToDraggingElementClass ? node.ref.cloneNode(true) : this.buildDraggingElement(node)) as HTMLElement;
             utils.editHtmlElement(this.draggingElement).withStyle({
                 'user-select': 'none',
                 'z-index': 9
-            }).withAbsolutePoint({
-                x: lastBounds.left,
-                y: lastBounds.top
             });
-            this.editableGlass.appendChild(this.draggingElement);
+            this.moveDraggingElement();
+            this.editorForeContainer.appendChild(this.draggingElement);
         }
+    }
+
+    moveDraggingElement = () => {
+        const lastBounds = this.context.lastBounds(true, true);
+        utils.editHtmlElement(this.draggingElement).withAbsolutePosition({
+            x: lastBounds.left,
+            y: lastBounds.top,
+            width: lastBounds.width,
+            height: lastBounds.height
+        });
+        this.renderEdgesWhenDraggingElement(lastBounds);
+    }
+
+    renderEdge = (edgeSvg: SVGElement, edgePoints: EdgePoints) => {
+        const { source, target } = edgePoints;
+        const midX = (source.x + target.x) / 2;
+        const midY = (source.y + target.y) / 2;
+        const path = `M${source.x},${source.y} L${midX},${midY} L${target.x},${target.y}`;
+        utils.editHtmlElement(edgeSvg).withAttributes({
+            'd': path
+        });
+    }
+
+    mapEdgePointToGlobal = (edgePoints: EdgePoints) => {
+        const { source: edgeSource, target: edgeTarget } = edgePoints;
+        const source = {
+            x: edgeSource.x + this.draggingNodeParentBounds.x - this.svgBackgroundBounds.x,
+            y: edgeSource.y + this.draggingNodeParentBounds.y - this.svgBackgroundBounds.y
+        };
+        const target = {
+            x: edgeTarget.x + this.draggingNodeParentBounds.x - this.svgBackgroundBounds.x,
+            y: edgeTarget.y + this.draggingNodeParentBounds.y - this.svgBackgroundBounds.y
+        };
+        return {
+            source, target
+        }
+    }
+
+    renderEdgesWhenDraggingElement = (lastBounds: HtmlElementBounds): void => {
+        this.draggingNodeMirror.x = lastBounds.x - (this.draggingNodeParentBounds.x - this.svgBackgroundBounds.x);
+        this.draggingNodeMirror.y = lastBounds.y - (this.draggingNodeParentBounds.y - this.svgBackgroundBounds.y);
+        this.draggingNodeMirror.width = lastBounds.width;
+        this.draggingNodeMirror.height = lastBounds.height;
+        this.asSourceDraggingEdges?.forEach(edge => {
+            this.renderEdge(edge.svgRef, this.mapEdgePointToGlobal(this.mapEdgeToPoints({
+                source: this.draggingNodeMirror,
+                target: edge.viewNode
+            })));
+        });
+        this.asTargetDraggingEdges?.forEach(edge => {
+            this.renderEdge(edge.svgRef, this.mapEdgePointToGlobal(this.mapEdgeToPoints({
+                source: edge.viewNode,
+                target: this.draggingNodeMirror
+            })));
+        });
     }
 
     startEdgeDragging = (node: IViewNode, e: MouseEvent): void => {
@@ -123,6 +235,7 @@ export default class NiceDagDnd {
             utils.editHtmlElement(this.editableGlass).withStyle({
                 display: 'block'
             });
+            this.disableUserSelect();
             this.isDraggingEdge = true;
             const svg = this.context.provider.svgDndBackground;
             this.draggingElement = utils.createSvgElement(svg, 'path').withAttributes({
@@ -141,7 +254,7 @@ export default class NiceDagDnd {
         this.editableGlass.remove();
     }
 
-    private renderDraggingEdge(mPoint: Point) {
+    private onDraggingEdge(mPoint: Point) {
         let targetNode = this.draggingNode;
         const potentialEdgeTarget = this.findPotentialEdgeTarget(mPoint);
         if (potentialEdgeTarget) {
@@ -200,7 +313,7 @@ export default class NiceDagDnd {
                 const yDirection = this.context.yDirection(mPoint, rootBounds);
                 this.updateRelativeMousePoint(mPoint);
                 if (this.isDraggingEdge) {
-                    this.renderDraggingEdge(mPoint);
+                    this.onDraggingEdge(mPoint);
                 } else {
                     this.onDraggingNode(xDirection, yDirection);
                 }
@@ -209,20 +322,17 @@ export default class NiceDagDnd {
     }
 
     onDraggingNode(xDirection: XDirection, yDirection: YDirection): void {
-        const lastBounds = this.context.lastBounds();
         this.scrollIfNeeded({
             xDirection, yDirection
         });
-        utils.editHtmlElement(this.draggingElement).withAbsolutePoint(
-            {
-                x: lastBounds.left,
-                y: lastBounds.top
-            }
-        );
+        this.moveDraggingElement();
     }
 
     endDragging = (event: MouseEvent): void => {
         this.draggingElement?.remove();
+        [...this.asSourceDraggingEdges || [], ...this.asTargetDraggingEdges || []].forEach(edge => {
+            edge.svgRef.remove();
+        });
         const mPoint = {
             x: event.pageX,
             y: event.pageY,
@@ -250,7 +360,7 @@ export default class NiceDagDnd {
         utils.editHtmlElement(this.editableGlass).withStyle({
             display: 'none'
         });
-        utils.editHtmlElement(this.context.provider.svgDndBackground).withStyle({
+        utils.editHtmlElement(this.editorForeContainer).withStyle({
             display: 'none'
         });
         if (!this.isDraggingEdge) {
@@ -259,6 +369,7 @@ export default class NiceDagDnd {
             this.context.provider.endEdgeDragging(this.draggingNode, targetNode);
         }
         this.isDraggingEdge = false;
+        this.restoreUserSelect();
     }
 
     private updateRelativeMousePoint = (mPoint: Point) => {
@@ -283,24 +394,24 @@ export default class NiceDagDnd {
     }
 
     private scrollIfNeeded = ({ xDirection, yDirection }: { xDirection: XDirection, yDirection: YDirection }) => {
-        const rootBounds = this._rootContainer.getBoundingClientRect();
-        const lastGlobalBounds = utils.htmlElementBounds(this.draggingElement as HTMLElement);
-        this.context.provider.resizeIfNeeded(lastGlobalBounds);
-        let xDelta = 0;
-        let yDelta = 0;
-        if (xDirection === XDirection.LeftToRight && lastGlobalBounds.right > rootBounds.right) {
-            xDelta = lastGlobalBounds.right - rootBounds.right;
-        }
-        if (xDirection === XDirection.RightToLeft && lastGlobalBounds.left < rootBounds.left) {
-            xDelta = -(rootBounds.left - lastGlobalBounds.left);
-        }
-        if (yDirection === YDirection.TopToBottom && lastGlobalBounds.bottom >= rootBounds.bottom - 20) {
-            yDelta = lastGlobalBounds.bottom - (rootBounds.bottom - 20);
-        }
-        if (yDirection === YDirection.BottomToTop && lastGlobalBounds.top < rootBounds.top) {
-            yDelta = -(rootBounds.top - lastGlobalBounds.top);
-        }
-        this._rootContainer.scrollLeft += xDelta;
-        this._rootContainer.scrollTop += yDelta;
+        // const rootBounds = this._rootContainer.getBoundingClientRect();
+        // const lastGlobalBounds = utils.htmlElementBounds(this.draggingElement as HTMLElement);
+        // this.context.provider.resizeForeground(this.context.lastBounds(true, true));
+        // let xDelta = 0;
+        // let yDelta = 0;
+        // if (xDirection === XDirection.LeftToRight && lastGlobalBounds.right > rootBounds.right) {
+        //     xDelta = lastGlobalBounds.right - rootBounds.right;
+        // }
+        // if (xDirection === XDirection.RightToLeft && lastGlobalBounds.left < rootBounds.left) {
+        //     xDelta = -(rootBounds.left - lastGlobalBounds.left);
+        // }
+        // if (yDirection === YDirection.TopToBottom && lastGlobalBounds.bottom >= rootBounds.bottom) {
+        //     yDelta = lastGlobalBounds.bottom - rootBounds.bottom;
+        // }
+        // if (yDirection === YDirection.BottomToTop && lastGlobalBounds.top < rootBounds.top) {
+        //     yDelta = -(rootBounds.top - lastGlobalBounds.top);
+        // }
+        // this._rootContainer.scrollLeft += xDelta;
+        // this._rootContainer.scrollTop += yDelta;
     }
 }

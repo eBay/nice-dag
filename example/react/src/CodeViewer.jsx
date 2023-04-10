@@ -1,6 +1,6 @@
 /* eslint import/no-webpack-loader-syntax: off */
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import readOnlyViewCode from '!!raw-loader!./cases/sample/ReadOnlyView.js';
 import readOnlyViewData from '!!raw-loader!./cases/data/ReadOnlyViewData.js';
 import readOnlyViewLess from '!!raw-loader!./cases/sample/ReadOnlyView.less';
@@ -14,6 +14,10 @@ import complexHierarchicalViewLess from '!!raw-loader!./cases/sample/ComplexHier
 
 import zoomInOutSliderCode from '!!raw-loader!./cases/sample/ZoomInOutSlider.js';
 
+import Highlight, { defaultProps } from "prism-react-renderer";
+import theme from "prism-react-renderer/themes/nightOwl";
+import styled from "styled-components";
+
 const codeMap = {
   'ReadOnlyView.js': readOnlyViewCode,
   'ReadOnlyViewData.js': readOnlyViewData,
@@ -25,15 +29,44 @@ const codeMap = {
   'ComplexHierarchicalView.less': complexHierarchicalViewLess,
   'ComplexHierarchicalViewData.js': complexHierarchicalViewData
 };
+const Pre = styled.pre`
+  text-align: left;
+  margin: 0 0 !important;
+  padding: 0.5em;
+  overflow: scroll;
+`;
+
+const Line = styled.div`
+  display: table-row;
+`;
+
+const LineNo = styled.span`
+  display: table-cell;
+  text-align: right;
+  padding-right: 1em;
+  user-select: none;
+  opacity: 0.5;
+`;
+
+const LineContent = styled.span`
+  display: table-cell;
+`;
+
 export default function CodeViewer({ filename }) {
-  useEffect(() => {
-    if (window.Prism) window.Prism.highlightAll();
-  }, [filename]);
-  return (
-    <pre>
-      <code className="language-jsx line-numbers">
-        {codeMap[filename] || `// Error: code of "${filename}" not found`}
-      </code>
-    </pre>
-  );
+  return <Highlight {...defaultProps} theme={theme} code={codeMap[filename] || `// Error: code of "${filename}" not found`} language="jsx">
+    {({ className, style, tokens, getLineProps, getTokenProps }) => (
+      <Pre className={className} style={style}>
+        {tokens.map((line, i) => (
+          <Line key={i} {...getLineProps({ line, key: i })}>
+            <LineNo>{i + 1}</LineNo>
+            <LineContent>
+              {line.map((token, key) => (
+                <span key={key} {...getTokenProps({ token, key })} />
+              ))}
+            </LineContent>
+          </Line>
+        ))}
+      </Pre>
+    )}
+  </Highlight>;
 }

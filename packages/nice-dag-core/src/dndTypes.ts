@@ -1,7 +1,6 @@
 import { Bounds, HtmlElementBounds, IViewNode, Point } from "./types";
 
 export interface Grid {
-    gridPoint: (p: Point) => Point;
 }
 
 export interface Line {
@@ -16,8 +15,10 @@ export interface IDndProvider {
     scale: number;
     validDndThreshold?: number;
     svgDndBackground: SVGElement;
-    resizeIfNeeded: (size: Bounds) => boolean;
+    resizeForeground: (size: Bounds) => boolean;
     getParentTopLeft: (node: IViewNode) => Point;
+    endNodeDragging: (draggingNode: IViewNode) => void;
+    endEdgeDragging: (dragginNode: IViewNode, targetNode: IViewNode) => void;
 }
 
 export enum XDirection {
