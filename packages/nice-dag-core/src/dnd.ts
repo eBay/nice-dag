@@ -260,24 +260,15 @@ export default class NiceDagDnd {
         if (potentialEdgeTarget) {
             targetNode = potentialEdgeTarget as IViewNode;
         }
-        const { source: edgeSource, target: edgeTarget } = this.mapEdgeToPoints({
+        let { source, target } = this.mapEdgePointToGlobal(this.mapEdgeToPoints({
             source: this.draggingNode,
             target: targetNode
-        });
+        }));
         const scale: number = this.context.provider.scale || 1;
         const backgroundBounds = utils.resetBoundsWithRatio(this.context.provider.svgDndBackground.getBoundingClientRect(), scale);
-        const draggingNodeParentBounds = utils.resetBoundsWithRatio(this.draggingNodeParentBounds, scale);
-        const source = {
-            x: edgeSource.x + draggingNodeParentBounds.x - backgroundBounds.x,
-            y: edgeSource.y + draggingNodeParentBounds.y - backgroundBounds.y
-        };
-        const edgeTargetGPoint = {
-            x: edgeTarget.x + draggingNodeParentBounds.x,
-            y: edgeTarget.y + draggingNodeParentBounds.y
-        }
-        const target = {
-            x: (targetNode !== this.draggingNode ? edgeTargetGPoint.x : utils.float2Int(mPoint.x / scale)) - backgroundBounds.x,
-            y: (targetNode !== this.draggingNode ? edgeTargetGPoint.y : utils.float2Int(mPoint.y / scale)) - backgroundBounds.y
+        target = {
+            x: (targetNode !== this.draggingNode ? target.x : (utils.float2Int(mPoint.x / scale)) - backgroundBounds.x),
+            y: (targetNode !== this.draggingNode ? target.y : (utils.float2Int(mPoint.y / scale)) - backgroundBounds.y)
         };
         const midX = (source.x + target.x) / 2;
         const midY = (source.y + target.y) / 2;
