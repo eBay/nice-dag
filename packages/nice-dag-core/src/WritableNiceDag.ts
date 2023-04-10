@@ -178,7 +178,8 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
             }).htmlElement;
         this.editorForeContainer = utils.createElementIfAbsent(this.mainLayer, EDITOR_FOREGROUND_CLS).withStyle({
             'z-index': 2,
-            'display': 'none'
+            'display': 'none',
+            'overflow': 'hidden'
         }).htmlElement;
         this._dnd = new NiceDagDnd(this.mainLayer, args.glassStyles, this._config.mapEdgeToPoints,
             this.editorForeContainer,
@@ -192,9 +193,8 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
         this.svgDndBkg = utils.createSvgIfAbsent(this.editorForeContainer, null, `${this.uid}-${SVG_DND_ARROW_ID}`)
             .withClassNames(SVG_DND_CLS)
             .withAbsolutePosition(ZERO_BOUNDS).withStyle({
-                width: '100%',
-                height: '100%',
-                'z-index': 99
+                ...EDITOR_BACKGROUND_SIZE,
+                'z-index': 1
             }).svgElement;
     }
 
@@ -327,6 +327,7 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
             ...size
         };
         utils.editHtmlElement(this.editorForeContainer).withAbsolutePosition(bounds);
+        this.adaptOverflow();
     }
 
     set gridVisible(visible: boolean) {
@@ -358,15 +359,45 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
         return this;
     }
 
+    adaptOverflow() {
+        const mainLayerBounds = utils.htmlElementBounds(this.mainLayer);
+        const editorForeContainerSize = {
+            width: parseInt(this.editorForeContainer.style.width),
+            height: parseInt(this.editorForeContainer.style.height),
+        };
+        if (mainLayerBounds.width < editorForeContainerSize.width) {
+            utils.editHtmlElement(this.mainLayer).withStyle({
+                'overflow-x': 'auto'
+            });
+        } else {
+            utils.editHtmlElement(this.mainLayer).withStyle({
+                'overflow-x': 'none'
+            });
+        }
+        if (mainLayerBounds.height < editorForeContainerSize.height) {
+            utils.editHtmlElement(this.mainLayer).withStyle({
+                'overflow-y': 'auto'
+            });
+        } else {
+            utils.editHtmlElement(this.mainLayer).withStyle({
+                'overflow-y': 'none'
+            });
+        }
+    }
+
+    /**
+     * Resize foreground
+     * @param bounds this.context.lastBounds(true, true)
+     * @returns void
+     */
     resizeForeground(bounds: HtmlElementBounds) {
         /**
-         * The last dragging bounds is reset to original bounds, so that it needs to * _scale
+         * All in original size
          */
-        const backgroundBounds = this.editorForeContainer.getBoundingClientRect();
-        const relativeRight = bounds.x + bounds.width;
-        const relativeBottom = bounds.y + bounds.height;
-        let width = utils.float2Int(backgroundBounds.width / this._scale);
-        let height = utils.float2Int(backgroundBounds.height / this._scale);
+        const backgroundBounds = utils.resetBoundsWithRatio(this.editorForeContainer.getBoundingClientRect(), this.scale);
+        const relativeRight = bounds.right;
+        const relativeBottom = bounds.bottom;
+        let { width, height } = backgroundBounds;
         let shouldResize;
         if (width < relativeRight) {
             width = relativeRight;
@@ -384,12 +415,8 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
             };
             utils.editHtmlElement(this.editorForeContainer).withAbsolutePosition(_bounds);
         }
+        this.adaptOverflow();
         return shouldResize;
-    }
-
-    resizeIfNeeded(lastDraggingElementBounds: Bounds): boolean {
-        const ifNeeded = this.resizeForeground(lastDraggingElementBounds);
-        return ifNeeded;
     }
 
     drawGrid(): void {

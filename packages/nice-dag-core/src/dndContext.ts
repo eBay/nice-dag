@@ -21,7 +21,6 @@ export default class DndContext {
     private _originalPoint: Point;
     private mrPoint: Point;
     private originalOffset: Point;
-    private rootXy: Point;
     private zoomLayerXy: Point;
 
     invalidDropping: boolean;
@@ -32,7 +31,6 @@ export default class DndContext {
 
     constructor({ rootXy, zoomLayerXy, mPoint, bounds, scale, provider }: DndContextInternalInitArgs) {
         this.mouseDownTimestamp = new Date().getTime();
-        this.rootXy = rootXy;
         this.zoomLayerXy = zoomLayerXy;
         this._scale = scale || 1;
         const { x, y } = rootXy;

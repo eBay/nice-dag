@@ -15,7 +15,7 @@ export interface IDndProvider {
     scale: number;
     validDndThreshold?: number;
     svgDndBackground: SVGElement;
-    resizeIfNeeded: (size: Bounds) => boolean;
+    resizeForeground: (size: Bounds) => boolean;
     getParentTopLeft: (node: IViewNode) => Point;
     endNodeDragging: (draggingNode: IViewNode) => void;
     endEdgeDragging: (dragginNode: IViewNode, targetNode: IViewNode) => void;

@@ -306,7 +306,7 @@ export default class ReadOnlyNiceDag implements IReadOnlyNiceDag, ViewModelChang
             }
         ).htmlElement;
         this.mainLayer = utils.createElementIfAbsent(this.rootContainer, DAGGER_MAIN_LAYER_CLS).withStyle(
-            { ..._100_PECTANGLE_SIZE_STYLE, overflow: 'auto' }
+            { ..._100_PECTANGLE_SIZE_STYLE, overflow: 'hidden' }
         ).htmlElement;
         this.mainLayer.addEventListener('scroll', this.onMainLayerScroll);
         this.zoomLayer = utils.createElementIfAbsent(this.mainLayer, DAGGER_ZOOM_LAYER_CLS).withStyle(
@@ -351,11 +351,35 @@ export default class ReadOnlyNiceDag implements IReadOnlyNiceDag, ViewModelChang
     onModelChange(event: IViewModelChangeEvent): void {
         if (event.type === ViewModelChangeEventType.RESIZE) {
             utils.editHtmlElement(this.zoomLayer).withSize(this.rootView.model.size());
+            this.adaptOverflow();
         }
         if (event.type === ViewModelChangeEventType.RESIZE
             || event.type === ViewModelChangeEventType.ADD_SUB_VIEW
             || event.type === ViewModelChangeEventType.REMOVE_SUB_VIEW) {
             this.justifyCenterWhenResizing();
+        }
+    }
+
+    adaptOverflow() {
+        const mainLayerBounds = utils.htmlElementBounds(this.mainLayer);
+        const zoomLayerBounds = utils.htmlElementBounds(this.zoomLayer);
+        if (mainLayerBounds.width < zoomLayerBounds.width) {
+            utils.editHtmlElement(this.mainLayer).withStyle({
+                'overflow-x': 'auto'
+            });
+        } else {
+            utils.editHtmlElement(this.mainLayer).withStyle({
+                'overflow-x': 'none'
+            });
+        }
+        if (mainLayerBounds.height < zoomLayerBounds.height) {
+            utils.editHtmlElement(this.mainLayer).withStyle({
+                'overflow-y': 'auto'
+            });
+        } else {
+            utils.editHtmlElement(this.mainLayer).withStyle({
+                'overflow-y': 'none'
+            });
         }
     }
 
@@ -487,6 +511,7 @@ export default class ReadOnlyNiceDag implements IReadOnlyNiceDag, ViewModelChang
                 ...this.rootView.model.size()
             }
         );
+        this.adaptOverflow();
         if (this.parentSize) {
             this.justifyCenter(this.parentSize);
         }
@@ -518,6 +543,7 @@ export default class ReadOnlyNiceDag implements IReadOnlyNiceDag, ViewModelChang
         if (this.minimap) {
             this.minimap.setViewBoxScale(scale);
         }
+        this.adaptOverflow();
     }
 
     get scale(): number {
