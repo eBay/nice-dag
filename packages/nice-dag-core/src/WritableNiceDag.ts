@@ -216,6 +216,8 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
             if (this._editing) {
                 this.doForegroundLayout();
                 this.fireMinimapChange();
+            } else {
+                super.adaptOverflow();
             }
         } else if (event.type === ViewModelChangeEventType.REMOVE_NODE) {
             this.fireMinimapChange();
@@ -305,6 +307,7 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
     }
 
     doForegroundLayout(): void {
+        debugger
         const zoomLayerBounds = this.zoomLayer.getBoundingClientRect();
         const { scale = 1 } = this;
         /**
@@ -360,6 +363,7 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
     }
 
     adaptOverflow() {
+        debugger
         const mainLayerBounds = utils.htmlElementBounds(this.mainLayer);
         const editorForeContainerSize = {
             width: parseInt(this.editorForeContainer.style.width),
@@ -499,6 +503,7 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
                     height: zoomLayerHeight
                 });
             }
+            this.adaptOverflow();
         }
     }
 

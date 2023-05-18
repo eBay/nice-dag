@@ -229,6 +229,10 @@ export function resetBoundsWithRatio(
     };
 }
 
+export function contains(point: Point, bounds: Bounds) {
+  return point.x >= bounds.x && point.x <= bounds.x + bounds.width && point.y >= bounds.y && point.y <= bounds.y + bounds.height;
+}
+
 export function htmlElementBounds(
   element: HTMLElement | SVGElement
 ): HtmlElementBounds {
