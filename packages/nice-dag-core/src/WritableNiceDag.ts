@@ -307,7 +307,6 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
     }
 
     doForegroundLayout(): void {
-        debugger
         const zoomLayerBounds = this.zoomLayer.getBoundingClientRect();
         const { scale = 1 } = this;
         /**
@@ -363,7 +362,6 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
     }
 
     adaptOverflow() {
-        debugger
         const mainLayerBounds = utils.htmlElementBounds(this.mainLayer);
         const editorForeContainerSize = {
             width: parseInt(this.editorForeContainer.style.width),
