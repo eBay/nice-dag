@@ -1,6 +1,6 @@
 {
   "name": "@ebay/nice-dag-vue3",
-  "version": "1.0.21",
+  "version": "1.0.22",
   "type": "module",
   "main": "./lib/index.cjs",
   "module": "./lib/index.js",
