@@ -568,7 +568,7 @@ export default class ReadOnlyNiceDag implements IReadOnlyNiceDag, ViewModelChang
 
     removeNiceDagChangeListener = (listener: NiceDagChangeListener): boolean => {
         if (this.listeners.some(l => l === listener)) {
-            this.listeners = this.listeners.filter(l => l === listener);
+            this.listeners = this.listeners.filter(l => l !== listener);
         }
         return false;
     }
