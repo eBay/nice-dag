@@ -286,6 +286,8 @@ export default class NiceDagDnd {
                 if (!potentialConnector.viewNode.dependencies || potentialConnector.viewNode.dependencies.length === 0 || potentialConnector.viewNode.joint) {
                     return potentialConnector.viewNode;
                 }
+            } else {
+                return potentialConnector.viewNode;
             }
         }
         return null;
