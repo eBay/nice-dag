@@ -56,12 +56,12 @@ export default class ViewNode implements IViewNode {
         this.fireNodeChange({ type: ViewNodeChangeEventType.RESIZE, node: this });
     }
 
-    addChildNode(node: Node, point: Point): Node {
+    addChildNode(node: Node, point: Point, joint?: boolean): Node {
         const isCollapsed = this.collapse || !this.children || this.children.length === 0;
         if (!this.children) {
             this.children = [];
         }
-        this.children.push(node);
+        this.children = [...this.children, node];
         this.fireNodeChange({
             type: ViewNodeChangeEventType.ADD_CHILD_NODE, node: this, data: {
                 point,
@@ -69,6 +69,9 @@ export default class ViewNode implements IViewNode {
                 sourceNode: node
             }
         });
+        if (joint) {
+            this.model.findNodeById(node.id).joint = joint;
+        }
         return this.model.findNodeById(node.id);
     }
 

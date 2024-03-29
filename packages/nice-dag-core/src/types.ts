@@ -211,7 +211,7 @@ export interface IViewNode extends Node, Bounds {
     removeDependency: (source: IViewNode) => void;
     doLayout: () => void;
     resize: (size: Size) => void;
-    addChildNode: (node: Node, point: Point) => Node;
+    addChildNode: (node: Node, point: Point, joint?: boolean) => Node;
     destory: () => void;
     fireNodeChange: (e: ViewNodeChangeEvent) => void;
     findEdgesAsSource(): IEdge[];
