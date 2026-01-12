@@ -19,6 +19,7 @@ export interface IDndProvider {
     getParentTopLeft: (node: IViewNode) => Point;
     endNodeDragging: (draggingNode: IViewNode) => void;
     endEdgeDragging: (dragginNode: IViewNode, targetNode: IViewNode) => void;
+    validateNodeOnDrop?: (sourceNode: IViewNode, targetNode: IViewNode) => boolean;
 }
 
 export enum XDirection {
