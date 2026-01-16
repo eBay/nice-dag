@@ -205,6 +205,13 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
         }
     }
 
+    validateNodeOnDrop(source: IViewNode, target: IViewNode): boolean {
+        if (this._config.validateEdgeOnDrop) {
+            return this._config.validateEdgeOnDrop(source, target);
+        }
+        return true;
+    }
+
     endNodeDragging(): void {
         this.fireMinimapChange();
     }

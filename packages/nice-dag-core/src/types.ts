@@ -121,6 +121,7 @@ export type MapNodeToElement = (node: Node) => HTMLElement;
 export type MapNodeToDraggingElementClass = (node: Node) => StyleObjectType;
 export type MapEdgeToElement = (edge: IEdge) => HTMLElement;
 export type OnEdgeDropped = (edge: IEdge) => void;
+export type ValidateEdgeOnDrop = (sourceNode: IViewNode, targetNode: IViewNode) => boolean;
 export type MapEdgeToPoints = (edge: IEdge) => EdgePoints;
 export type GetViewElement = (node?: Node) => HTMLElement;
 export type GetNodeSize = (node: Node) => Size;
@@ -145,6 +146,7 @@ export interface NiceDagConfig {
     mapNodeToElement?: MapNodeToElement;
     mapEdgeToElement?: MapEdgeToElement;
     onEdgeDropped?: OnEdgeDropped;
+    validateEdgeOnDrop?: ValidateEdgeOnDrop;
     mapEdgeToPoints?: MapEdgeToPoints;
     getViewElement?: GetViewElement;
     getNodeSize: GetNodeSize;
@@ -169,7 +171,7 @@ export interface NiceDagConfig {
 export type ViewModelConfig = Pick<NiceDagConfig, 'rootViewPadding' | 'subViewPadding' | 'mode' | 'modelType' | 'edgeConnectorType' | 'jointEdgeConnectorType' | 'omitJointBeforeEnd'>;
 
 export type DagViewConfig = ViewModelConfig & Pick<NiceDagConfig,
-    'mapEdgeToPoints' | 'mapNodeToElement' | 'mapEdgeToElement' | 'getViewElement' | 'subViewPadding' | 'getGateElement' | 'getEdgeAttributes' | 'onEdgeDropped'>;
+    'mapEdgeToPoints' | 'mapNodeToElement' | 'mapEdgeToElement' | 'getViewElement' | 'subViewPadding' | 'getGateElement' | 'getEdgeAttributes' | 'onEdgeDropped' | 'validateEdgeOnDrop'>;
 
 export interface NiceDagInitArgs extends NiceDagConfig {
     container: HTMLElement;

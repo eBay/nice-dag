@@ -338,6 +338,7 @@ export default class NiceDagDnd {
         };
         const scale = this.context.provider.scale || 1;
         let targetNode;
+        let isValidDrop = true;
         if (!this.isDraggingEdge) {
             this.draggingNode.setPoint(
                 {
@@ -347,9 +348,13 @@ export default class NiceDagDnd {
             );
         } else {
             targetNode = this.findPotentialEdgeTarget(mPoint);
-            if (targetNode) {
-                const edge = this.draggingNode.connect(targetNode);
-                this.context.provider.onEdgeDropped(edge);
+            if (this.context.provider.validateNodeOnDrop?.(this.draggingNode, targetNode)) {
+                if (targetNode) {
+                    const edge = this.draggingNode.connect(targetNode);
+                    this.context.provider.onEdgeDropped(edge);
+                } else {
+                    isValidDrop = false;
+                }
             }
         }
         utils.editHtmlElement(this.editableGlass).withStyle({
@@ -358,10 +363,12 @@ export default class NiceDagDnd {
         utils.editHtmlElement(this.editorForeContainer).withStyle({
             display: 'none'
         });
-        if (!this.isDraggingEdge) {
-            this.context.provider.endNodeDragging(this.draggingNode);
-        } else {
-            this.context.provider.endEdgeDragging(this.draggingNode, targetNode);
+        if (isValidDrop) {
+            if (!this.isDraggingEdge) {
+                this.context.provider.endNodeDragging(this.draggingNode);
+            } else {
+                this.context.provider.endEdgeDragging(this.draggingNode, targetNode);
+            }
         }
         this.isDraggingEdge = false;
         this.restoreUserSelect();
