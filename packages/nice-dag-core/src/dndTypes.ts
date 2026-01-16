@@ -1,4 +1,5 @@
-import { Bounds, HtmlElementBounds, IViewNode, Point } from "./types";
+import Edge from "./Edge";
+import { Bounds, HtmlElementBounds, IEdge, IViewNode, Point } from "./types";
 
 export interface Grid {
 }
@@ -19,7 +20,7 @@ export interface IDndProvider {
     getParentTopLeft: (node: IViewNode) => Point;
     endNodeDragging: (draggingNode: IViewNode) => void;
     endEdgeDragging: (dragginNode: IViewNode, targetNode: IViewNode) => void;
-    validateNodeOnDrop?: (sourceNode: IViewNode, targetNode: IViewNode) => boolean;
+    onEdgeDropped?: (edge: IEdge) => void;
 }
 
 export enum XDirection {

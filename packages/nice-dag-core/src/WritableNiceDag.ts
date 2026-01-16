@@ -11,6 +11,7 @@ import DndContext from "./dndContext";
 // import { resetBoundsWithRatio } from "./utils";
 import { EDITOR_BKG_CLS, SVG_BKG_ARROW_ID, SVG_BKG_CLS, SVG_DND_ARROW_ID, SVG_DND_CLS, ZERO_BOUNDS, EDITOR_FOREGROUND_CLS } from "./constants";
 import ViewModel from "./ViewModel";
+import Edge from "./Edge";
 
 const SVGNS = "http://www.w3.org/2000/svg";
 
@@ -198,11 +199,10 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
             }).svgElement;
     }
 
-    validateNodeOnDrop(source: IViewNode, target: IViewNode): boolean {
-        if (this._config.validateEdgeOnDrop) {
-            return this._config.validateEdgeOnDrop(source, target);
+    onEdgeDropped(edge: Edge): void {
+        if (this._config.onEdgeDropped) {
+            this._config.onEdgeDropped(edge);
         }
-        return true;
     }
 
     endNodeDragging(): void {
@@ -593,10 +593,10 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
     }
 
     getParentTopLeft(node: IViewNode): Point {
-        const bounds = node.ref.parentElement.getBoundingClientRect();
+        const bounds = node.ref?.parentElement?.getBoundingClientRect();
         return {
-            x: bounds.left,
-            y: bounds.top
+            x: bounds?.left,
+            y: bounds?.top
         }
     }
 

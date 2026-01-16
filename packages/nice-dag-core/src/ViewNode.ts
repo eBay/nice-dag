@@ -81,13 +81,13 @@ export default class ViewNode implements IViewNode {
         return exists;
     }
 
-    connect(node: IViewNode): void {
+    connect(node: IViewNode): IEdge {
         if (!node?.dependencies.some(dependency => dependency === this.id)) {
             if (!node.dependencies) {
                 node.dependencies = [];
             }
             node.dependencies.push(this.id);
-            this.model.addEdge(this, node);
+            return this.model.addEdge(this, node);
         }
     }
 

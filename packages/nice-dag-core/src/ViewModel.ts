@@ -182,7 +182,6 @@ export default class ViewModel implements IViewModel, ViewNodeChangeListener, Vi
         const newEdge = this.createEdgeAndFireModelChange(source, target);
         niceDagHolder.use(this._dagId).fireNiceDagChange();
         return newEdge;
-        // }
     }
 
     /**
