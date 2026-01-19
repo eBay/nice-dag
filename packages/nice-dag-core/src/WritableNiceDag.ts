@@ -199,17 +199,10 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
             }).svgElement;
     }
 
-    onEdgeDropped(edge: Edge): void {
+    onEdgeDropped(sourceNode: IViewNode, targetNode: IViewNode): void {
         if (this._config.onEdgeDropped) {
-            this._config.onEdgeDropped(edge);
+            this._config.onEdgeDropped(sourceNode, targetNode);
         }
-    }
-
-    validateNodeOnDrop(source: IViewNode, target: IViewNode): boolean {
-        if (this._config.validateEdgeOnDrop) {
-            return this._config.validateEdgeOnDrop(source, target);
-        }
-        return true;
     }
 
     endNodeDragging(): void {

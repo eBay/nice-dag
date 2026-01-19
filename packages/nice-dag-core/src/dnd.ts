@@ -348,13 +348,14 @@ export default class NiceDagDnd {
             );
         } else {
             targetNode = this.findPotentialEdgeTarget(mPoint);
-            if (this.context.provider.validateNodeOnDrop?.(this.draggingNode, targetNode)) {
-                if (targetNode) {
-                    const edge = this.draggingNode.connect(targetNode);
-                    this.context.provider.onEdgeDropped(edge);
+            if (targetNode) {
+                if (!this.context.provider.onEdgeDropped) {
+                    this.draggingNode.connect(targetNode);
                 } else {
-                    isValidDrop = false;
+                    this.context.provider.onEdgeDropped(this.draggingNode, targetNode);
                 }
+            } else {
+                isValidDrop = false;
             }
         }
         utils.editHtmlElement(this.editableGlass).withStyle({
