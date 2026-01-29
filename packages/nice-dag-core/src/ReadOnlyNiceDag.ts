@@ -244,20 +244,26 @@ class DagView implements ViewModelChangeListener {
     getAllNodes(omitJointNode?: boolean): IViewNode[] {
         const allNodes: IViewNode[] = this.model.getAllNodes();
         if (omitJointNode) {
-            const jointNodeMapper: NodeMapWithId = {} as NodeMapWithId;
+            const jointNodeMapper: Record<string, IViewNode> = {} as Record<string, IViewNode>;
             allNodes.filter(node => node.joint).forEach(node => {
                 jointNodeMapper[node.id] = node;
             });
-            return allNodes.filter(node => !node.joint).map(node => {
-                const { dependencies } = node;
-                let dependenciesOmittingJointNode: string[] = [];
+            const resolveDependencies = (dependencies: string[]): string[] => {
+                const resolved: string[] = [];
                 dependencies.forEach(dependentId => {
                     if (jointNodeMapper[dependentId]) {
-                        dependenciesOmittingJointNode = [...dependenciesOmittingJointNode, ...jointNodeMapper[dependentId].dependencies];
+                        const nestedResolved = resolveDependencies(jointNodeMapper[dependentId].dependencies);
+                        resolved.push(...nestedResolved);
                     } else {
-                        dependenciesOmittingJointNode.push(dependentId);
+                        resolved.push(dependentId);
                     }
                 });
+                return Array.from(new Set(resolved));
+            };
+
+            return allNodes.filter(node => !node.joint).map(node => {
+                const { dependencies } = node;
+                const dependenciesOmittingJointNode = resolveDependencies(dependencies);
                 return {
                     ...node,
                     dependencies: dependenciesOmittingJointNode
