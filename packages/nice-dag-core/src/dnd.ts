@@ -244,8 +244,8 @@ export default class NiceDagDnd {
             }).svgElement;
             this.initContext(node);
             this.updateRelativeMousePoint({
-                x: e.pageX,
-                y: e.pageY
+                x: e.clientX,
+                y: e.clientY
             });
         }
     }
@@ -298,8 +298,8 @@ export default class NiceDagDnd {
         event.stopPropagation();
         if (event.button === 0) {
             const mPoint = {
-                x: event.pageX,
-                y: event.pageY,
+                x: event.clientX,
+                y: event.clientY,
             };
             if (this.context) {
                 const rootBounds = this._rootContainer.getBoundingClientRect();
