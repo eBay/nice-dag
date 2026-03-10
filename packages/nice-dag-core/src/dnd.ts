@@ -298,8 +298,8 @@ export default class NiceDagDnd {
         event.stopPropagation();
         if (event.button === 0) {
             const mPoint = {
-                x: event.clientX,
-                y: event.clientY,
+                x: this.isDraggingEdge ? event.clientX : event.pageX,
+                y: this.isDraggingEdge ? event.clientY : event.pageY,
             };
             if (this.context) {
                 const rootBounds = this._rootContainer.getBoundingClientRect();
