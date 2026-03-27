@@ -160,7 +160,7 @@ export default class NiceDagDnd {
             });
             this.disableUserSelect();
             this.initContext(node);
-            this.updateRelativeMousePoint({
+             this.updateRelativeMousePoint({
                 x: e.pageX,
                 y: e.pageY
             });
@@ -328,8 +328,8 @@ export default class NiceDagDnd {
             edge.svgRef.remove();
         });
         const mPoint = {
-            x: event.pageX,
-            y: event.pageY,
+            x: this.isDraggingEdge ? event.clientX : event.pageX,
+            y: this.isDraggingEdge ? event.clientY : event.pageY,
         };
         this.updateRelativeMousePoint(mPoint);
         const scrollDelta = {
