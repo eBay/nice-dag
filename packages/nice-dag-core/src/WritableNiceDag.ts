@@ -180,7 +180,7 @@ export default class WritableNiceDag extends ReadOnlyNiceDag implements IDndProv
         this.editorForeContainer = utils.createElementIfAbsent(this.mainLayer, EDITOR_FOREGROUND_CLS).withStyle({
             'z-index': 2,
             'display': 'none',
-            'overflow': 'hidden'
+            // 'overflow': 'hidden'
         }).htmlElement;
         this._dnd = new NiceDagDnd(this.mainLayer, args.glassStyles, this._config.mapEdgeToPoints,
             this.editorForeContainer,

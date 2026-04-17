@@ -160,7 +160,7 @@ export default class NiceDagDnd {
             });
             this.disableUserSelect();
             this.initContext(node);
-             this.updateRelativeMousePoint({
+            this.updateRelativeMousePoint({
                 x: e.pageX,
                 y: e.pageY
             });
@@ -355,6 +355,7 @@ export default class NiceDagDnd {
                     this.context.provider.onEdgeDropped(this.draggingNode, targetNode);
                 }
             } else {
+                this.context.provider.onEdgeDropped(this.draggingNode, null);
                 isValidDrop = false;
             }
         }
@@ -369,6 +370,10 @@ export default class NiceDagDnd {
                 this.context.provider.endNodeDragging(this.draggingNode);
             } else {
                 this.context.provider.endEdgeDragging(this.draggingNode, targetNode);
+            }
+        } else {
+            if (this.isDraggingEdge) {
+                this.context.provider.endEdgeDragging(this.draggingNode, null);
             }
         }
         this.isDraggingEdge = false;
