@@ -116,12 +116,25 @@ class DagView implements ViewModelChangeListener {
     }
 
     justifySize(size: Size): void {
+        let padding = (this.model.isRoot ? this.viewConfig.rootViewPadding : this.viewConfig.subViewPadding) || {};
+        if (!padding.left) {
+            padding.left = 0;
+        }
+        if (!padding.right) {
+            padding.right = 0;
+        }
+        if (!padding.top) {
+            padding.top = 0;
+        }
+        if (!padding.bottom) {
+            padding.bottom = 0;
+        }
         if (size.width > 0) {
-            this.nodesLayer.style.width = `${size.width}px`;
+            this.nodesLayer.style.width = `${size.width - padding.left - padding.right}px`;
             this.contentLayer.style.width = `${size.width}px`;
         }
         if (size.height > 0) {
-            this.nodesLayer.style.height = `${size.height}px`;
+            this.nodesLayer.style.height = `${size.height - padding.top - padding.bottom}px`;
             this.contentLayer.style.height = `${size.height}px`;
         }
     }
